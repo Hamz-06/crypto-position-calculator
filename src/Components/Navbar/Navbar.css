@@ -1,5 +1,5 @@
 .NavbarItems{
-    background: linear-gradient(90deg, rgb(110,94,256),rgba(76, 63, 252, 1));
+    background: linear-gradient(90deg, rgb(110,94,256),#4c3ffc);
     height: 80px;
     display: flex;
     justify-content: center;
@@ -49,7 +49,7 @@
         transition: all 0.5s ease;
     }
     .nav-menu.active{
-        background: red;
+        background: #4c3ffc;
         left: 0;
         opacity: 1;
         transition: all 0.5s ease;
@@ -60,7 +60,11 @@
         padding: 2rem;
         width: 100%;
         display: table;
+    }
+    .nav-links:hover{
+        color: whitesmoke;
 
+        
     }
     .navbar-logo{
         position: absolute;
