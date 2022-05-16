@@ -1,0 +1,24 @@
+.displayTransactionBox{
+    margin: 5%;
+}
+
+table {
+    border-collapse: separate;
+    width: 100%;
+    border-radius:6px;
+    border: 1px solid black;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    
+ 
+}
+th{
+    
+    
+}
+    
+td {
+    border: 1px solid red;
+}
