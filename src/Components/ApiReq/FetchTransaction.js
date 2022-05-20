@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+
 import axios from 'axios';
 import React, { Component, useEffect, useState } from 'react';
 import './FetchTransaction.css';
@@ -91,15 +91,7 @@ function FetchTransation(){
         
     },[])
 
- 
-    
- 
 
-    
-    
-    
-    
-    
 
     var total=0;
 

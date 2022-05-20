@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './Components/Navbar/Navbar';
 import FetchBalance from './Components/ApiReq/FetchBalance';
 import FetchTransation from './Components/ApiReq/FetchTransaction';
+import CalcRiskReward from './Components/Calc/CalcRiskReward';
 import $ from 'jquery'; 
 
 function App() {
@@ -17,7 +18,10 @@ function App() {
       
 
       <Navbar />
-        <div className='OuterBox'>
+      <CalcRiskReward/>
+      
+
+        {/* <div className='OuterBox'>
           hello
           <div className='PriceChartRow'>
 
@@ -35,10 +39,10 @@ function App() {
               Price
           </div>
 
-        </div>
+        </div> */}
       {/* <FetchBalance/> */}
       
-     { <FetchTransation/> } 
+     {/* { <FetchTransation/> }  */}
       
       
 
