@@ -10,20 +10,50 @@ function createRiskReward(){
                     <h1>Position Size Calculator for Bitcoin</h1>
                 </div>
 
-                <div className="portfolioSize">
-                    Portfolio Size
+                <div className="inputBox">
+                    <p>Portfolio Size</p>
+                    
                     <input type="text" name="name" />
                 </div>
 
-                <div className="riskSize">
-                    Risk Size
+                <div className="inputBox">
+                    <p>Margin Size</p>
+                    <input type="text" name="name" />
+                    <input type="text" name="name" />
+                    
+                </div>
+
+                <div className="inputBox">
+                    <p>Risk Size</p>
+                    <input type="text" name="name" />
                     <input type="text" name="name" />
 
                 </div>
 
-                <div className="stopLoss">
-                    Stop Loss
+                <div className="inputBox">
+                    <p>Stop Loss</p>
                     <input type="text" name="name" />
+                </div>
+
+                <div className="outputBox">
+                    
+                    <div>
+                        <p className='placeHolderOutput'>Result</p>
+                        <p>Result</p>
+                    </div>
+                    
+                    <div>
+                        <p className='placeHolderOutput'>Result</p>
+                        <p>Result</p>
+                    </div>
+
+                    <div >
+                        <p className='placeHolderOutput'>Result</p>
+                        <p>Result</p>
+                    </div>
+                    
+   
+                                       
                 </div>
             </div>
 

@@ -12,51 +12,83 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     border: 1px solid red;
     background:#a9a9a9ed;
     border-radius: 15px;
     width: 50%;
-    height: 80%;
+    height: 90%;
     
 }
+
+.outerBox > div {
+    
+    background-color: #E46119;
+    border: 1px solid #626262;
+    margin: 3px;
+}
+.outerBox > div:nth-of-type(1) { flex: 0.1 0 0; }
+.outerBox > div:nth-of-type(2) { flex: 0.15 0 0; }
+.outerBox > div:nth-of-type(3) { flex: 0.2 0 0; }
+.outerBox > div:nth-of-type(4) { flex: 0.2 0 0; }
+.outerBox > div:nth-of-type(5) { flex: 0.15 0 0; }
+.outerBox > div:nth-of-type(6) { flex: 0.15 0 0; }
+
 .logoBox{
+    margin: 7% 2% 2% 2%;
     border: 1px solid red;
     border-radius: 15px;
     width: 90%;
     
-}
-.portfolioSize{
-    border: 1px solid red;
-   
-   
-    border-radius: 15px;
-    width: 90%;
-   
-}
-.riskSize{
-    border: 1px solid red;
-   
-   
-    border-radius: 15px;
-    width: 90%;
+    text-align: center;
     
 }
-.stopLoss{
+
+.inputBox{
+    margin:2%;
     border: 1px solid red;
-   
-   
     border-radius: 15px;
     width: 90%;
+}
+
+
+.outputBox{
+    
+    margin:2%;
+    border: 1px solid red;
+    border-radius: 15px;
+    width: 90%; 
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+
+.outputBox > div:nth-of-type(1) { flex-grow: 1; }
+.outputBox > div:nth-of-type(2) { flex-grow: 1; }
+.outputBox > div:nth-of-type(3) { flex-grow: 1; }
+
+
+
+.outerBox p{
+    margin: 1%;
+    text-align: center;  
     
 }
 
 .outerBox input{
     border: 1px solid red;
     box-sizing: border-box;
-    padding: 12px 20px;
+    padding: 2% 10%;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+
+    
 }
+
 .outerBox input[type=text]:focus {
     
-
     outline: none;
-  }
+}
