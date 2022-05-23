@@ -4,32 +4,53 @@ import './CalcRiskReward.css'
 
 function CreateRiskReward(){
     const [price, setPrice] = useState('');
-    const [marginPercent, setmarginPercent] = useState();
-    const [marginUsd, setmarginUsd] = useState();
+    const [marginPercent, setmarginPercent] = useState('');
+    const [marginUsd, setmarginUsd] = useState('');
 
     function updatePortfolioPrice(event){
-        setPrice(event.target.value);
+        
+        var price = document.getElementsByClassName("inputPort")[0].value;
+        
+        switch(event.target.className) {
+            case 'inputPort':
+                setPrice(event.target.value);
+                
+              break;
+            case 'marginPercent':
+                
+                if (price!==''){
+                    var getMarginPercent = event.target.value
+                    setmarginPercent(getMarginPercent)
+                
+                    
+        
+                }
+              break;
+            
+            case 'marginUsd':
+
+            break;
+        }
+        var setMarginUsdCalculation = (marginPercent/100)*price
+        setmarginUsd(setMarginUsdCalculation)
+        // console.log("------")
+        // console.log(event.target.value +" "+ event.target.className)
+        // console.log( " price")
+
+        if(price===""){
+            //console.log("is empty")
+            setmarginUsd('')
+            setmarginPercent('')
+        }
       
     }
     //set margin percent and also the margin in usd
-    const updateMarginPercent=(event)=>{
-        if (price!=''){
-
-            setmarginPercent(event.target.value)
-            
-            var setMarginUsdCal = price/marginPercent
-            setmarginUsd(setMarginUsdCal)
-
-            
-        }
+ 
 
 
-        //document.getElementsByClassName("marginUsd")[0].value="12"
+    //document.getElementsByClassName("marginUsd")[0].value="12"
 
-    }
-    const updateMarginUsd=(event)=>{
-        
-    }
+    
 
 
 
@@ -45,13 +66,14 @@ function CreateRiskReward(){
                 <div className="inputBox">
                     <p>Portfolio Size</p>
                     
-                    <input type="number" name="name" onChange={updatePortfolioPrice}/>
+                    <input type="number" className='inputPort' onChange={updatePortfolioPrice} value={price}/>
+                    
                 </div>
 
                 <div className="inputBox">
                     <p>Margin Size</p>
-                    <input type="number" name="name" onChange={updateMarginPercent} className="marginPercent" value={marginPercent}/>
-                    <input type="number" name="name" onChange={updateMarginUsd} className="marginUsd" value={marginUsd}/>
+                    <input type="number"  onChange={updatePortfolioPrice} className="marginPercent" value={marginPercent}/>
+                    <input type="number" name="name" onChange={updatePortfolioPrice} className="marginUsd" value={marginUsd}/>
                     
                 </div>
 
