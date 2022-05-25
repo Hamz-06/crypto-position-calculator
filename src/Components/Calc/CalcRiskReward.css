@@ -6,56 +6,58 @@
     display:flex;
     justify-content: center;
     align-items: center;
-    background: #5C5E60;
+    background: #403b63;
 }
 .outerBox{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid red;
     background:#a9a9a9ed;
-    border-radius: 15px;
+ 
     width: 50%;
     height: 90%;
+    border-radius: 26px;
+    background: #403b63;
+    box-shadow:  5px -5px 0px #1e1c2f,
+             -5px 5px 0px #625a97;
     
 }
 
 .outerBox > div {
     
-    background-color: #E46119;
-    border: 1px solid #626262;
-    margin: 3px;
+    background-color: #625a97;
+    border: 1px solid #1e1c2f;
+    width: 90%;
+    margin: 6px;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: bold;
+    
+    
+
+    /* border-radius: 26px;
+    background: #403b63;
+    box-shadow:  5px -5px 0px #1e1c2f,
+             -5px 5px 0px #625a97; */
 }
-.outerBox > div:nth-of-type(1) { flex: 0.1 0 0; }
+.outerBox > div:nth-of-type(1) { flex: 0.15 0 0; }
 .outerBox > div:nth-of-type(2) { flex: 0.15 0 0; }
-.outerBox > div:nth-of-type(3) { flex: 0.2 0 0; }
-.outerBox > div:nth-of-type(4) { flex: 0.2 0 0; }
+.outerBox > div:nth-of-type(3) { flex: 0.15 0 0; }
+.outerBox > div:nth-of-type(4) { flex: 0.15 0 0; }
 .outerBox > div:nth-of-type(5) { flex: 0.15 0 0; }
 .outerBox > div:nth-of-type(6) { flex: 0.15 0 0; }
 
 .logoBox{
     margin: 7% 2% 2% 2%;
-    border: 1px solid red;
-    border-radius: 15px;
-    width: 90%;
-    
-    text-align: center;
-    
-}
-
-.inputBox{
-    margin:2%;
-    border: 1px solid red;
-    border-radius: 15px;
-    width: 90%;
+      
 }
 
 
 .outputBox{
     
     margin:2%;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     border-radius: 15px;
     width: 90%; 
     display: flex;
@@ -78,23 +80,51 @@
 }
 
 .outerBox input{
-    border: 1px solid red;
+    /* border: 1px solid red;
     box-sizing: border-box;
     padding: 2% 10%;
     text-align: center;
     display: block;
-    margin: 0 auto;
+    margin: 0 auto; */
 
-    
+    padding: 7px;
+    font-size: 18px;
+    border-width: 0px;
+    border-color: #cbcbcb;
+    background-color: #ffffff;
+    color: #000000;
+    border-style: solid;
+    border-radius: 22px;
+    box-shadow: 1px 0px 10px rgba(30,28,47,.75);
+    display: block;
+    margin: 0 auto; 
+    font-weight: bold;
+    text-align: center;
 }
 
+.outerBox input[type=number]:focus {
+    
+    outline: none;
+}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.outerBox input[type=number]:focus {
-    
-    outline: none;
+.fa-copy{
+    color: #1e1c2f;
+}
+
+.fa-bitcoin-sign{
+    animation: fa-bitcoin-sign-spin infinite 20s linear;
+    color: #FFD700;
+}
+
+@keyframes fa-bitcoin-sign-spin {
+    from{
+        transform: rotate(0deg);
+    }to{
+        transform: rotate(360deg);
+    }
 }

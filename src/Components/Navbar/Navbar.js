@@ -12,18 +12,13 @@ class Navbar extends Component{
     render(){
         const Value = [
             {
-                title:'home',
+                title:'MetaMask Connect (Coming Soon)',
                 url:'google.com',
                 cName:'nav-links'
             },
             {
-                title:'yahoo',
-                url:'yahoo.com',
-                cName:'nav-links'
-            },    
-            {
-                title:'gmail',
-                url:'gmail.com',
+                title:'Portfolio Tracker (Coming Soon)',
+                url:'google.com',
                 cName:'nav-links'
             }
         ]        
@@ -36,6 +31,8 @@ class Navbar extends Component{
                         <i className={this.state.clicked ? 'fas fa-times':'fas fa-bars'}></i>
                     </div>
                 </div>
+               
+                
             
 
                 <ul className={this.state.clicked?'nav-menu active':'nav-menu'}>     
