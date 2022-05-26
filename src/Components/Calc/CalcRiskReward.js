@@ -3,7 +3,6 @@ import './CalcRiskReward.css'
 
 
 
-
 function CreateRiskReward(){
     const [price, setPrice] = useState('');
     const [marginUsd, setmarginUsd] = useState('');
@@ -12,6 +11,7 @@ function CreateRiskReward(){
     const [contract, setContract] = useState('');
     const [portAtRisk, setPortAtRisk] = useState('');
     const [leverage, setLeverage] = useState('');
+    const [button, setButton] = useState(true);
 
     
 
@@ -57,6 +57,7 @@ function CreateRiskReward(){
             setContract('')
             setPortAtRisk('')
             setLeverage('')
+            setButton(true)
             return;
             
         }
@@ -72,8 +73,7 @@ function CreateRiskReward(){
 
         
         setTimeout(() => {
-            var avg =createLeverage();
-            console.log(avg+" s")
+            var avg =getContract();
             var setLevCalc = Math.ceil(avg/marginUsdQ)
             setLeverage(setLevCalc)
 
@@ -81,12 +81,18 @@ function CreateRiskReward(){
    
     }
     
-    function createLeverage(){
+    function getContract(){
         
-        var contQ = document.getElementsByTagName('p')[5].innerHTML;
+        var contQ = document.getElementsByTagName('p')[5].innerText;
+        if(contQ===""){
+            setButton(true);
+        }else{
+            setButton(false)
+        }
         return contQ;
-
     }
+
+
 
 
     return (
@@ -98,11 +104,7 @@ function CreateRiskReward(){
 
                 <div className="logoBox">
                     <h1>Position Size Calculator for Bitcoin <i className="fa-solid fa-bitcoin-sign"></i></h1>
-
-                    
-                    
-
-                    
+    
                 </div>
 
                 <div className="inputBox">
@@ -134,19 +136,24 @@ function CreateRiskReward(){
                 <div className="outputBox">
                     
                     <div>
-                        <p className='placeHolderOutput'>Result <i className="fa-solid fa-copy"></i></p>
-                        <h1>{contract}</h1>
+                      
+
+                        <p>Result <i className="fa-solid fa-copy"></i></p>
+                        {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
+                        
+                        <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
+                        
                     </div>
                     
                     <div>
                         
-                        <p className='placeHolderOutput'>Result <i className="fa-solid fa-chart-line"></i></p>
-                        <h1>{portAtRisk}</h1>
+                        <p>Result <i className="fa-solid fa-chart-line"></i></p>
+                        <p className='placeHolderOutput'>{portAtRisk}</p>
                     </div>
 
                     <div >
-                        <p className='placeHolderOutput'>Result <i className="fa-solid fa-rocket"></i></p>
-                        <h1>{leverage}</h1>
+                        <p>Result <i className="fa-solid fa-rocket"></i></p>
+                        <p className='placeHolderOutput'>{leverage}</p>
                     </div>
                     
    

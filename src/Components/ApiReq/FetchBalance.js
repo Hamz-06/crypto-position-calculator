@@ -24,15 +24,16 @@ function FetchBalance(){
                "address": "0xb8f6bE82647053298B60546Ce0e612EACbCC8E0F",
                "apikey": process.env.REACT_APP_API_KEY
            }
-       })
-
-       .then((responce)=>{
+        })
         
+        .then((responce)=>{
+            
             setBalance(responce.data.result)
         })
         
     },[])
     
+    console.log("");
     return(
         <h1>{balance}</h1>
     );

@@ -48,6 +48,13 @@
 .outerBox > div:nth-of-type(5) { flex: 0.15 0 0; }
 .outerBox > div:nth-of-type(6) { flex: 0.15 0 0; }
 
+.outerBox p{
+    margin: 1%;
+    text-align: center;  
+    
+    
+}
+
 .logoBox{
     margin: 7% 2% 2% 2%;
       
@@ -67,17 +74,67 @@
 }
 
 
+
 .outputBox > div:nth-of-type(1) { flex-grow: 1; }
 .outputBox > div:nth-of-type(2) { flex-grow: 1; }
 .outputBox > div:nth-of-type(3) { flex-grow: 1; }
 
 
-
-.outerBox p{
-    margin: 1%;
-    text-align: center;  
+.placeHolderOutput{
+    font-size: 3vh;
+    font-weight: bold;
     
+
 }
+
+/* button{
+    padding: 0;
+    margin: 0;
+    background: none;
+    outline: none;
+    border: none;
+} */
+button:hover { 
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+
+button {
+    text-align: center;
+    
+    cursor: pointer;
+    font-size: 20px;
+    letter-spacing: 4px;
+    position: relative;
+    
+    border: none;
+    color: black;
+    
+   background: none;
+    text-align: center;
+    transition-duration: 0.4s;
+    overflow: hidden;
+  
+  }
+  button:after {
+    content: "";
+    background: limegreen;
+    display: block;
+    position: absolute;
+    padding-top: 300%;
+    padding-left: 350%;
+    margin-left: -20px !important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.8s
+  }
+  
+  button:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s
+  }
 
 .outerBox input{
     /* border: 1px solid red;
@@ -116,7 +173,7 @@ input::-webkit-inner-spin-button {
     color: #1e1c2f;
 }
 
-.fa-bitcoin-sign{
+/* .fa-bitcoin-sign{
     animation: fa-bitcoin-sign-spin infinite 20s linear;
     color: #FFD700;
 }
@@ -127,4 +184,4 @@ input::-webkit-inner-spin-button {
     }to{
         transform: rotate(360deg);
     }
-}
+} */
