@@ -104,7 +104,7 @@ function CreateRiskReward(){
 
                 <div className="logoBox">
                     <h1>Position Size Calculator for Bitcoin <i className="fa-solid fa-bitcoin-sign"></i></h1>
-    
+        
                 </div>
 
                 <div className="inputBox">
@@ -138,7 +138,7 @@ function CreateRiskReward(){
                     <div>
                       
 
-                        <p>Result <i className="fa-solid fa-copy"></i></p>
+                        <p>Contract <i className="fa-solid fa-copy"></i></p>
                         {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
                         
                         <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
@@ -147,12 +147,12 @@ function CreateRiskReward(){
                     
                     <div>
                         
-                        <p>Result <i className="fa-solid fa-chart-line"></i></p>
+                        <p>Port Risk <i className="fa-solid fa-chart-line"></i></p>
                         <p className='placeHolderOutput'>{portAtRisk}</p>
                     </div>
 
                     <div >
-                        <p>Result <i className="fa-solid fa-rocket"></i></p>
+                        <p>leverage <i className="fa-solid fa-rocket"></i></p>
                         <p className='placeHolderOutput'>{leverage}</p>
                     </div>
                     

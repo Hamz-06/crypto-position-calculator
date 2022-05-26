@@ -21,7 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+#new project
 src/Components/ApiReq/FetchTransaction.js
 src/Components/ApiReq/FetchBalance.js
 src/Components/ApiReq/FetchTransaction.css

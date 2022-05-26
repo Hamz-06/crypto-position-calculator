@@ -1,8 +1,7 @@
-.container{
-    height: 90vh;
-}
+
 .container{
     
+    height: 90vh;
     display:flex;
     justify-content: center;
     align-items: center;
@@ -185,3 +184,26 @@ input::-webkit-inner-spin-button {
         transform: rotate(360deg);
     }
 } */
+
+@media screen and (max-width:960px){
+
+    .outerBox{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background:#a9a9a9ed;
+     
+        width: 80%;
+        height: 90%;
+        border-radius: 26px;
+        background: #403b63;
+        box-shadow:  5px -5px 0px #1e1c2f,
+                 -5px 5px 0px #625a97;
+        
+    }
+    .placeHolderOutput{
+        font-size: small;
+    }
+    
+}
