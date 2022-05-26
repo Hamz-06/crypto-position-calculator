@@ -32,7 +32,7 @@
     border-radius: 15px;
     text-align: center;
     font-weight: bold;
-    
+    flex: 0.15 0 0;
     
 
     /* border-radius: 26px;
@@ -40,25 +40,24 @@
     box-shadow:  5px -5px 0px #1e1c2f,
              -5px 5px 0px #625a97; */
 }
-.outerBox > div:nth-of-type(1) { flex: 0.15 0 0; }
-.outerBox > div:nth-of-type(2) { flex: 0.15 0 0; }
-.outerBox > div:nth-of-type(3) { flex: 0.15 0 0; }
-.outerBox > div:nth-of-type(4) { flex: 0.15 0 0; }
-.outerBox > div:nth-of-type(5) { flex: 0.15 0 0; }
-.outerBox > div:nth-of-type(6) { flex: 0.15 0 0; }
+/* .outerBox > div:nth-of-type(1) { text-align: center; } */
+
 
 .outerBox p{
     margin: 1%;
     text-align: center;  
     
-    
 }
 
 .logoBox{
     margin: 7% 2% 2% 2%;
-      
+    
 }
 
+.logoBox h1{
+    
+    padding-top: 20px;
+}
 
 .outputBox{
     
@@ -194,16 +193,23 @@ input::-webkit-inner-spin-button {
         justify-content: center;
         background:#a9a9a9ed;
      
-        width: 80%;
+        width: 95%;
         height: 90%;
         border-radius: 26px;
         background: #403b63;
-        box-shadow:  5px -5px 0px #1e1c2f,
+        box-shadow:  5px -5px 0px #625a97,
                  -5px 5px 0px #625a97;
         
     }
     .placeHolderOutput{
         font-size: small;
+    }
+    .logoBox h1{
+        font-size: larger;
+        margin: 5px;
+    }
+    .outerBox input{
+        margin-bottom: 10px;
     }
     
 }

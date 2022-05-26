@@ -103,7 +103,7 @@ function CreateRiskReward(){
                 
 
                 <div className="logoBox">
-                    <h1>Position Size Calculator for Bitcoin <i className="fa-solid fa-bitcoin-sign"></i></h1>
+                    <h1>Position Size Calculator For Crypto <i className="fa-solid fa-bitcoin-sign"></i></h1>
         
                 </div>
 
