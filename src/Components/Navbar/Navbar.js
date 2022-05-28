@@ -4,10 +4,18 @@ import './Navbar.css'
 class Navbar extends Component{
 
     
-    state = {clicked:false}
-    handleClick=()=>{
-        this.setState({clicked:!this.state.clicked})
+    state = {menuClicked:false,
+            settingClicked:false
+        }
+
+    menuClicked=()=>{
+        this.setState({menuClicked:!this.state.menuClicked})
     }
+    settingClicked =()=>{
+        this.setState({settingClicked:!this.state.settingClicked})
+        console.log(this.state.settingClicked)
+    }
+        
 
     render(){
         const Value = [
@@ -26,16 +34,28 @@ class Navbar extends Component{
         return(
             
             <nav className="NavbarItems">
-                <div className='menu-icon container'>
-                    <div className='menu-icon' onClick={this.handleClick}>
-                        <i className={this.state.clicked ? 'fas fa-times':'fas fa-bars'}></i>
+
+                <div className='menu-icon container' onClick={this.menuClicked}>
+                    <div className='menu-icon' >
+                        <i className={this.state.menuClicked ? 'fas fa-times':'fas fa-bars'}></i>
                     </div>
+                    
                 </div>
+                <div className='menu-icon container' onClick={this.settingClicked}>
+                    <div className='menu-icon'>
+                        <i className={'fa-solid fa-gear'} ></i>
+                    </div>
+                    
+                </div>
+
+          
+
+          
                
                 
             
 
-                <ul className={this.state.clicked?'nav-menu active':'nav-menu'}>     
+                <ul className={this.state.menuClicked?'nav-menu active':'nav-menu'}>     
                     { Value.map((item, index)=>{
                         return(
                             <li key={index}>

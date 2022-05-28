@@ -40,18 +40,19 @@
     transition: all 0.2s ease-out;
 }
 .menu-icon{
+    /* This is the actual icon */
     display: flex;
-    position: absolute;
-    margin-left: 5%;
+    position: relative;
+    margin-right: 2%;
     font-size: 1.8rem;
     cursor: pointer;
-    
-    
-    
-
+      
 }
+/* This will help to allign the navbar icons  */
+.NavbarItems > .menu-icon.container:nth-of-type(1) { margin-left: 5%; } 
+
 .menu-icon.container{
-    /* css for container */
+    /* Icon container used to build border around icon */
     background: #625a97;
     border: 1px solid #1e1c2f;
     border-radius: 10px;
@@ -61,6 +62,25 @@
     align-items: center;
 
 }
+
+/* -----------Settings Icon----------- */
+
+.fa-gear:hover {
+    animation: gearanimate 1s 1;
+}
+@keyframes gearanimate {
+    
+        from{
+            color: red;
+            transform: rotate(0deg);
+        }to{
+            transform: rotate(360deg);
+        }
+} 
+
+
+
+
 
 @media screen and (max-width:960px){
     .NavbarItems{
@@ -105,7 +125,7 @@
     }
     .menu-icon{
         display: flex;
-        position: absolute;
+        position: relative;
         font-size: 1.8rem;
         cursor: pointer;
         
