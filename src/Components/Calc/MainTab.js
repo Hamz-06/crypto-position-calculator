@@ -1,21 +1,31 @@
 
 import './MainTab.css'
 import {CalculatorTab} from './CalculatorTab'
-
+import {ChartTab} from './ChartTab'
 
 function MainTab(){
 
 
     return (
+       
+      
         <div className="container">
-            <div className='tabSelector'>
+             
+            <div className="outerBox">
+
+                <CalculatorTab />
                 
             </div>
+
+            <div className="outerBox">
+            <ChartTab />
             
-            <CalculatorTab /> 
 
-
+            </div> 
         </div>
+       
+
+
     );
 }
 export default MainTab;

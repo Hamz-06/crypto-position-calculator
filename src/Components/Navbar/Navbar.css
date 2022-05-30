@@ -66,7 +66,7 @@
 /* -----------Settings Icon----------- */
 
 .fa-gear:hover {
-    animation: gearanimate 1s 1;
+    animation: gearanimate 5s 1;
 }
 @keyframes gearanimate {
     
@@ -77,6 +77,10 @@
             transform: rotate(360deg);
         }
 } 
+
+/* -----------Settings Icon----------- */
+
+
 
 
 

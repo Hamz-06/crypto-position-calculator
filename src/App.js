@@ -21,28 +21,6 @@ function App() {
       <MainTab />
       
 
-        {/* <div className='OuterBox'>
-          hello
-          <div className='PriceChartRow'>
-
-            <div className='LeftCol'>
-              left box
-            </div>
-
-            <div className='RightCol'>
-              right box
-            </div>
-
-          </div>
-
-          <div className='RecentPriceRow'>
-              Price
-          </div>
-
-        </div> */}
-      {/* <FetchBalance/> */}
-      
-     {/* { <FetchTransation/> }  */}
       
       
 

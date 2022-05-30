@@ -5,7 +5,8 @@ class Navbar extends Component{
 
     
     state = {menuClicked:false,
-            settingClicked:false
+            settingClicked:false,
+            chartClicked:false
         }
 
     menuClicked=()=>{
@@ -14,6 +15,9 @@ class Navbar extends Component{
     settingClicked =()=>{
         this.setState({settingClicked:!this.state.settingClicked})
         console.log(this.state.settingClicked)
+    }
+    chartClicked=()=>{
+        this.setState({chartClicked:!this.state.chartClicked})
     }
         
 
@@ -41,9 +45,17 @@ class Navbar extends Component{
                     </div>
                     
                 </div>
+
                 <div className='menu-icon container' onClick={this.settingClicked}>
                     <div className='menu-icon'>
                         <i className={'fa-solid fa-gear'} ></i>
+                    </div>
+                    
+                </div>
+
+                <div className='menu-icon container' onClick={this.chartClicked}>
+                    <div className='menu-icon'>
+                        <i className={this.state.chartClicked ? 'fa-solid fa-toggle-on': 'fa-solid fa-toggle-off'} ></i>
                     </div>
                     
                 </div>

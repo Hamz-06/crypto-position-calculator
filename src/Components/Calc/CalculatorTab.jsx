@@ -93,65 +93,65 @@ export const CalculatorTab = () => {
     }
 
     return(
-        <div className="outerBox">
+        
+        <>       
+        
+        <div className="logoBox">
+                <h1>Position Size Calculator For Crypto <i className="fa-solid fa-bitcoin-sign"></i></h1>
+    
+            </div>
+
+            <div className="inputBox">
+                <p>Portfolio Size In USD <i className="fa-solid fa-wallet"></i></p>
+                
+                <input type="number" className='inputPort' onChange={updatePortfolioPrice} value={price}/>
+                
+            </div>
+
+            <div className="inputBox">
+                <p>Margin Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
+                <input type="number"  onChange={updatePortfolioPrice} className="marginUsd" value={marginUsd}/>
+                
+                
+            </div>
+
+            <div className="inputBox">
+                <p>Risk Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
+                <input type="number" onChange={updatePortfolioPrice} className='riskSizeUsd' value={riskSizeUsd}/>
+                
+
+            </div>
+
+            <div className="inputBox">
+                <p>Stop Loss In Percent <i className="fa-solid fa-percent"></i></p>
+                <input type="number" onChange={updatePortfolioPrice} className='stopLossPercent' value={stopLossPercent}/>
+            </div>
+
+            <div className="outputBox">
+                
+                <div>
                     
-    
-                    <div className="logoBox">
-                        <h1>Position Size Calculator For Crypto <i className="fa-solid fa-bitcoin-sign"></i></h1>
-            
-                    </div>
-    
-                    <div className="inputBox">
-                        <p>Portfolio Size In USD <i className="fa-solid fa-wallet"></i></p>
-                        
-                        <input type="number" className='inputPort' onChange={updatePortfolioPrice} value={price}/>
-                        
-                    </div>
-    
-                    <div className="inputBox">
-                        <p>Margin Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                        <input type="number"  onChange={updatePortfolioPrice} className="marginUsd" value={marginUsd}/>
-                        
-                        
-                    </div>
-    
-                    <div className="inputBox">
-                        <p>Risk Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                        <input type="number" onChange={updatePortfolioPrice} className='riskSizeUsd' value={riskSizeUsd}/>
-                       
-    
-                    </div>
-    
-                    <div className="inputBox">
-                        <p>Stop Loss In Percent <i className="fa-solid fa-percent"></i></p>
-                        <input type="number" onChange={updatePortfolioPrice} className='stopLossPercent' value={stopLossPercent}/>
-                    </div>
-    
-                    <div className="outputBox">
-                        
-                        <div>
-                          
-    
-                            <p>Contract <i className="fa-solid fa-copy"></i></p>
-                            {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
-                            
-                            <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
-                            
-                        </div>
-                        
-                        <div>
-                            
-                            <p>Port Risk <i className="fa-solid fa-chart-line"></i></p>
-                            <p className='placeHolderOutput'>{portAtRisk}</p>
-                        </div>
-    
-                        <div >
-                            <p>leverage <i className="fa-solid fa-rocket"></i></p>
-                            <p className='placeHolderOutput'>{leverage}</p>
-                        </div>
-                                           
-                    </div>
+
+                    <p>Contract <i className="fa-solid fa-copy"></i></p>
+                    {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
+                    
+                    <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
+                    
                 </div>
+                
+                <div>
+                    
+                    <p>Port Risk <i className="fa-solid fa-chart-line"></i></p>
+                    <p className='placeHolderOutput'>{portAtRisk}</p>
+                </div>
+
+                <div >
+                    <p>leverage <i className="fa-solid fa-rocket"></i></p>
+                    <p className='placeHolderOutput'>{leverage}</p>
+                </div>
+                                    
+            </div>
+        </>
         )
 };
         
