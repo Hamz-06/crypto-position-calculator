@@ -1,7 +1,7 @@
-
+import React from 'react';
 import './MainTab.css'
 import {CalculatorTab} from './CalculatorTab'
-import {ChartTab} from './ChartTab'
+import {ChartTab} from './ChartTab.tsx'
 
 function MainTab(){
 
@@ -12,13 +12,14 @@ function MainTab(){
         <div className="container">
              
             <div className="outerBox">
-
+            <React.StrictMode>
                 <CalculatorTab />
-                
+            </React.StrictMode>
             </div>
 
             <div className="outerBox">
-            <ChartTab />
+               
+                <ChartTab />
             
 
             </div> 

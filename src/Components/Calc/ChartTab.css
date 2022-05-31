@@ -18,3 +18,12 @@
              -5px 5px 0px #625a97;
     
 } */
+.chartBorder{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    background-color: #625a97;
+    border: 1px solid #1e1c2f;
+    
+}
