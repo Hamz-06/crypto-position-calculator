@@ -15,6 +15,7 @@ function MainTab(){
             <React.StrictMode>
                 <CalculatorTab />
             </React.StrictMode>
+                
             </div>
 
             <div className="outerBox">

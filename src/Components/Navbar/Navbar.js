@@ -57,6 +57,12 @@ class Navbar extends Component{
                     <div className='menu-icon'>
                         <i className={this.state.chartClicked ? 'fa-solid fa-toggle-on': 'fa-solid fa-toggle-off'} ></i>
                     </div>
+                </div>
+
+                <div className='menu-icon container'>
+                    <div className='menu-icon'>
+                        <i className={'login'}>Login</i>
+                    </div>
                     
                 </div>
 

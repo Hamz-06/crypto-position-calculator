@@ -2,7 +2,7 @@ import './ChartTab.css'
 import './MainTab.css'
 import { priceData } from './PriceData';
 import { useEffect } from 'react';
-import { createChart, CrosshairMode } from 'lightweight-charts';
+import { createChart, CrosshairMode, ColorType } from 'lightweight-charts';
 import { useRef } from 'react';
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
@@ -13,7 +13,16 @@ export const ChartTab = () => {
    
     useEffect(() => {
         
-       
+        const handleResize =()=>{
+            chart.applyOptions({width: chartContainerRef.current.clientwidth});
+        }
+
+        const chart = createChart(chartContainerRef.current, {
+        
+            width: chartContainerRef.current.clientWidth,
+            height: 300,
+        });
+
         const chartOptions = {
             handleScale: {
                 axisPressedMouseMove:true
@@ -39,10 +48,10 @@ export const ChartTab = () => {
                 timeScale: {
                 borderColor: '#485c7b',
             },
-            width: 400,
+            width: 550,
             height: 400
         };
-        const chart = createChart(document.getElementById('as'), chartOptions as any);
+        
 
         
         const candleSeries = chart.addCandlestickSeries();
@@ -56,18 +65,20 @@ export const ChartTab = () => {
 
     const size ={
         height: '450px',
-        width: '450px'
+        width: '600px'
     }
  
 
 
     return (
-         <div className='chartBorder' style={size}>
+        <>
 
-            <div id='as'>
+            <div ref={chartContainerRef}>
 
+                
             </div>
-        </div>
+        
+        </>
     )
 }
 
