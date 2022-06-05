@@ -1,8 +1,11 @@
-import React from "react"
+import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
-export const CalculatorTab = () => {
+export const CalculatorTab = (props) => {
 
+    const cont = useRef()
+    const lev = useRef()
+    const stoploss = useRef()
 
     const [price, setPrice] = useState('');
     const [marginUsd, setmarginUsd] = useState('');
@@ -53,15 +56,15 @@ export const CalculatorTab = () => {
 
         //if margin percent and price is not empty we will make margin usd
         if(priceQ==="" || marginUsdQ==="" || riskSizeQ==="" || stopLossQ===""){
-            console.log("empty")
+            // console.log("empty")
             setContract('')
             setPortAtRisk('')
             setLeverage('')
             setButton(true)
+           
             return;
             
         }
-        
         
         var setContractCalc = riskSizeQ/(stopLossQ/100)
         setContractCalc = setContractCalc.toFixed(2)
@@ -71,14 +74,15 @@ export const CalculatorTab = () => {
         setPortRiskCalc=setPortRiskCalc.toFixed(2)
         setPortAtRisk(setPortRiskCalc)
 
-        
+        //calculate leverage and pass data back into mainTab (has to be timer to load data)
         setTimeout(() => {
             var avg =getContract();
             var setLevCalc = Math.ceil(avg/marginUsdQ)
             setLeverage(setLevCalc)
-
+            props.onCalculate([cont,lev,stoploss])
         }, "1 second")
-   
+        
+  
     }
     
     function getContract(){
@@ -91,6 +95,9 @@ export const CalculatorTab = () => {
         }
         return contQ;
     }
+
+ 
+
 
     return(
         
@@ -135,19 +142,19 @@ export const CalculatorTab = () => {
                     <p>Contract <i className="fa-solid fa-copy"></i></p>
                     {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
                     
-                    <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
+                    <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p ref={cont} className='placeHolderOutput'>{contract}</p></button>
                     
                 </div>
                 
                 <div>
                     
                     <p>Port Risk <i className="fa-solid fa-chart-line"></i></p>
-                    <p className='placeHolderOutput'>{portAtRisk}</p>
+                    <p ref={lev} className='placeHolderOutput'>{portAtRisk}</p>
                 </div>
 
                 <div >
                     <p>leverage <i className="fa-solid fa-rocket"></i></p>
-                    <p className='placeHolderOutput'>{leverage}</p>
+                    <p ref={stoploss} className='placeHolderOutput'>{leverage}</p>
                 </div>
                                     
             </div>
