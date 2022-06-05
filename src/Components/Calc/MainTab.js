@@ -10,6 +10,7 @@ function MainTab(){
     
     
     const [data, getData]= useState([])
+    
     const fetchData=(data)=>{ 
         getData(data)
 

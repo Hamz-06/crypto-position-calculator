@@ -1,20 +1,22 @@
 import './ChartTab.css'
 import './MainTab.css'
-import { priceData } from './PriceData';
-import { useEffect } from 'react';
+import { GetCandles} from './PriceData';
+import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
+import date from 'date-and-time';
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
 
 export const ChartTab = props => {
 
     
-    console.log(props.reload)
+    // console.log(props.reload)
 
     const chartContainerRef = useRef();
-
     
+
+
     useEffect(
         () => {
             const handleResize = () => {
@@ -58,7 +60,8 @@ export const ChartTab = props => {
             chart.timeScale().fitContent();
 
             const newSeries = chart.addCandlestickSeries()
-            newSeries.setData(priceData);
+
+            fetchCandle(newSeries);
 
             addMarkers(newSeries)
 
@@ -76,16 +79,16 @@ export const ChartTab = props => {
 
     function addMarkers(newSeries){
 
-        newSeries.setMarkers([{
+        // newSeries.setMarkers([{
 
-            time: priceData[priceData.length-1].time,
-            position: 'belowBar',
-            color: 'green',
-            shape: 'arrowUp',
-            text: 'buy',
-            id: 'id4',
+        //     time: priceData[priceData.length-1].time,
+        //     position: 'belowBar',
+        //     color: 'green',
+        //     shape: 'arrowUp',
+        //     text: 'buy',
+        //     id: 'id4',
 
-        }]);
+        // }]);
 
         const priceLine = newSeries.createPriceLine({ 
             price: 210.0,
@@ -100,7 +103,28 @@ export const ChartTab = props => {
 
 
 
+    function fetchCandle(newSeries){
+       
+        GetCandles()
+        .then(Resp=>{
+            const candles=Resp.data.map((d)=>({
 
+                'time':d[0]/1000,
+                'open':d[1],
+                'high':d[2],
+                'low':d[3],
+                'close':d[4]
+                
+            }))
+
+            newSeries.setData(candles)
+            
+        })
+        
+        
+        
+
+    }
 
 
     const size = {
@@ -110,8 +134,7 @@ export const ChartTab = props => {
     }
 
 
-    
-
+  
 
     return (
         <>
