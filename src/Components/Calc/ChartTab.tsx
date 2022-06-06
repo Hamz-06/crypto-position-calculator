@@ -1,6 +1,6 @@
 import './ChartTab.css'
 import './MainTab.css'
-import { GetCandles} from './PriceData';
+import { GetCandles } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
@@ -13,8 +13,9 @@ export const ChartTab = props => {
     
     // console.log(props.reload)
 
+   
     const chartContainerRef = useRef();
-    
+
 
 
     useEffect(
@@ -60,7 +61,7 @@ export const ChartTab = props => {
             chart.timeScale().fitContent();
 
             const newSeries = chart.addCandlestickSeries()
-
+            //FETCH OLD AND LIVE CANDLES 
             fetchCandle(newSeries);
 
             addMarkers(newSeries)
@@ -104,24 +105,40 @@ export const ChartTab = props => {
 
 
     function fetchCandle(newSeries){
-       
+       //taken fron priceData.js 
         GetCandles()
-        .then(Resp=>{
-            const candles=Resp.data.map((d)=>({
+            .then(Resp=>{
+                const candles=Resp.data.map((d)=>({
 
-                'time':d[0]/1000,
-                'open':d[1],
-                'high':d[2],
-                'low':d[3],
-                'close':d[4]
-                
-            }))
+                    'time':d[0]/1000,
+                    'open':d[1],
+                    'high':d[2],
+                    'low':d[3],
+                    'close':d[4]
+                    
+                }))
+                newSeries.setData(candles)
+            })
 
-            newSeries.setData(candles)
-            
-        })
-        
-        
+        //taken fron priceData.js
+        const conn = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@kline_30m"); 
+        conn.onmessage = function (event){
+          var liveData =JSON.parse(event.data)
+      
+          var editLiveData = {
+            time:liveData.k.t/1000,
+            open:liveData.k.o,
+            high:liveData.k.h,
+            low:liveData.k.l,
+            close:liveData.k.c
+      
+          }
+          newSeries.update(editLiveData)
+          
+          return 
+          
+        }
+
         
 
     }

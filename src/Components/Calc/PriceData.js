@@ -5,8 +5,10 @@ export const GetCandles=()=>{
 
 
     
-  return axios.get('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h')
+  return axios.get('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=30m')
 
 }
+
+
 
 
