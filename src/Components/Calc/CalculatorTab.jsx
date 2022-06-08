@@ -61,6 +61,7 @@ export const CalculatorTab = (props) => {
             setPortAtRisk('')
             setLeverage('')
             setButton(true)
+            props.onCalculate([])
            
             return;
             

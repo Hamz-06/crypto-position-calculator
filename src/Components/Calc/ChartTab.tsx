@@ -1,20 +1,24 @@
 import './ChartTab.css'
-import './MainTab.css'
+
 import { GetCandles } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-import date from 'date-and-time';
+
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
 
 export const ChartTab = props => {
 
     
-    // console.log(props.reload)
-
-   
+    
+    
     const chartContainerRef = useRef();
+    var newSeries = useRef(null);
+    const purchasePrice = useRef(null);
+    const stopLossPrice = useRef(null);
+    const getLivePrice = useRef(null);
+    
 
 
 
@@ -23,10 +27,10 @@ export const ChartTab = props => {
             const handleResize = () => {
                 chart.applyOptions(
                     {
-                    width: (chartContainerRef as any).current.clientWidth,
-                    height: (chartContainerRef.current as any).clientHeight,
-                });
-        
+                        width: (chartContainerRef as any).current.clientWidth,
+                        height: (chartContainerRef.current as any).clientHeight,
+                    });
+
             };
             const chartOptions = {
                 handleScale: {
@@ -60,11 +64,12 @@ export const ChartTab = props => {
             const chart = createChart(chartContainerRef.current, chartOptions);
             chart.timeScale().fitContent();
 
-            const newSeries = chart.addCandlestickSeries()
+            newSeries.current = chart.addCandlestickSeries()
             //FETCH OLD AND LIVE CANDLES 
-            fetchCandle(newSeries);
+            fetchCandle();
 
-            addMarkers(newSeries)
+            
+            //addMarkers(newSeries);
 
 
             window.addEventListener('resize', handleResize);
@@ -74,84 +79,116 @@ export const ChartTab = props => {
                 chart.remove();
             };
 
-        },
-
-    );
-
-    function addMarkers(newSeries){
-
-        // newSeries.setMarkers([{
-
-        //     time: priceData[priceData.length-1].time,
-        //     position: 'belowBar',
-        //     color: 'green',
-        //     shape: 'arrowUp',
-        //     text: 'buy',
-        //     id: 'id4',
-
-        // }]);
-
-        const priceLine = newSeries.createPriceLine({ 
-            price: 210.0,
-            color: 'green',
-            lineWidth: 2,
-            lineStyle: null,
-            axisLabelVisible: true,
-            title: 'P/L 500',
-            lineVisible:true
-        });
-    }
+        }, []);
 
 
+        useEffect(()=>{
 
-    function fetchCandle(newSeries){
-       //taken fron priceData.js 
+            //run and load if data is present and priceLine does not exist
+            if (props.reload.length!==0 && purchasePrice.current===null &&stopLossPrice.current===null){
+                
+                //create price lines (current price) - subject to change
+                purchasePrice.current = newSeries.current.createPriceLine({
+                    lineWidth: 2,
+                    lineStyle: null,
+                    axisLabelVisible: false,
+                    lineVisible: true
+                });
+                //create stop loss price
+                stopLossPrice.current = newSeries.current.createPriceLine({
+                    lineWidth: 2,
+                    lineStyle: null,
+                    axisLabelVisible: false,
+                    lineVisible: true
+                })
+
+            //remove if data is zero and price line exists 
+            }else if(props.reload.length===0 && purchasePrice.current!==null && stopLossPrice.current!==null){
+                
+                newSeries.current.removePriceLine(purchasePrice.current)
+                purchasePrice.current =null
+
+                newSeries.current.removePriceLine(stopLossPrice.current)
+                stopLossPrice.current=null
+                
+            }
+            //update price and stop loss if new data is fetched( first checks if data is not null)
+            if (purchasePrice.current!=null &&stopLossPrice.current!=null){
+        
+                
+                purchasePrice.current.applyOptions({
+                    color:'pink',
+                    price: getLivePrice.current
+                })
+
+                stopLossPrice.current.applyOptions({
+                    color:'pink',
+                    price: createStopLoss(getLivePrice.current)
+                })
+                
+            }
+
+            
+
+        },[props.reload])
+
+
+        function createStopLoss(currentPrice ){
+            
+            return 32000
+
+        }
+
+
+
+
+
+
+    function fetchCandle() {
+        //taken fron priceData.js 
         GetCandles()
-            .then(Resp=>{
-                const candles=Resp.data.map((d)=>({
+            .then(Resp => {
+                const candles = Resp.data.map((d) => ({
 
-                    'time':d[0]/1000,
-                    'open':d[1],
-                    'high':d[2],
-                    'low':d[3],
-                    'close':d[4]
-                    
+                    'time': d[0] / 1000,
+                    'open': d[1],
+                    'high': d[2],
+                    'low': d[3],
+                    'close': d[4]
+
                 }))
-                newSeries.setData(candles)
+                newSeries.current.setData(candles)
             })
 
         //taken fron priceData.js
-        const conn = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@kline_30m"); 
-        conn.onmessage = function (event){
-          var liveData =JSON.parse(event.data)
-      
-          var editLiveData = {
-            time:liveData.k.t/1000,
-            open:liveData.k.o,
-            high:liveData.k.h,
-            low:liveData.k.l,
-            close:liveData.k.c
-      
-          }
-          newSeries.update(editLiveData)
-          
-          return 
-          
+        const conn = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@kline_30m");
+        conn.onmessage = function (event) {
+            var liveData = JSON.parse(event.data)
+
+            var editLiveData = {
+                time: liveData.k.t / 1000,
+                open: liveData.k.o,
+                high: liveData.k.h,
+                low: liveData.k.l,
+                close: liveData.k.c
+
+            }
+            getLivePrice.current=editLiveData.close;
+            
+            newSeries.current.update(editLiveData)
+            return;
         }
-
-        
-
     }
 
 
     const size = {
 
-        width: '80%',
-        height: '50%'
+        width: '90%',
+        height: '70%'
     }
 
 
-  
+
 
     return (
         <>

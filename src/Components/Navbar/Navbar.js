@@ -5,10 +5,10 @@ class Navbar extends Component{
 
     
     state = {menuClicked:false,
-            settingClicked:false,
-            chartClicked:false
-        }
-
+        settingClicked:false,
+        chartClicked:true
+    }
+    
     menuClicked=()=>{
         this.setState({menuClicked:!this.state.menuClicked})
     }
@@ -18,6 +18,7 @@ class Navbar extends Component{
     }
     chartClicked=()=>{
         this.setState({chartClicked:!this.state.chartClicked})
+        this.props.onc(this.state.chartClicked)
     }
         
 
