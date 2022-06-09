@@ -47,25 +47,25 @@ class Navbar extends Component{
                     
                 </div>
 
-                <div className='menu-icon container' onClick={this.settingClicked}>
+                {/* <div className='menu-icon container' onClick={this.settingClicked}>
                     <div className='menu-icon'>
                         <i className={'fa-solid fa-gear'} ></i>
                     </div>
                     
-                </div>
+                </div> */}
 
                 <div className='menu-icon container' onClick={this.chartClicked}>
                     <div className='menu-icon'>
                         <i className={this.state.chartClicked ? 'fa-solid fa-toggle-on': 'fa-solid fa-toggle-off'} ></i>
                     </div>
                 </div>
-
+{/* 
                 <div className='menu-icon container'>
                     <div className='menu-icon'>
                         <i className={'login'}>Login</i>
                     </div>
                     
-                </div>
+                </div> */}
 
           
 

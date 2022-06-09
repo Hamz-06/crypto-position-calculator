@@ -214,7 +214,8 @@ export const ChartTab = props => {
     return (
         <>
             <div className='extraInfoBox'>
-                <h1>signa</h1>
+                <h1>BTC Chart</h1>
+                <p>(add to portfolio and Long/short feature coming soon v3 soon)</p>
          
             </div>
 
