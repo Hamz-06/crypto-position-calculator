@@ -17,6 +17,7 @@ export const ChartTab = props => {
     var newSeries = useRef(null);
     const purchasePrice = useRef(null);
     const stopLossPrice = useRef(null);
+    const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
     
 
@@ -89,6 +90,7 @@ export const ChartTab = props => {
                 
                 //create price lines (current price) - subject to change
                 purchasePrice.current = newSeries.current.createPriceLine({
+                    color:'white',
                     lineWidth: 2,
                     lineStyle: null,
                     axisLabelVisible: false,
@@ -96,51 +98,70 @@ export const ChartTab = props => {
                 });
                 //create stop loss price
                 stopLossPrice.current = newSeries.current.createPriceLine({
+                    color:'red',
                     lineWidth: 2,
                     lineStyle: null,
-                    axisLabelVisible: false,
+                    axisLabelVisible: true,
+                    lineVisible: true
+                })
+
+                //create take profit
+                takeProfPrice.current = newSeries.current.createPriceLine({
+                    color:'green',
+                    lineWidth: 2,
+                    lineStyle: null,
+                    axisLabelVisible: true,
                     lineVisible: true
                 })
 
             //remove if data is zero and price line exists 
-            }else if(props.reload.length===0 && purchasePrice.current!==null && stopLossPrice.current!==null){
+            }else if(props.reload.length===0 && purchasePrice.current!==null && stopLossPrice.current!==null && takeProfPrice.current!==null){
                 
                 newSeries.current.removePriceLine(purchasePrice.current)
                 purchasePrice.current =null
 
                 newSeries.current.removePriceLine(stopLossPrice.current)
                 stopLossPrice.current=null
+
+                newSeries.current.removePriceLine(takeProfPrice.current)
+                takeProfPrice.current=null
                 
             }
             //update price and stop loss if new data is fetched( first checks if data is not null)
-            if (purchasePrice.current!=null &&stopLossPrice.current!=null){
+            if (purchasePrice.current!=null && stopLossPrice.current!=null && takeProfPrice.current!=null){
         
                 
                 purchasePrice.current.applyOptions({
-                    color:'pink',
+                    
                     price: getLivePrice.current
                 })
-
-                stopLossPrice.current.applyOptions({
-                    color:'pink',
-                    price: createStopLoss(getLivePrice.current)
-                })
                 
-            }
+                stopLossPrice.current.applyOptions({
+                    
+                    price: createStopLoss(props.reload[0], parseInt(getLivePrice.current))
+                })
 
-            
+                takeProfPrice.current.applyOptions({
+                    price: createTakeProf(props.reload[1],parseInt(getLivePrice.current))
+                    
+                })
+               
+            }
 
         },[props.reload])
 
-
-        function createStopLoss(currentPrice ){
-            
-            return 32000
-
+        function createTakeProf(takeProfPercent, currentPrice){
+   
+            var getTakePrice = currentPrice+((takeProfPercent/100)*currentPrice)
+            return getTakePrice
         }
-
-
-
+        
+        
+        function createStopLoss(stopLossPercent, currentPrice){
+            var getStopPrice = currentPrice - ((stopLossPercent/100)*currentPrice)
+            // console.log(getStopPrice + "  --sl-")
+            return getStopPrice
+        }
 
 
 
@@ -192,6 +213,11 @@ export const ChartTab = props => {
 
     return (
         <>
+            <div className='extraInfoBox'>
+                <h1>signa</h1>
+         
+            </div>
+
             <div className="chartBorder" style={size}>
 
                 <div ref={chartContainerRef} style={{
@@ -201,6 +227,8 @@ export const ChartTab = props => {
                 </div>
 
             </div>
+
+      
 
         </>
     )

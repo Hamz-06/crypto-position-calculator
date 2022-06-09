@@ -7,10 +7,6 @@
 
 .logoBox h1{
     
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     padding: 3%;
 }
 
@@ -78,6 +74,7 @@ button {
     transition: 0s
   }
 
+
 .outerBox input{
     /* border: 1px solid red;
     box-sizing: border-box;
@@ -85,6 +82,7 @@ button {
     text-align: center;
     display: block;
     margin: 0 auto; */
+    
 
     padding: 7px;
     font-size: 18px;
@@ -101,10 +99,41 @@ button {
     text-align: center;
 }
 
+
+
+.outerBox > .inputBox,.logoBox,.outputBox {
+    
+ 
+    background-color: #625a97;
+    border: 1px solid #1e1c2f;
+    width: 90%;
+    margin: 6px;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: bold;
+    height: 13%;
+ 
+    
+
+}
+
+.inputBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.logoBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
 .outerBox input[type=number]:focus {
     
     outline: none;
 }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -115,42 +144,12 @@ input::-webkit-inner-spin-button {
     color: #1e1c2f;
 }
 
-/* .fa-bitcoin-sign{
-    animation: fa-bitcoin-sign-spin infinite 20s linear;
-    color: #FFD700;
-}
-
-@keyframes fa-bitcoin-sign-spin {
-    from{
-        transform: rotate(0deg);
-    }to{
-        transform: rotate(360deg);
-    }
-} */
-.outerBox > .inputBox,.logoBox,.outputBox {
-    
-    background-color: #625a97;
-    border: 1px solid #1e1c2f;
-    width: 90%;
-    margin: 6px;
-    border-radius: 15px;
-    text-align: center;
-    font-weight: bold;
-    flex: 0.15 0 0;
-    
-
-    /* border-radius: 26px;
-    background: #403b63;
-    box-shadow:  5px -5px 0px #1e1c2f,
-             -5px 5px 0px #625a97; */
-}
-
 
 @media screen and (max-width:960px){
 
 
     .placeHolderOutput{
-        font-size: small;
+        font-size: medium;
     }
     .logoBox h1{
         font-size: larger;

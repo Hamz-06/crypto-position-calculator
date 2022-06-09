@@ -3,63 +3,53 @@ import { useState } from 'react';
 import './CalculatorTab.css'
 export const CalculatorTab = (props) => {
 
-    const cont = useRef()
-    const lev = useRef()
-    const stoploss = useRef()
 
-    const [price, setPrice] = useState('');
-    const [marginUsd, setmarginUsd] = useState('');
-    const [riskSizeUsd, setriskSizeUsd] = useState('');
-    const [stopLossPercent, setStopLossPercent] = useState('');
+    var marginUsd = useRef('');
+    var riskSizeUsd = useRef('');
+    var stopLossPercent = useRef('');
+    var takeProfPercent = useRef('')
+    
     const [contract, setContract] = useState('');
-    const [portAtRisk, setPortAtRisk] = useState('');
     const [leverage, setLeverage] = useState('');
     const [button, setButton] = useState(true);
 
     
 
-    function updatePortfolioPrice(event){
+    function updatePortfolio(event){
         
-  
+        
 
         switch(event.target.className) {
             case 'inputPort':
-                setPrice(event.target.value);
+             takeProfPercent.current = event.target.value;
                 
                 break;
             case 'marginUsd':
                  
-                var getMarginUsd = event.target.value;
-                setmarginUsd(getMarginUsd);
+                
+                marginUsd.current = event.target.value;
 
                 break;
             case 'riskSizeUsd':
-                var getRiskSizeUsd = event.target.value;
-                setriskSizeUsd(getRiskSizeUsd);
+              
+                riskSizeUsd.current = event.target.value;
 
                 break;
             case 'stopLossPercent':
-                var getStopLossPercent = event.target.value;
-                setStopLossPercent(getStopLossPercent);
+               
+                stopLossPercent.current = event.target.value;
                 break;
         
         }
-        var priceQ = document.getElementsByClassName("inputPort")[0].value;
-        var marginUsdQ = document.getElementsByClassName("marginUsd")[0].value;
-        var riskSizeQ = document.getElementsByClassName("riskSizeUsd")[0].value;
-        var stopLossQ = document.getElementsByClassName("stopLossPercent")[0].value;
-        
-        
-        
-        
-        
+ 
 
-        //if margin percent and price is not empty we will make margin usd
-        if(priceQ==="" || marginUsdQ==="" || riskSizeQ==="" || stopLossQ===""){
+
+        //if margin percent and takeProfPercent is not empty we will make margin usd
+        if (takeProfPercent.current==="" || marginUsd.current==="" || riskSizeUsd.current==="" || stopLossPercent.current===""){
             // console.log("empty")
-            setContract('')
-            setPortAtRisk('')
-            setLeverage('')
+            
+
+
             setButton(true)
             props.onCalculate([])
            
@@ -67,72 +57,62 @@ export const CalculatorTab = (props) => {
             
         }
         
-        var setContractCalc = riskSizeQ/(stopLossQ/100)
+        
+        var setContractCalc = riskSizeUsd.current/(stopLossPercent.current/100)
         setContractCalc = setContractCalc.toFixed(2)
         setContract(setContractCalc)
 
-        var setPortRiskCalc = (riskSizeQ/priceQ)*100
-        setPortRiskCalc=setPortRiskCalc.toFixed(2)
-        setPortAtRisk(setPortRiskCalc)
+
 
         //calculate leverage and pass data back into mainTab (has to be timer to load data)
-        setTimeout(() => {
-            var avg =getContract();
-            var setLevCalc = Math.ceil(avg/marginUsdQ)
-            setLeverage(setLevCalc)
-            props.onCalculate([cont,lev,stoploss])
-        }, "1 second")
         
-  
-    }
-    
-    function getContract(){
-        
-        var contQ = document.getElementsByTagName('p')[5].innerText;
-        if(contQ===""){
+        if(setContractCalc===""){
             setButton(true);
         }else{
             setButton(false)
         }
-        return contQ;
-    }
 
- 
+        
+        var setLevCalc = Math.ceil(setContractCalc/marginUsd.current)
+        setLeverage(setLevCalc)
+
+        props.onCalculate([stopLossPercent.current,takeProfPercent.current])
+        
+  
+    }
+    
+
 
 
     return(
         
         <>       
         
-        <div className="logoBox">
+            <div className="logoBox">
                 <h1>Position Size Calculator For Crypto <i className="fa-solid fa-bitcoin-sign"></i></h1>
     
             </div>
 
-            <div className="inputBox">
-                <p>Portfolio Size In USD <i className="fa-solid fa-wallet"></i></p>
-                
-                <input type="number" className='inputPort' onChange={updatePortfolioPrice} value={price}/>
-                
-            </div>
+
 
             <div className="inputBox">
                 <p>Margin Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                <input type="number"  onChange={updatePortfolioPrice} className="marginUsd" value={marginUsd}/>
-                
-                
+                <input type="number"  onChange={updatePortfolio} className="marginUsd" value={marginUsd.current}/>
             </div>
 
             <div className="inputBox">
                 <p>Risk Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                <input type="number" onChange={updatePortfolioPrice} className='riskSizeUsd' value={riskSizeUsd}/>
-                
-
+                <input type="number" onChange={updatePortfolio} className='riskSizeUsd' value={riskSizeUsd.current}/>
             </div>
 
             <div className="inputBox">
                 <p>Stop Loss In Percent <i className="fa-solid fa-percent"></i></p>
-                <input type="number" onChange={updatePortfolioPrice} className='stopLossPercent' value={stopLossPercent}/>
+                <input type="number" onChange={updatePortfolio} className='stopLossPercent' value={stopLossPercent.current}/>
+            </div>
+            
+            <div className="inputBox">
+                <p>Take Profit In Percent <i className="fa-solid fa-percent"></i></p>
+                <input type="number" className='inputPort' onChange={updatePortfolio} value= {takeProfPercent.current}/>                
             </div>
 
             <div className="outputBox">
@@ -143,19 +123,15 @@ export const CalculatorTab = (props) => {
                     <p>Contract <i className="fa-solid fa-copy"></i></p>
                     {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
                     
-                    <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p ref={cont} className='placeHolderOutput'>{contract}</p></button>
+                    <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
                     
                 </div>
                 
-                <div>
-                    
-                    <p>Port Risk <i className="fa-solid fa-chart-line"></i></p>
-                    <p ref={lev} className='placeHolderOutput'>{portAtRisk}</p>
-                </div>
+
 
                 <div >
                     <p>leverage <i className="fa-solid fa-rocket"></i></p>
-                    <p ref={stoploss} className='placeHolderOutput'>{leverage}</p>
+                    <p className='placeHolderOutput'>{leverage}</p>
                 </div>
                                     
             </div>

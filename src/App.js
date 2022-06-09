@@ -6,7 +6,7 @@ import './Components/Calc/MainTab.css';
 
 import { CalculatorTab } from './Components/Calc/CalculatorTab';
 import { ChartTab } from './Components/Calc/ChartTab.tsx';
-import { render } from '@testing-library/react';
+import {Footer} from './Components/Footer/Footer.tsx'
 
 function App() {
 
@@ -61,24 +61,15 @@ function App() {
 
         </div>
 
-
-
         {
 
           ShowChart()
 
         }
 
-
-
-
-
       </div>
 
-
-
-
-
+      <Footer />
 
 
 
