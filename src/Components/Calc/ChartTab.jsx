@@ -1,10 +1,10 @@
 import './ChartTab.css'
-
+import React from 'react';
 import { GetCandles } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-
+import { useSelector, useDispatch } from 'react-redux'
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
 
@@ -19,7 +19,7 @@ export const ChartTab = props => {
     const stopLossPrice = useRef(null);
     const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
-    
+    const chartClicked = useSelector((state) => state.counter.value)
 
 
 
@@ -28,8 +28,8 @@ export const ChartTab = props => {
             const handleResize = () => {
                 chart.applyOptions(
                     {
-                        width: (chartContainerRef as any).current.clientWidth,
-                        height: (chartContainerRef.current as any).clientHeight,
+                        width: (chartContainerRef).current.clientWidth,
+                        height: (chartContainerRef.current).clientHeight,
                     });
 
             };
@@ -58,8 +58,8 @@ export const ChartTab = props => {
                 timeScale: {
                     borderColor: '#485c7b',
                 },
-                width: (chartContainerRef as any).current.clientWidth,
-                height: (chartContainerRef.current as any).clientHeight,
+                width: (chartContainerRef ).current.clientWidth,
+                height: (chartContainerRef.current).clientHeight,
             };
 
             const chart = createChart(chartContainerRef.current, chartOptions);
@@ -213,6 +213,7 @@ export const ChartTab = props => {
 
     return (
         <>
+        <div className="outerBox" style={chartClicked ? { display: '' } : { display: 'none' }}>
             <div className='extraInfoBox'>
                 <h1>BTC Chart</h1>
                 <p>(add to portfolio and Long/short feature coming soon v3 soon)</p>
@@ -228,6 +229,8 @@ export const ChartTab = props => {
                 </div>
 
             </div>
+
+        </div>
 
       
 

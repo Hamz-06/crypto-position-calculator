@@ -1,48 +1,62 @@
 import React, {Component} from 'react';
 
-import './Navbar.css'
-class Navbar extends Component{
 
+import './Navbar.css'
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from '../Storage/Actions'
+
+function Navbar(){
+
+    const dispatch = useDispatch();
+    const chartClick = useSelector((state) => state.counter.value)
+
+    const [menuClick, updateMenuClick] = useState(false)
+    const [settingClick, updateSettingclick] = useState(false)
     
-    state = {menuClicked:false,
-        settingClicked:false,
-        chartClicked:true
-    }
     
-    menuClicked=()=>{
-        this.setState({menuClicked:!this.state.menuClicked})
+    
+    const menuClicked=()=>{
+        // this.setState({menuClicked:!this.state.menuClicked}) 
+        updateMenuClick(!menuClick)
+        
     }
-    settingClicked =()=>{
-        this.setState({settingClicked:!this.state.settingClicked})
-        console.log(this.state.settingClicked)
+    const settingClicked =()=>{
+        // this.setState({settingClicked:!this.state.settingClicked})
+        updateSettingclick(!settingClick)
     }
-    chartClicked=()=>{
-        this.setState({chartClicked:!this.state.chartClicked})
-        this.props.onc(this.state.chartClicked)
-    }
+
+
+      
+ 
+
+ 
+    
+
+
         
 
-    render(){
-        const Value = [
-            {
-                title:'MetaMask Connect (Coming Soon)',
-                url:'google.com',
-                cName:'nav-links'
-            },
-            {
-                title:'Portfolio Tracker (Coming Soon)',
-                url:'google.com',
-                cName:'nav-links'
-            }
-        ]        
+
+    const Value = [
+        {
+            title:'MetaMask Connect (Coming Soon)',
+            url:'google.com',
+            cName:'nav-links'
+        },
+        {
+            title:'Portfolio Tracker (Coming Soon)',
+            url:'google.com',
+            cName:'nav-links'
+        }
+    ]        
 
         return(
             
             <nav className="NavbarItems">
 
-                <div className='menu-icon container' onClick={this.menuClicked}>
+                <div className='menu-icon container' onClick={menuClicked}>
                     <div className='menu-icon' >
-                        <i className={this.state.menuClicked ? 'fas fa-times':'fas fa-bars'}></i>
+                        <i className={menuClick ? 'fas fa-times':'fas fa-bars'}></i>
                     </div>
                     
                 </div>
@@ -54,11 +68,14 @@ class Navbar extends Component{
                     
                 </div> */}
 
-                <div className='menu-icon container' onClick={this.chartClicked}>
+                <div className='menu-icon container' onClick={()=>dispatch(decrement(!chartClick))}>
                     <div className='menu-icon'>
-                        <i className={this.state.chartClicked ? 'fa-solid fa-toggle-on': 'fa-solid fa-toggle-off'} ></i>
+                        {console.log(chartClick)}
+                        <i className={chartClick ? 'fa-solid fa-toggle-on': 'fa-solid fa-toggle-off'} ></i>
                     </div>
                 </div>
+                <button className="test" style={{width:50, height:50, backgroundColor:"red"}} ></button>
+
 {/* 
                 <div className='menu-icon container'>
                     <div className='menu-icon'>
@@ -74,7 +91,7 @@ class Navbar extends Component{
                 
             
 
-                <ul className={this.state.menuClicked?'nav-menu active':'nav-menu'}>     
+                <ul className={menuClick?'nav-menu active':'nav-menu'}>     
                     { Value.map((item, index)=>{
                         return(
                             <li key={index}>
@@ -88,6 +105,6 @@ class Navbar extends Component{
                
             </nav>
         )
-    }
+    
 }
 export default Navbar;

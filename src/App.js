@@ -5,8 +5,9 @@ import React, { useEffect, useState, useMemo } from 'react';
 import './Components/Calc/MainTab.css';
 
 import { CalculatorTab } from './Components/Calc/CalculatorTab';
-import { ChartTab } from './Components/Calc/ChartTab.tsx';
-import {Footer} from './Components/Footer/Footer.tsx'
+import { ChartTab } from './Components/Calc/ChartTab.jsx';
+import {Footer} from './Components/Footer/Footer.jsx'
+
 
 function App() {
 
@@ -15,8 +16,7 @@ function App() {
   // console.log(num); 
 
   const [calcData, getCalcData] = useState([])
-  const [toggle, getToggle] = useState()
-
+  
 
 
   const fetchData = (data) => { //fetch data from calc and pass to chart
@@ -24,49 +24,26 @@ function App() {
   }
 
 
-  //get toggle information, returns true or false (display chart)
-  const FetchChartToggle = (rettog) => {
-
-    getToggle(rettog)
-  }
-
-
-  //display chart using the toggle, also passes information from calculator
-  const ShowChart = () => {
-
-    return (
-
-      <div className="outerBox" style={toggle ? { display: 'none' } : { display: '' }}>
-        <ChartTab reload={calcData} />
-      </div>
-    )
-
-  }
-
+  
 
 
   return (
     <div className="App">
 
 
-      <Navbar onc={FetchChartToggle} />
-
+      <Navbar/>
+      
 
       <div className="container">
+            
+        <React.StrictMode>
+          <CalculatorTab onCalculate={fetchData} />
+        </React.StrictMode>
 
-        <div className="outerBox">
-          <React.StrictMode>
-            <CalculatorTab onCalculate={fetchData} />
-          </React.StrictMode>
 
-        </div>
+          <ChartTab reload={calcData} />
 
-        {
-
-          ShowChart()
-
-        }
-
+        
       </div>
 
       <Footer />

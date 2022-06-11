@@ -87,6 +87,7 @@ export const CalculatorTab = (props) => {
     return(
         
         <>       
+        <div className="outerBox">
         
             <div className="logoBox">
                 <h1>Position Size Calculator For Crypto <i className="fa-solid fa-bitcoin-sign"></i></h1>
@@ -123,7 +124,7 @@ export const CalculatorTab = (props) => {
                     <p>Contract <i className="fa-solid fa-copy"></i></p>
                     {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
                     
-                    <button hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
+                    <button className="copyButton" hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
                     
                 </div>
                 
@@ -135,6 +136,7 @@ export const CalculatorTab = (props) => {
                 </div>
                                     
             </div>
+        </div>
         </>
         )
 };
