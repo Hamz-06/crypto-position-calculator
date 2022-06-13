@@ -20,29 +20,47 @@
 } */
 
 
-.outerBox>.extraInfoBox,.chartBorder{
+.outerBox>.chartBorder,.infoBox{
 
     background-color: #625a97;
     border: 1px solid #1e1c2f;
     width: 90%;
     margin: 6px;
     border-radius: 15px;
-    height: 13%;
+    height: 20%;
     
-    text-align: center;
+    
     font-weight: bold;
     margin: 6px;
 }
-.extraInfoBox{
-    
-
+.infoBox{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    
 
+    padding: 2%;
+    
 }
+
+.infoBox>.addToPort,.positionType{
+
+  
+    width: 100%;
+    border: 1px solid #1e1c2f;
+    margin: 2%;
+    
+}
+
+.positionType{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.radio{
+    
+    margin: 2%;
+    border: 1px solid #1e1c2f;
+    text-align: center;
+}
+
 .chartBorder{
     padding: 2%;
     z-index: 0;

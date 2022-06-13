@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import Reducers from './Actions'
-
+import Reducers from './Chartclicked_data'
+//import Reducers from "./Calculator_data";
 export const Store = configureStore({
   reducer: {
-    counter: Reducers,
+    chartClicked: Reducers,
+
     
   },
 })

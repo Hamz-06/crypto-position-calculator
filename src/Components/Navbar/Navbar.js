@@ -4,12 +4,12 @@ import React, {Component} from 'react';
 import './Navbar.css'
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from '../Storage/Actions'
+import { displayChart } from '../Storage/Chartclicked_data'
 
 function Navbar(){
 
     const dispatch = useDispatch();
-    const chartClick = useSelector((state) => state.counter.value)
+    const chartClick = useSelector((state) => state.chartClicked.value)
 
     const [menuClick, updateMenuClick] = useState(false)
     const [settingClick, updateSettingclick] = useState(false)
@@ -27,14 +27,6 @@ function Navbar(){
     }
 
 
-      
- 
-
- 
-    
-
-
-        
 
 
     const Value = [
@@ -68,9 +60,9 @@ function Navbar(){
                     
                 </div> */}
 
-                <div className='menu-icon container' onClick={()=>dispatch(decrement(!chartClick))}>
+                <div className='menu-icon container' onClick={()=>dispatch(displayChart(!chartClick))}>
                     <div className='menu-icon'>
-                        {console.log(chartClick)}
+                        
                         <i className={chartClick ? 'fa-solid fa-toggle-on': 'fa-solid fa-toggle-off'} ></i>
                     </div>
                 </div>

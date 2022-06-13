@@ -19,8 +19,9 @@ export const CalculatorTab = (props) => {
         
         
 
-        switch(event.target.className) {
+        switch(event.target.id) {
             case 'inputPort':
+                console.log(event.target.id)
              takeProfPercent.current = event.target.value;
                 
                 break;
@@ -98,22 +99,22 @@ export const CalculatorTab = (props) => {
 
             <div className="inputBox">
                 <p>Margin Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                <input type="number"  onChange={updatePortfolio} className="marginUsd" value={marginUsd.current}/>
+                <input type="number"  onChange={updatePortfolio} className="calc_input" id ='marginUsd' value={marginUsd.current}/>
             </div>
 
             <div className="inputBox">
                 <p>Risk Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                <input type="number" onChange={updatePortfolio} className='riskSizeUsd' value={riskSizeUsd.current}/>
+                <input type="number" onChange={updatePortfolio} className='calc_input' id="riskSizeUsd" value={riskSizeUsd.current}/>
             </div>
 
             <div className="inputBox">
                 <p>Stop Loss In Percent <i className="fa-solid fa-percent"></i></p>
-                <input type="number" onChange={updatePortfolio} className='stopLossPercent' value={stopLossPercent.current}/>
+                <input type="number" onChange={updatePortfolio} className='calc_input' id="stopLossPercent" value={stopLossPercent.current}/>
             </div>
             
             <div className="inputBox">
                 <p>Take Profit In Percent <i className="fa-solid fa-percent"></i></p>
-                <input type="number" className='inputPort' onChange={updatePortfolio} value= {takeProfPercent.current}/>                
+                <input type="number" className='calc_input' onChange={updatePortfolio} id='inputPort' value= {takeProfPercent.current}/>                
             </div>
 
             <div className="outputBox">

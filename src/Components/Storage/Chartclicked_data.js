@@ -4,14 +4,11 @@ const initialState = {
   value: true,
 }
 
-
-
-
- const counterSlice = createSlice({
-  name: 'counter',
+ const chartClickedSlice = createSlice({
+  name: 'chartClicked',
   initialState,
   reducers: {
-    decrement: (state,action) => {
+    displayChart: (state,action) => {
       
       state.value = action.payload
     },
@@ -21,6 +18,6 @@ const initialState = {
 
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { displayChart } = chartClickedSlice.actions
 
-export default counterSlice.reducer
+export default chartClickedSlice.reducer

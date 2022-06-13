@@ -4,22 +4,26 @@ import { GetCandles } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
 
 export const ChartTab = props => {
 
-    
-    
-    
+
+
+
     const chartContainerRef = useRef();
     var newSeries = useRef(null);
     const purchasePrice = useRef(null);
     const stopLossPrice = useRef(null);
     const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
-    const chartClicked = useSelector((state) => state.counter.value)
+    const [positionType, setPosType] = useState('long')  //default
+    console.log(positionType)
+
+    const chartClicked = useSelector((state) => state.chartClicked.value)
 
 
 
@@ -58,7 +62,7 @@ export const ChartTab = props => {
                 timeScale: {
                     borderColor: '#485c7b',
                 },
-                width: (chartContainerRef ).current.clientWidth,
+                width: (chartContainerRef).current.clientWidth,
                 height: (chartContainerRef.current).clientHeight,
             };
 
@@ -69,7 +73,7 @@ export const ChartTab = props => {
             //FETCH OLD AND LIVE CANDLES 
             fetchCandle();
 
-            
+
             //addMarkers(newSeries);
 
 
@@ -83,85 +87,87 @@ export const ChartTab = props => {
         }, []);
 
 
-        useEffect(()=>{
+    useEffect(() => {
 
-            //run and load if data is present and priceLine does not exist
-            if (props.reload.length!==0 && purchasePrice.current===null &&stopLossPrice.current===null){
-                
-                //create price lines (current price) - subject to change
-                purchasePrice.current = newSeries.current.createPriceLine({
-                    color:'white',
-                    lineWidth: 2,
-                    lineStyle: null,
-                    axisLabelVisible: false,
-                    lineVisible: true
-                });
-                //create stop loss price
-                stopLossPrice.current = newSeries.current.createPriceLine({
-                    color:'red',
-                    lineWidth: 2,
-                    lineStyle: null,
-                    axisLabelVisible: true,
-                    lineVisible: true
-                })
+        //run and load if data is present and priceLine does not exist
+        if (props.reload.length !== 0 && purchasePrice.current === null && stopLossPrice.current === null) {
 
-                //create take profit
-                takeProfPrice.current = newSeries.current.createPriceLine({
-                    color:'green',
-                    lineWidth: 2,
-                    lineStyle: null,
-                    axisLabelVisible: true,
-                    lineVisible: true
-                })
+            //create price lines (current price) - subject to change
+            purchasePrice.current = newSeries.current.createPriceLine({
+                color: 'white',
+                lineWidth: 2,
+                lineStyle: null,
+                axisLabelVisible: false,
+                lineVisible: true
+            });
+            //create stop loss price
+            stopLossPrice.current = newSeries.current.createPriceLine({
+                color: 'red',
+                lineWidth: 2,
+                lineStyle: null,
+                axisLabelVisible: true,
+                lineVisible: true
+            })
+
+            //create take profit
+            takeProfPrice.current = newSeries.current.createPriceLine({
+                color: 'green',
+                lineWidth: 2,
+                lineStyle: null,
+                axisLabelVisible: true,
+                lineVisible: true
+            })
 
             //remove if data is zero and price line exists 
-            }else if(props.reload.length===0 && purchasePrice.current!==null && stopLossPrice.current!==null && takeProfPrice.current!==null){
-                
-                newSeries.current.removePriceLine(purchasePrice.current)
-                purchasePrice.current =null
+        } else if (props.reload.length === 0 && purchasePrice.current !== null && stopLossPrice.current !== null && takeProfPrice.current !== null) {
 
-                newSeries.current.removePriceLine(stopLossPrice.current)
-                stopLossPrice.current=null
+            newSeries.current.removePriceLine(purchasePrice.current)
+            purchasePrice.current = null
 
-                newSeries.current.removePriceLine(takeProfPrice.current)
-                takeProfPrice.current=null
-                
-            }
-            //update price and stop loss if new data is fetched( first checks if data is not null)
-            if (purchasePrice.current!=null && stopLossPrice.current!=null && takeProfPrice.current!=null){
-        
-                
-                purchasePrice.current.applyOptions({
-                    
-                    price: getLivePrice.current
-                })
-                
-                stopLossPrice.current.applyOptions({
-                    
-                    price: createStopLoss(props.reload[0], parseInt(getLivePrice.current))
-                })
+            newSeries.current.removePriceLine(stopLossPrice.current)
+            stopLossPrice.current = null
 
-                takeProfPrice.current.applyOptions({
-                    price: createTakeProf(props.reload[1],parseInt(getLivePrice.current))
-                    
-                })
-               
-            }
+            newSeries.current.removePriceLine(takeProfPrice.current)
+            takeProfPrice.current = null
 
-        },[props.reload])
-
-        function createTakeProf(takeProfPercent, currentPrice){
-   
-            var getTakePrice = currentPrice+((takeProfPercent/100)*currentPrice)
-            return getTakePrice
         }
-        
-        
-        function createStopLoss(stopLossPercent, currentPrice){
-            var getStopPrice = currentPrice - ((stopLossPercent/100)*currentPrice)
-            // console.log(getStopPrice + "  --sl-")
-            return getStopPrice
+        //update price and stop loss if new data is fetched( first checks if data is not null)
+        if (purchasePrice.current != null && stopLossPrice.current != null && takeProfPrice.current != null) {
+
+
+            purchasePrice.current.applyOptions({
+
+                price: getLivePrice.current
+            })
+
+            stopLossPrice.current.applyOptions({
+
+                price: createStopLoss(props.reload[0], parseInt(getLivePrice.current))
+            })
+
+            takeProfPrice.current.applyOptions({
+                price: createTakeProf(props.reload[1], parseInt(getLivePrice.current))
+
+            })
+
         }
+
+    }, [props.reload ])
+
+
+
+    function createTakeProf(takeProfPercent, currentPrice) {
+
+        var getTakePrice = currentPrice + ((takeProfPercent / 100) * currentPrice)
+        return getTakePrice
+    }
+
+
+    function createStopLoss(stopLossPercent, currentPrice) {
+        var getStopPrice = currentPrice - ((stopLossPercent / 100) * currentPrice)
+        // console.log(getStopPrice + "  --sl-")
+        return getStopPrice
+    }
 
 
 
@@ -194,8 +200,8 @@ export const ChartTab = props => {
                 close: liveData.k.c
 
             }
-            getLivePrice.current=editLiveData.close;
-            
+            getLivePrice.current = editLiveData.close;
+
             newSeries.current.update(editLiveData)
             return;
         }
@@ -209,32 +215,66 @@ export const ChartTab = props => {
     }
 
 
+    const handleChange = (event) => {
+        console.log(event.target)
+        setPosType((event.target.value));
 
+    };
 
+    
     return (
         <>
-        <div className="outerBox" style={chartClicked ? { display: '' } : { display: 'none' }}>
-            <div className='extraInfoBox'>
-                <h1>BTC Chart</h1>
-                <p>(add to portfolio and Long/short feature coming soon v3 soon)</p>
-         
-            </div>
+            <div className="outerBox" style={chartClicked ? { display: '' } : { display: 'none' }}>
 
-            <div className="chartBorder" style={size}>
 
-                <div ref={chartContainerRef} style={{
-                    'width': '100%',
-                    'height': '100%'
-                }}>
+                <div className="chartBorder" style={size}>
+
+                    <div ref={chartContainerRef} style={{
+                        'width': '100%',
+                        'height': '100%'
+                    }}>
+                    </div>
+
+                </div>
+
+                <div className="infoBox">
+
+                    <div className="addToPort">
+                        as
+                    </div>
+
+
+                    <div className="positionType">
+
+                        <div className="radio">
+                            <label>
+                                <b>Long </b>
+                                <input type="radio" value="long" checked={positionType === 'long'} onChange={handleChange} />
+                            </label>
+                        </div>
+                        <div className="radio">
+                            <label>
+                                <b>Short </b>
+                                <input type="radio" value="short" checked={positionType === 'short'} onChange={handleChange} />
+                            </label>
+                        </div>
+
+
+
+
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
 
-      
+
+
+
 
         </>
     )
+
 }
 

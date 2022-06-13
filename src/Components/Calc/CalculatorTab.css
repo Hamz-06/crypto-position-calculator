@@ -76,7 +76,7 @@
   }
 
 
-.outerBox input{
+.inputBox .calc_input{
     /* border: 1px solid red;
     box-sizing: border-box;
     padding: 2% 10%;
@@ -144,6 +144,7 @@ input::-webkit-inner-spin-button {
 .fa-copy{
     color: #1e1c2f;
 }
+
 
 
 @media screen and (max-width:960px){

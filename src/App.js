@@ -28,29 +28,24 @@ function App() {
 
 
   return (
-    <div className="App">
-
+    <>
 
       <Navbar/>
       
-
       <div className="container">
             
         <React.StrictMode>
           <CalculatorTab onCalculate={fetchData} />
         </React.StrictMode>
-
-
           <ChartTab reload={calcData} />
 
-        
       </div>
 
       <Footer />
 
 
 
-    </div>
+    </>
   );
 }
 

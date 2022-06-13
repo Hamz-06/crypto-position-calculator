@@ -1,40 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC&family=Quicksand&display=swap");
 
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Quicksand';
 
 }
 
-.OuterBox{
-  margin: 5%;
-  border: 1px solid red;
-  border-radius: 15px
-}
-
-.RecentPriceRow{
-  margin: 5%;
-  border: 1px solid red;
-  border-radius: 15px
-}
-
-.PriceChartRow{
-  display: flex;
-}
-.RightCol{
-
-  flex: 50%;
-  margin: 5%;
-  
-  border: 1px solid red;
-  border-radius: 15px;
-  
-}
-
-.LeftCol{
-  flex: 50%;
-  margin: 5%;
-  border: 1px solid red;
-  border-radius: 15px;
-  
-}
