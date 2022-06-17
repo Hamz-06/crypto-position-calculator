@@ -21,7 +21,7 @@ export const ChartTab = props => {
     const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
     const [positionType, setPosType] = useState('long')  //default
-    console.log(positionType)
+
 
     const chartClicked = useSelector((state) => state.chartClicked.value)
 
@@ -140,31 +140,46 @@ export const ChartTab = props => {
                 price: getLivePrice.current
             })
 
+            takeProfPrice.current.applyOptions({
+                price: createTakeProf(props.reload[1], parseInt(getLivePrice.current), positionType)
+
+            })
             stopLossPrice.current.applyOptions({
 
-                price: createStopLoss(props.reload[0], parseInt(getLivePrice.current))
+                price: createStopLoss(props.reload[0], parseInt(getLivePrice.current), positionType)
             })
 
-            takeProfPrice.current.applyOptions({
-                price: createTakeProf(props.reload[1], parseInt(getLivePrice.current))
-
-            })
 
         }
 
-    }, [props.reload ])
+    }, [props.reload, positionType])
 
 
 
-    function createTakeProf(takeProfPercent, currentPrice) {
+    function createTakeProf(takeProfPercent, currentPrice, posType) {
 
-        var getTakePrice = currentPrice + ((takeProfPercent / 100) * currentPrice)
+        if (posType!=="short"){
+
+            var getTakePrice = currentPrice + ((takeProfPercent / 100) * currentPrice)
+            
+        }
+        else{
+            
+            var getTakePrice = currentPrice - ((takeProfPercent / 100) * currentPrice)
+        }
         return getTakePrice
     }
 
 
-    function createStopLoss(stopLossPercent, currentPrice) {
-        var getStopPrice = currentPrice - ((stopLossPercent / 100) * currentPrice)
+    function createStopLoss(stopLossPercent, currentPrice, posType) {
+        if (posType!=="long"){
+
+            var getStopPrice = currentPrice + ((stopLossPercent / 100) * currentPrice)
+        }
+        else{
+            
+            var getStopPrice = currentPrice - ((stopLossPercent / 100) * currentPrice)
+        }
         // console.log(getStopPrice + "  --sl-")
         return getStopPrice
     }
@@ -216,7 +231,7 @@ export const ChartTab = props => {
 
 
     const handleChange = (event) => {
-        console.log(event.target)
+        
         setPosType((event.target.value));
 
     };
@@ -224,7 +239,7 @@ export const ChartTab = props => {
     
     return (
         <>
-            <div className="outerBox" style={chartClicked ? { display: '' } : { display: 'none' }}>
+            <div className="outerBox" style={chartClicked ? { display: 'block' } : { display: 'none' }}>
 
 
                 <div className="chartBorder" style={size}>

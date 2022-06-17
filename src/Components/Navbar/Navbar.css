@@ -59,15 +59,11 @@
 
 /* PUSH LOGIN TO FAR RIGHT USING MARGIN RIGHT AUTO */
 .NavbarItems > .menu-icon.container:nth-of-type(3) { 
-    margin-right: auto;
+    margin-left: auto;
+   margin-right: 5%;
     
 } 
-/* Change login to fit inside box */
-.NavbarItems > .menu-icon.container:nth-of-type(4) { 
-    width: 100px;
-    margin-right: 5%;
-    
-} 
+
 i{
     font-style: normal;
     font-weight: medium;
