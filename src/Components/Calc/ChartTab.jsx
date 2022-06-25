@@ -239,7 +239,7 @@ export const ChartTab = props => {
     
     return (
         <>
-            <div className="outerBox" style={chartClicked ? { display: 'block' } : { display: 'none' }}>
+            <div className="outerBox" style={chartClicked ? { display: '' } : { display: 'none' }}>
 
 
                 <div className="chartBorder" style={size}>

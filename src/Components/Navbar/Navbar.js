@@ -8,7 +8,7 @@ import { displayChart } from '../Storage/Chartclicked_data'
 import './LoginModal.css'; //made easier for modal 
 import { useEffect } from 'react';
 import { useRef } from 'react';
-
+import { auth } from '../Firebase/Firebase'
 function Navbar() {
 
     const dispatch = useDispatch();
@@ -18,6 +18,8 @@ function Navbar() {
     const [settingClick, updateSettingclick] = useState(false)
     const [displayLogin, updateDisplayLogin] = useState(true)
 
+    const [email, updateEmail] = useState();
+    const [password, updatePassword] = useState();
 
     const menuClicked = () => {
         // this.setState({menuClicked:!this.state.menuClicked}) 
@@ -29,6 +31,10 @@ function Navbar() {
         updateSettingclick(!settingClick)
     }
 
+    const handleSignIn = (e) => {
+        e.preventDefault()
+    }
+
 
 
 
@@ -37,6 +43,7 @@ function Navbar() {
             title: 'MetaMask Connect (Coming Soon)',
             url: 'google.com',
             cName: 'nav-links'
+
         },
         {
             title: 'Portfolio Tracker (Coming Soon)',
@@ -48,29 +55,83 @@ function Navbar() {
 
 
     const LoginModal = () => {
-        console.log(displayLogin)
+
         return (
+            <div className="log_outer_box"
+                style={displayLogin ? { display: 'block' } : { display: 'none' }}>
 
-            <div className="login_container" style={displayLogin ? { display: 'block' } : { display: 'none' }}>
-                <div>
+
+                <div className="login_container">
+
+                    <div>
+
+                        <h1 className='login_label'>Login</h1>
+                    </div>
+
+                    <form>
+
+                        <div className="login_input">
+
+                            <label className='login_label'>Email</label>
+                            <input type="text"
+                                className="login_userName_input"
+                                value={email}
+                                onChange={(e) => {
+                                    console.log("sff")
+                                    updateEmail(e.value)
+                                }}
+
+                            />
+
+                        </div>
+                        <div className="login_input">
+                            <label
+                                className='login_label'>Password</label>
+                            <input type="text"
+                                className="login_userName_input"
+                                value={password}
+                                onChange={(e) => {
+                                    console.log("sff")
+                                    updatePassword(e.value)
+                                }}
+                            />
+                        </div>
+                    </form>
+                    <div className='login_btn'>
+
+                        <button type='submit' className='login_btn_submit' onClick={handleSignIn}>log in </button>
+
+
+                    </div>
+                        <a className='sign_up'> Create an account</a>
+
+
+
+
 
                 </div>
-                <div className="login_title">
-
-                    <input type="text" className="login_userName_input" />
-                    <label>lol</label>
-
-                </div>
-                <div className="login_input">
-                    <input type="text" className="login_userName_input" />
-                    <label>lol</label>
-                </div>
-
-
             </div>
 
         )
     }
+    useEffect(() => {
+        var login_con = document.getElementsByClassName('login_container')[0];
+        var user_butt = document.getElementById("userLoginBut");
+
+        document.addEventListener("click", (e) => {
+
+            //console.log(e.target.className)
+            var isOutsideClicked = login_con.contains(e.target);
+            var isUserClicked = user_butt.contains(e.target);
+
+
+            if ((!isOutsideClicked && !isUserClicked)) {
+                updateDisplayLogin(false)
+
+            }
+
+        });
+    }, [])
 
 
 
@@ -103,13 +164,11 @@ function Navbar() {
 
 
             <div className='menu-icon container'
-
+                id='userLoginBut'
                 onClick={() => {
-                    
+
                     updateDisplayLogin(!displayLogin)
                 }
-
-
 
                 }>
 
@@ -122,11 +181,6 @@ function Navbar() {
             {
                 LoginModal()
             }
-
-
-
-
-
 
 
 

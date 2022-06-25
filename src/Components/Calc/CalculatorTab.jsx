@@ -129,7 +129,7 @@ export const CalculatorTab = (props) => {
                     
                 </div>
                 
-
+  
 
                 <div >
                     <p>leverage <i className="fa-solid fa-rocket"></i></p>
