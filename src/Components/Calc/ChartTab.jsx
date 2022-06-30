@@ -94,14 +94,18 @@ export const ChartTab = props => {
 
             //create price lines (current price) - subject to change
             purchasePrice.current = newSeries.current.createPriceLine({
+            
                 color: 'white',
-                lineWidth: 2,
+                lineWidth: 1,
                 lineStyle: null,
                 axisLabelVisible: false,
-                lineVisible: true
+                lineVisible: true,
+                
+                
             });
             //create stop loss price
             stopLossPrice.current = newSeries.current.createPriceLine({
+                title:'StopLoss',
                 color: 'red',
                 lineWidth: 2,
                 lineStyle: null,
@@ -111,6 +115,7 @@ export const ChartTab = props => {
 
             //create take profit
             takeProfPrice.current = newSeries.current.createPriceLine({
+                title:'TakeProfit',
                 color: 'green',
                 lineWidth: 2,
                 lineStyle: null,
@@ -255,7 +260,7 @@ export const ChartTab = props => {
                 <div className="infoBox">
 
                     <div className="addToPort">
-                        as
+                        Add to portfolio coming soon !!
                     </div>
 
 

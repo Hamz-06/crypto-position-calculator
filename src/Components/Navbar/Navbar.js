@@ -16,7 +16,7 @@ function Navbar() {
 
     const [menuClick, updateMenuClick] = useState(false)
     const [settingClick, updateSettingclick] = useState(false)
-    const [displayLogin, updateDisplayLogin] = useState(true)
+    const [displayLogin, updateDisplayLogin] = useState(false)
 
     const [email, updateEmail] = useState();
     const [password, updatePassword] = useState();
@@ -39,12 +39,7 @@ function Navbar() {
 
 
     const Value = [
-        {
-            title: 'MetaMask Connect (Coming Soon)',
-            url: 'google.com',
-            cName: 'nav-links'
 
-        },
         {
             title: 'Portfolio Tracker (Coming Soon)',
             url: 'google.com',
@@ -103,11 +98,7 @@ function Navbar() {
 
 
                     </div>
-                        <a className='sign_up'> Create an account</a>
-
-
-
-
+                        <a href='/create_account' className='sign_up'> Create an account</a>
 
                 </div>
             </div>

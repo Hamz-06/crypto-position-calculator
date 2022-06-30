@@ -25,3 +25,4 @@ yarn-error.log*
 src/Components/ApiReq/FetchTransaction.js
 src/Components/ApiReq/FetchBalance.js
 src/Components/ApiReq/FetchTransaction.css
+src/Components/Firebase/Firebase.js

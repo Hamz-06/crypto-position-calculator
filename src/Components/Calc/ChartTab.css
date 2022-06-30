@@ -44,20 +44,24 @@
 
   
     width: 100%;
-    border: 1px solid #1e1c2f;
+    
     margin: 2%;
     
 }
 
-.positionType{
+.positionType,.addToPort{
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
+.addToPort{
+    text-align: center;
+}
 .radio{
     
     margin: 2%;
-    border: 1px solid #1e1c2f;
+ 
     text-align: center;
 }
 
