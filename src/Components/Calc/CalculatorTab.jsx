@@ -8,137 +8,159 @@ export const CalculatorTab = (props) => {
     var riskSizeUsd = useRef('');
     var stopLossPercent = useRef('');
     var takeProfPercent = useRef('')
-    
+
     const [contract, setContract] = useState('');
     const [leverage, setLeverage] = useState('');
     const [button, setButton] = useState(true);
+    const [positionType, setPosType] = useState('long')  //default
 
-    
 
-    function updatePortfolio(event){
-        
-        
+    function updatePortfolio(event) {
 
-        switch(event.target.id) {
+
+
+        switch (event.target.id) {
             case 'inputPort':
                 console.log(event.target.id)
-             takeProfPercent.current = event.target.value;
-                
+                takeProfPercent.current = event.target.value;
+
                 break;
             case 'marginUsd':
-                 
-                
+
+
                 marginUsd.current = event.target.value;
 
                 break;
             case 'riskSizeUsd':
-              
+
                 riskSizeUsd.current = event.target.value;
 
                 break;
             case 'stopLossPercent':
-               
+
                 stopLossPercent.current = event.target.value;
                 break;
-        
+
         }
- 
+
 
 
         //if margin percent and takeProfPercent is not empty we will make margin usd
-        if (takeProfPercent.current==="" || marginUsd.current==="" || riskSizeUsd.current==="" || stopLossPercent.current===""){
+        if (takeProfPercent.current === "" || marginUsd.current === "" || riskSizeUsd.current === "" || stopLossPercent.current === "") {
             // console.log("empty")
-            
+
 
 
             setButton(true)
             props.onCalculate([])
-           
+
             return;
-            
+
         }
-        
-        
-        var setContractCalc = riskSizeUsd.current/(stopLossPercent.current/100)
+
+
+        var setContractCalc = riskSizeUsd.current / (stopLossPercent.current / 100)
         setContractCalc = setContractCalc.toFixed(2)
         setContract(setContractCalc)
 
 
 
         //calculate leverage and pass data back into mainTab (has to be timer to load data)
-        
-        if(setContractCalc===""){
+
+        if (setContractCalc === "") {
             setButton(true);
-        }else{
+        } else {
             setButton(false)
         }
 
-        
-        var setLevCalc = Math.ceil(setContractCalc/marginUsd.current)
+
+        var setLevCalc = Math.ceil(setContractCalc / marginUsd.current)
         setLeverage(setLevCalc)
 
-        props.onCalculate([stopLossPercent.current,takeProfPercent.current])
-        
-  
+        props.onCalculate([stopLossPercent.current, takeProfPercent.current])
+
+
     }
-    
+    const handleChange = (event) => {
+
+        setPosType((event.target.value));
+
+    };
 
 
 
-    return(
-        
-        <>       
-        <div className="outerBox">
-        
-            <div className="logoBox">
-                <h1>Position Size Calculator For Crypto <i className="fa-solid fa-bitcoin-sign"></i></h1>
-    
-            </div>
+
+    return (
+
+        <>
+            <div className="calc_outer">
 
 
 
-            <div className="inputBox">
-                <p>Margin Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                <input type="number"  onChange={updatePortfolio} className="calc_input" id ='marginUsd' value={marginUsd.current}/>
-            </div>
 
-            <div className="inputBox">
-                <p>Risk Size In USD <i className="fa-solid fa-dollar-sign"></i></p>
-                <input type="number" onChange={updatePortfolio} className='calc_input' id="riskSizeUsd" value={riskSizeUsd.current}/>
-            </div>
-
-            <div className="inputBox">
-                <p>Stop Loss In Percent <i className="fa-solid fa-percent"></i></p>
-                <input type="number" onChange={updatePortfolio} className='calc_input' id="stopLossPercent" value={stopLossPercent.current}/>
-            </div>
-            
-            <div className="inputBox">
-                <p>Take Profit In Percent <i className="fa-solid fa-percent"></i></p>
-                <input type="number" className='calc_input' onChange={updatePortfolio} id='inputPort' value= {takeProfPercent.current}/>                
-            </div>
-
-            <div className="outputBox">
-                
-                <div>
-                    
-
-                    <p>Contract <i className="fa-solid fa-copy"></i></p>
-                    {/* <button type='button' hidden ={false}><h1>{contract}1</h1></button> */}
-                    
-                    <button className="copyButton" hidden={button} onClick={() => {navigator.clipboard.writeText(contract)}}><p className='placeHolderOutput'>{contract}</p></button>
-                    
+                <div className="calc_inputBox">
+                    <label style={{ color: marginUsd.current === '' ? 'transparent' : 'black' }}>margin size</label>
+                    <input type="number" onChange={updatePortfolio} className="calc_input" id='marginUsd' value={marginUsd.current} placeholder='Margin Size In USD' />
                 </div>
-                
-  
 
-                <div >
-                    <p>leverage <i className="fa-solid fa-rocket"></i></p>
-                    <p className='placeHolderOutput'>{leverage}</p>
+
+
+                <div className="calc_inputBox">
+                    <label style={{ color: riskSizeUsd.current === '' ? 'transparent' : 'black' }}>risk size</label>
+                    <input type="number" onChange={updatePortfolio} className='calc_input' id="riskSizeUsd" value={riskSizeUsd.current} placeholder='Risk Size In USD' />
                 </div>
-                                    
+
+
+                <div className="calc_inputBox">
+                    <label style={{ color: stopLossPercent.current === '' ? 'transparent' : 'black' }} >stop loss</label>
+                    <input type="number" onChange={updatePortfolio} className='calc_input' id="stopLossPercent" value={stopLossPercent.current} placeholder='Stop Loss In Percent' />
+                </div>
+
+
+                <div className="calc_inputBox">
+                    <label style={{ color: takeProfPercent.current === '' ? 'transparent' : 'black' }}>take profit</label>
+                    {/* <label style={takeProfPercent.current===''?{display:'none'}:{display:'block'}}>take profit</label> */}
+                    <input type="number" className='calc_input' onChange={updatePortfolio} id='inputPort' value={takeProfPercent.current} placeholder='Take Profit In Percent' />
+                </div>
+
+                <div className="calc_inputBox">
+
+
+                    <div className="calc_radio">
+                        <label>
+                            <b>Long </b>
+                            <input type="radio" value="long" checked={positionType === 'long'} onChange={handleChange} />
+                        </label>
+                    </div>
+                    <div className="calc_radio">
+                        <label>
+                            <b>Short </b>
+                            <input type="radio" value="short" checked={positionType === 'short'} onChange={handleChange} />
+                        </label>
+                    </div>
+
+
+                </div>
+
+
+                <div className="calc_output">
+
+                    <div>
+
+
+                        <p>Contract <i className="fa-solid fa-copy"></i></p>
+                        <button className="calc_copyButton" hidden={button} onClick={() => { navigator.clipboard.writeText(contract) }}><p className='placeHolderOutput'>{contract}</p></button>
+
+                    </div>
+
+
+                    <div >
+                        <p>leverage <i className="fa-solid fa-rocket"></i></p>
+                        <p className='placeHolderOutput'>{leverage}</p>
+                    </div>
+
+                </div>
             </div>
-        </div>
         </>
-        )
+    )
 };
-        

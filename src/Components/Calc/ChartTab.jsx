@@ -94,18 +94,18 @@ export const ChartTab = props => {
 
             //create price lines (current price) - subject to change
             purchasePrice.current = newSeries.current.createPriceLine({
-            
+
                 color: 'white',
                 lineWidth: 1,
                 lineStyle: null,
                 axisLabelVisible: false,
                 lineVisible: true,
-                
-                
+
+
             });
             //create stop loss price
             stopLossPrice.current = newSeries.current.createPriceLine({
-                title:'StopLoss',
+                title: 'StopLoss',
                 color: 'red',
                 lineWidth: 2,
                 lineStyle: null,
@@ -115,7 +115,7 @@ export const ChartTab = props => {
 
             //create take profit
             takeProfPrice.current = newSeries.current.createPriceLine({
-                title:'TakeProfit',
+                title: 'TakeProfit',
                 color: 'green',
                 lineWidth: 2,
                 lineStyle: null,
@@ -163,13 +163,13 @@ export const ChartTab = props => {
 
     function createTakeProf(takeProfPercent, currentPrice, posType) {
 
-        if (posType!=="short"){
+        if (posType !== "short") {
 
             var getTakePrice = currentPrice + ((takeProfPercent / 100) * currentPrice)
-            
+
         }
-        else{
-            
+        else {
+
             var getTakePrice = currentPrice - ((takeProfPercent / 100) * currentPrice)
         }
         return getTakePrice
@@ -177,12 +177,12 @@ export const ChartTab = props => {
 
 
     function createStopLoss(stopLossPercent, currentPrice, posType) {
-        if (posType!=="long"){
+        if (posType !== "long") {
 
             var getStopPrice = currentPrice + ((stopLossPercent / 100) * currentPrice)
         }
-        else{
-            
+        else {
+
             var getStopPrice = currentPrice - ((stopLossPercent / 100) * currentPrice)
         }
         // console.log(getStopPrice + "  --sl-")
@@ -231,60 +231,35 @@ export const ChartTab = props => {
     const size = {
 
         width: '90%',
-        height: '70%'
+        height: '90%'
     }
 
 
     const handleChange = (event) => {
-        
+
         setPosType((event.target.value));
 
     };
 
-    
+
     return (
         <>
             <div className="outerBox" style={chartClicked ? { display: '' } : { display: 'none' }}>
 
 
-                <div className="chartBorder" style={size}>
+               
+                <div className="chartTab_container">
 
                     <div ref={chartContainerRef} style={{
                         'width': '100%',
                         'height': '100%'
                     }}>
                     </div>
-
                 </div>
 
-                <div className="infoBox">
-
-                    <div className="addToPort">
-                        Add to portfolio coming soon !!
-                    </div>
+                
 
 
-                    <div className="positionType">
-
-                        <div className="radio">
-                            <label>
-                                <b>Long </b>
-                                <input type="radio" value="long" checked={positionType === 'long'} onChange={handleChange} />
-                            </label>
-                        </div>
-                        <div className="radio">
-                            <label>
-                                <b>Short </b>
-                                <input type="radio" value="short" checked={positionType === 'short'} onChange={handleChange} />
-                            </label>
-                        </div>
-
-
-
-
-                    </div>
-
-                </div>
 
             </div>
 

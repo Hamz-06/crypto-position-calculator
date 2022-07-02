@@ -52,61 +52,108 @@ function Navbar() {
     const LoginModal = () => {
 
         return (
-            <div className="log_outer_box"
-                style={displayLogin ? { display: 'block' } : { display: 'none' }}>
+            <div className="login_outer" style={displayLogin ? { display: 'flex' } : { display: 'none' }}>
+
+                <div className="login_innerbox">
 
 
-                <div className="login_container">
+                    <div className="login_logo">
+                        <h1>Log in </h1>
+                    </div>
 
-                    <div>
 
-                        <h1 className='login_label'>Login</h1>
+    
+                    <div className="login_line">
+                        
                     </div>
 
                     <form>
 
                         <div className="login_input">
 
-                            <label className='login_label'>Email</label>
-                            <input type="text"
-                                className="login_userName_input"
-                                value={email}
-                                onChange={(e) => {
-                                    console.log("sff")
-                                    updateEmail(e.value)
-                                }}
+                            <input type="text" className="login_email" placeholder="Email" />
 
-                            />
 
+                            <input type="text" className="login_password" placeholder="Password" />
                         </div>
-                        <div className="login_input">
-                            <label
-                                className='login_label'>Password</label>
-                            <input type="text"
-                                className="login_userName_input"
-                                value={password}
-                                onChange={(e) => {
-                                    console.log("sff")
-                                    updatePassword(e.value)
-                                }}
-                            />
+
+
+                        <div className="login_remember_me">
+                            <label>
+                                Remember Me
+                                <input type="checkbox" className="login_checkbox" value="Bike" />
+
+                            </label>
                         </div>
+
+                        <div className="login_signup">
+                            <button type='submit' className="login_button">Create Account </button>
+                        </div>
+
+
                     </form>
-                    <div className='login_btn'>
 
-                        <button type='submit' className='login_btn_submit' onClick={handleSignIn}>log in </button>
-
-
+                    <div className="login_login">
+                        Create account?<a href='/create_account' className='login_login_link'> click here</a>
                     </div>
-                        <a href='/create_account' className='sign_up'> Create an account</a>
 
                 </div>
             </div>
+            // <div className="log_outer_box"
+            //     style={displayLogin ? { display: 'block' } : { display: 'none' }}>
+
+
+            //     <div className="login_container">
+
+            //         <div>
+
+            //             <h1 className='login_label'>Login</h1>
+            //         </div>
+
+            //         <form>
+
+            //             <div className="login_input">
+
+            //                 <label className='login_label'>Email</label>
+            //                 <input type="text"
+            //                     className="login_userName_input"
+            //                     value={email}
+            //                     onChange={(e) => {
+            //                         console.log("sff")
+            //                         updateEmail(e.value)
+            //                     }}
+
+            //                 />
+
+            //             </div>
+            //             <div className="login_input">
+            //                 <label
+            //                     className='login_label'>Password</label>
+            //                 <input type="text"
+            //                     className="login_userName_input"
+            //                     value={password}
+            //                     onChange={(e) => {
+            //                         console.log("sff")
+            //                         updatePassword(e.value)
+            //                     }}
+            //                 />
+            //             </div>
+            //         </form>
+            //         <div className='login_btn'>
+
+            //             <button type='submit' className='login_btn_submit' onClick={handleSignIn}>log in </button>
+
+
+            //         </div>
+            //             <a href='/create_account' className='sign_up'> Create an account</a>
+
+            //     </div>
+            // </div>
 
         )
     }
     useEffect(() => {
-        var login_con = document.getElementsByClassName('login_container')[0];
+        var login_con = document.getElementsByClassName('login_innerbox')[0];
         var user_butt = document.getElementById("userLoginBut");
 
         document.addEventListener("click", (e) => {
@@ -114,8 +161,8 @@ function Navbar() {
             //console.log(e.target.className)
             var isOutsideClicked = login_con.contains(e.target);
             var isUserClicked = user_butt.contains(e.target);
-
-
+            console.log(e.target)
+            console.log(isUserClicked)
             if ((!isOutsideClicked && !isUserClicked)) {
                 updateDisplayLogin(false)
 
