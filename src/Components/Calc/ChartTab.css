@@ -1,72 +1,33 @@
-/* .hell{
+
+.outerBox{
     width: 90%;
-}
-.chartBox{
-    background:#a9a9a9ed;
-    flex-direction: column;
+    height: 100%;
+    z-index: 1;
     display: flex;
-    
+    justify-content: center;
     align-items: center;
-    justify-content: center;
- 
-    margin: 2%;
-    height: 90vh;
-    width: 45%;
-    border-radius: 26px;
-    background: #403b63;
-    box-shadow:  5px -5px 0px #1e1c2f,
-             -5px 5px 0px #625a97;
-    
-} */
-
-
-.outerBox>.chartBorder,.infoBox{
-
-    background-color: #625a97;
-    border: 1px solid #1e1c2f;
-    width: 90%;
-    margin: 6px;
-    border-radius: 15px;
-    height: 20%;
-    
-    
-    font-weight: bold;
-    margin: 6px;
+    background: lightsteelblue;
+   
 }
-.infoBox{
-    display: flex;
-
-    padding: 2%;
-    
-}
-
-.infoBox>.addToPort,.positionType{
-
-  
+.chartTab_container{
     width: 100%;
-    
-    margin: 2%;
-    
+    height: 100%;
+    padding: 1%;
 }
 
-.positionType,.addToPort{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+@media screen and (max-width:960px){
 
-.addToPort{
-    text-align: center;
-}
-.radio{
-    
-    margin: 2%;
- 
-    text-align: center;
-}
+    .outerBox{
+        
+        height: 90vh;
+        width: 100%;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: lightsteelblue;
+       
+    }
 
-.chartBorder{
-    padding: 2%;
-    z-index: 0;
 }
 

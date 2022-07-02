@@ -10,12 +10,29 @@ export function Homepage() {
 
   return (
     <>
-      <div className="container">
-        <React.StrictMode>
-          <CalculatorTab onCalculate={fetchData} />
-        </React.StrictMode>
-        <ChartTab reload={calcData} />
+
+      <div className="homePage_outer">
+
+        <div className="homePage_logo">
+          <h1>
+            Bitcoin position size calculator
+          </h1>
+        </div>
+
+        <div className="homePage_row">
+          <div className="homePage_cal_tab">
+            <React.StrictMode>
+              <CalculatorTab onCalculate={fetchData} />
+            </React.StrictMode>
+
+          </div>
+          <div className="homePage_chart_tab">
+         
+            <ChartTab reload={calcData} />
+          </div>
+        </div>
       </div>
+
 
     </>
   )

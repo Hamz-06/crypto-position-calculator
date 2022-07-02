@@ -1,7 +1,5 @@
-.log_outer_box {
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4);
+.login_outer {
+
     /* Black w/ opacity */
     z-index: 3;
     position: fixed;
@@ -10,142 +8,68 @@
     width: 100%;
     height: 100%;
     /* background-color: red; */
-
-}
-
-.login_btn {
-    
-    
     display: flex;
+    align-items: center;
     justify-content: center;
-   
+
 }
-
-
-.login_container {
-    font-weight: bold;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40%;
+.login_line{
+    border-top: 1px solid black;
+    margin: 1% 0 5% 0;
+}
+.login_innerbox{
+    width:60%;
     height: fit-content;
-
-    background-color: #625a97;
-    border-radius: 26px;
-    display: flex;
-    flex-direction: column;
-    padding: 2% 2% 2% 2%;
-
-
+    background-color: lightsteelblue;
+    padding: 3%;
 }
-
-.login_container>.login_input,.login_label {
-    display: flex;
-    flex-direction: column;
+.login_logo,.login_signupOptions,.login_remember_me,.login_signup,.login_or,.login_signupUsing{
     text-align: center;
-
-}
-
-
-.login_footer {
-
-    width: 100%;
-    margin-top: auto;
-    display: flex;
-
-}
-
-.login_footer .login_close {
-
-    height: fit-content;
-    
-    border: 1px solid #1e1c2f;
-
-    margin-right: auto;
-    padding: 2%;
-    border-radius: 20%;
-    background-color: white;
-    transition: all 500ms;
-
-}
-
-.login_footer .login_close:hover {
-    color: red;
-}
-
-.login_footer .login_sign_up:hover {
-    color: green;
-}
-
-.login_footer .login_sign_up {
-    padding: 2%;
-    border-radius: 20%;
-    
-    border: 1px solid #1e1c2f;
-    text-decoration: none;
-    
-    background-color: white;
-}
-
-
-
-/* Apply margin to input fields and more */
-.login_input,.login_label {
     margin: 2%;
 }
 
+/* .login_input{display: flex;} */
+.login_email,.login_password{
+    width: 80%;
+    margin: 2%;
+    padding: 2%;
+    box-sizing: border-box;
+    font-size: large;
 
-
-
-/* add margin */
-.login_input,
-.login_btn {
-    margin: 4% 0 4% 0;
-    
+}
+.login_input{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.login_signupOptions .fa-brands{
+    margin: 0 2% 0 2%;
+    transition: 0.2s;
+}
+.login_signupOptions .fa-brands:hover{
+    transform: scale(1.5);
+    color: blue;
 }
 
 
-
-.sign_up{
-    font-size: medium;
-    margin-left: auto;
+.login_checkbox{
+    margin: 0 2% 0 ;
+    vertical-align: -5px;
+    width: 22px;
+    height: 22px;
 }
 
-
-
-.login_userName_input {
-
-    width: 70%;
-    padding: 7px;
-    font-size: 18px;
-    border-width: 0px;
-    border-color: #cbcbcb;
-    background-color: #ffffff;
-    color: #000000;
-    border-style: solid;
-    border-radius: 22px;
-    box-shadow: 1px 0px 10px rgba(30, 28, 47, .75);
-    display: block;
-    margin: 0 auto;
-    font-weight: bold;
-    text-align: center;
+.login_login{
+    text-align: right;
 }
-
-
-
-
-
-
-
-/* CSS */
-.login_btn_submit {
-   
+.login_login_link{
+    text-decoration: none;
+    font-size:large;
+}
+.login_button {
     align-items: center;
     appearance: none;
-    background-color: #3EB2FD;
-    background-image: linear-gradient(1deg, #4F58FD, #149BF3 99%);
-    background-size: calc(100% + 20px) calc(100% + 20px);
+    background-color: blue;
     border-radius: 100px;
     border-width: 0;
     box-shadow: none;
@@ -153,7 +77,6 @@
     color: #FFFFFF;
     cursor: pointer;
     display: inline-flex;
-
     font-size: 1rem;
     height: auto;
     justify-content: center;
@@ -168,17 +91,4 @@
     touch-action: manipulation;
     vertical-align: top;
     white-space: nowrap;
-}
-
-.login_btn_submit:active,
-.login_btn_submit:focus {
-    outline: none;
-}
-
-.login_btn_submit:hover {
-    background-position: -20px -20px;
-}
-
-.login_btn_submit:focus:not(:active) {
-    box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
 }
