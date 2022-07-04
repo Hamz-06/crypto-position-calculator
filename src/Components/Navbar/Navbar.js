@@ -15,6 +15,7 @@ function Navbar() {
 
     const dispatch = useDispatch();
     const chartClick = useSelector((state) => state.chartClicked.value)
+    const userInfo = useSelector((state)=>state.userData.value)
 
     const [menuClick, updateMenuClick] = useState(false)
     const [settingClick, updateSettingclick] = useState(false)
@@ -22,7 +23,7 @@ function Navbar() {
 
     const [email, updateEmail] = useState();
     const [password, updatePassword] = useState();
-    const [error,updateError] = useState('lol');
+    const [error,updateError] = useState('');
 
 
     const menuClicked = () => {
@@ -194,7 +195,7 @@ function Navbar() {
                         </div>
 
                         <div className="login_signup">
-                            <button type='submit' className="login_button">Create Account </button>
+                            <button type='submit' className="login_button">Log in </button>
                         </div>
 
 
@@ -254,7 +255,10 @@ function Navbar() {
                     <i className={chartClick ? 'fa-solid fa-toggle-on' : 'fa-solid fa-toggle-off'} ></i>
                 </div>
             </div>
-            {/* <button className="test" style={{width:50, height:50, backgroundColor:"red"}} ></button> */}
+            
+            {
+                userInfo
+            }
 
 
 
@@ -267,13 +271,18 @@ function Navbar() {
 
                 }>
 
-                <div className='menu-icon'>
-                    <i className={'fa-solid fa-user'}></i>
+                <div className='menu-icon' id='login-menu-icon'>
+                    {/* shows sign in or out according to user info(taken from redux store) */}
+                    <label className='fontm'>{userInfo?'Sign Out':'Sign In'}</label> 
+                    <i class={userInfo?'fa-solid fa-user-check':'fa-solid fa-user-xmark'}></i>
+                    {/* <i class={"fa-solid " + 'fa-user-xmark'}></i> */}
                 </div>
 
             </div>
 
             {
+                //if user is logged in dont shpw log in page, if hes logged in show sign out 
+                
                 LoginModal()
             }
 

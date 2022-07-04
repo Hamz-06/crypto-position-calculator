@@ -4,7 +4,7 @@ import { GetCandles } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-
+import { useSelector } from 'react-redux'
 
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
@@ -13,7 +13,7 @@ export const ChartTab = props => {
 
 
 
-
+    var chart = useRef(null);
     const chartContainerRef = useRef();
     var newSeries = useRef(null);
     const purchasePrice = useRef(null);
@@ -21,19 +21,28 @@ export const ChartTab = props => {
     const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
     const [positionType, setPosType] = useState('long')  //default
-    
+    const chartClicked = useSelector((state) => state.chartClicked.value)
 
-    
-
+    //fixes resize issue when user clicks chart it resizes the chart back to its correct position 
+    useEffect(() => {
+        if (chart.current != null) {
+            
+            chart.current.applyOptions({
+                width: chartContainerRef.current.clientWidth,
+                height: chartContainerRef.current.clientHeight,
+            });
+        }
+    }, [chartClicked])
 
 
     useEffect(
         () => {
+
             const handleResize = () => {
-                chart.applyOptions(
+                chart.current.applyOptions(
                     {
-                        width: (chartContainerRef).current.clientWidth,
-                        height: (chartContainerRef.current).clientHeight,
+                        width: chartContainerRef.current.clientWidth,
+                        height: chartContainerRef.current.clientHeight,
                     });
 
             };
@@ -62,14 +71,14 @@ export const ChartTab = props => {
                 timeScale: {
                     borderColor: '#485c7b',
                 },
-                width: (chartContainerRef).current.clientWidth,
-                height: (chartContainerRef.current).clientHeight,
+                width: chartContainerRef.current.clientWidth,
+                height: chartContainerRef.current.clientHeight,
             };
 
-            const chart = createChart(chartContainerRef.current, chartOptions);
-            chart.timeScale().fitContent();
+            chart.current = createChart(chartContainerRef.current, chartOptions);
+            chart.current.timeScale().fitContent();
 
-            newSeries.current = chart.addCandlestickSeries()
+            newSeries.current = chart.current.addCandlestickSeries()
             //FETCH OLD AND LIVE CANDLES 
             fetchCandle();
 
@@ -78,11 +87,11 @@ export const ChartTab = props => {
 
 
             window.addEventListener('resize', handleResize);
-
+            
 
             var posTypeRadios = document.getElementsByClassName('calc_radio_check');
-            for (let radio of posTypeRadios){
-                radio.onclick = (e) =>{
+            for (let radio of posTypeRadios) {
+                radio.onclick = (e) => {
                     console.log(e.target.value)
                     setPosType(e.target.value)
 
@@ -163,7 +172,7 @@ export const ChartTab = props => {
 
         }
 
-    }, [props.reload,positionType])
+    }, [props.reload, positionType])
 
 
 
@@ -249,7 +258,7 @@ export const ChartTab = props => {
             <div className="outerBox" >
 
 
-               
+
                 <div className="chartTab_container">
 
                     <div ref={chartContainerRef} style={{
@@ -259,7 +268,7 @@ export const ChartTab = props => {
                     </div>
                 </div>
 
-                
+
 
 
 

@@ -9,10 +9,33 @@ import {  onAuthStateChanged } from "firebase/auth";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { CreateAccountPage } from './Components/Pages/CreateAccountPage.jsx'
 
+import { useSelector, useDispatch } from 'react-redux'
+import { setUserData } from './Components/Storage/Userdata'
+
 function App() {
+
+  const dispatch = useDispatch();
+  const userData = useSelector((state) =>state.userData.value)
+  
+
 
   useEffect(()=>{
 
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        console.log(uid)
+        console.log(user.email)
+        dispatch(setUserData(user.email))
+        // ...
+      } else {
+        // User is signed out
+        // ...
+        dispatch(setUserData(null))
+      }
+    });
   },[])
 
   return (

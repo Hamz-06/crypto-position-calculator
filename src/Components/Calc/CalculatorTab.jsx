@@ -1,6 +1,8 @@
 import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
+import { useSelector } from 'react-redux'
+
 export const CalculatorTab = (props) => {
 
 
@@ -13,7 +15,8 @@ export const CalculatorTab = (props) => {
     const [leverage, setLeverage] = useState('');
     const [button, setButton] = useState(true);
     const [positionType, setPosType] = useState('long')  //default
-
+    //edit certain margins when div clicked
+    const chartClicked = useSelector((state) => state.chartClicked.value)
 
     function updatePortfolio(event) {
 
@@ -89,42 +92,54 @@ export const CalculatorTab = (props) => {
     };
 
 
+    const top_marginStyle = {
+        margin: '0 0 3% 0',
+        
+    }
+    const marginStyle = {
+        margin: '3% 0',
+        
+    }
+    const bottom_marginStyle={
+        margin: '3% 0 0 0',
+        
+    }
 
 
     return (
 
         <>
-            <div className="calc_outer">
+            <div className="calc_outer" style={ chartClicked? {}:{ border:'0' } }>
 
 
 
 
-                <div className="calc_inputBox">
+                <div className="calc_inputBox" style={chartClicked? { } : top_marginStyle }>
                     <label style={{ color: marginUsd.current === '' ? 'transparent' : 'black' }}>margin size</label>
                     <input type="number" onChange={updatePortfolio} className="calc_input" id='marginUsd' value={marginUsd.current} placeholder='Margin Size In USD' />
                 </div>
 
 
 
-                <div className="calc_inputBox">
+                <div className="calc_inputBox" style={chartClicked? { } : marginStyle}>
                     <label style={{ color: riskSizeUsd.current === '' ? 'transparent' : 'black' }}>risk size</label>
                     <input type="number" onChange={updatePortfolio} className='calc_input' id="riskSizeUsd" value={riskSizeUsd.current} placeholder='Risk Size In USD' />
                 </div>
 
 
-                <div className="calc_inputBox">
+                <div className="calc_inputBox" style={chartClicked? { } : marginStyle}>
                     <label style={{ color: stopLossPercent.current === '' ? 'transparent' : 'black' }} >stop loss</label>
                     <input type="number" onChange={updatePortfolio} className='calc_input' id="stopLossPercent" value={stopLossPercent.current} placeholder='Stop Loss In Percent' />
                 </div>
 
 
-                <div className="calc_inputBox">
+                <div className="calc_inputBox" style={chartClicked? { } : marginStyle}>
                     <label style={{ color: takeProfPercent.current === '' ? 'transparent' : 'black' }}>take profit</label>
                     {/* <label style={takeProfPercent.current===''?{display:'none'}:{display:'block'}}>take profit</label> */}
                     <input type="number" className='calc_input' onChange={updatePortfolio} id='inputPort' value={takeProfPercent.current} placeholder='Take Profit In Percent' />
                 </div>
 
-                <div className="calc_inputBox">
+                <div className="calc_inputBox" style={chartClicked? { } : {display:'none' } }>
 
 
                     <div className="calc_radio">
@@ -144,7 +159,7 @@ export const CalculatorTab = (props) => {
                 </div>
 
 
-                <div className="calc_output">
+                <div className="calc_output" style={chartClicked? { } : bottom_marginStyle}>
 
                     <div>
 
