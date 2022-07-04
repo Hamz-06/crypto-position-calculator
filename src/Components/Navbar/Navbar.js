@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import { auth } from '../Firebase/Firebase'
+import { GoogleAuthProvider, signInWithPopup, GithubAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+
 
 import './Navbar.css'
 import { useState } from 'react';
@@ -7,8 +10,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { displayChart } from '../Storage/Chartclicked_data'
 import './LoginModal.css'; //made easier for modal 
 import { useEffect } from 'react';
-import { useRef } from 'react';
-import { auth } from '../Firebase/Firebase'
+
 function Navbar() {
 
     const dispatch = useDispatch();
@@ -20,6 +22,8 @@ function Navbar() {
 
     const [email, updateEmail] = useState();
     const [password, updatePassword] = useState();
+    const [error,updateError] = useState('lol');
+
 
     const menuClicked = () => {
         // this.setState({menuClicked:!this.state.menuClicked}) 
@@ -31,12 +35,6 @@ function Navbar() {
         updateSettingclick(!settingClick)
     }
 
-    const handleSignIn = (e) => {
-        e.preventDefault()
-    }
-
-
-
 
     const Value = [
 
@@ -46,6 +44,91 @@ function Navbar() {
             cName: 'nav-links'
         }
     ]
+    const handleaccount = (e) => {
+        e.preventDefault()
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                // ...
+                updateDisplayLogin(false)
+                updateError('')
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                updateError(errorCode);
+            });
+
+    }
+
+    function handleEmail(e) {
+
+        updateEmail(e.target.value);
+    }
+    function handlePassword(e) {
+        updatePassword(e.target.value);
+    }
+
+    function handleFacebook() {
+        const provider = new GoogleAuthProvider();
+
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+
+                if (result) {
+                    //removes login pop up
+                    updateDisplayLogin(false)
+                }
+                // ...
+            }).catch((error) => {
+                console.log(error)
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                console.log(error)
+                // ...
+            });
+    }
+
+    function handleGithub() {
+        const provider = new GithubAuthProvider();
+
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+                const credential = GithubAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                console.log(result)
+                // The signed-in user info.
+                const user = result.user;
+                if (result) {
+                    //removes login pop up
+                    updateDisplayLogin(false)
+                }
+                // ...
+            }).catch((error) => {
+                console.log(error)
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GithubAuthProvider.credentialFromError(error);
+                // ...
+            });
+
+    }
 
 
 
@@ -60,21 +143,45 @@ function Navbar() {
                     <div className="login_logo">
                         <h1>Log in </h1>
                     </div>
-
-
-    
                     <div className="login_line">
-                        
+
                     </div>
 
-                    <form>
+                    <div className="login_signupUsing">
+                        <p>Log in using :</p>
+                    </div>
+
+
+                    <div className="login_signupOptions">
+
+
+                        <i onClick={handleGithub} className="fa-brands fa-github fa-2x"></i>
+
+                        <i onClick={handleFacebook} className="fa-brands fa-google fa-2x"></i>
+
+
+                    </div>
+                    <div className="login_or">
+
+                        <p>or sign in:</p>
+                    </div>
+
+
+
+
+                    <form onSubmit={handleaccount}>
 
                         <div className="login_input">
 
-                            <input type="text" className="login_email" placeholder="Email" />
+                        <div className="login_error">
+                            {error}
+
+                        </div>
+
+                            <input type="email" className="login_email" placeholder="Email" value={email} onChange={handleEmail} required />
 
 
-                            <input type="text" className="login_password" placeholder="Password" />
+                            <input type="text" className="login_password" placeholder="Password" value={password} onChange={handlePassword} required />
                         </div>
 
 
@@ -99,56 +206,7 @@ function Navbar() {
 
                 </div>
             </div>
-            // <div className="log_outer_box"
-            //     style={displayLogin ? { display: 'block' } : { display: 'none' }}>
 
-
-            //     <div className="login_container">
-
-            //         <div>
-
-            //             <h1 className='login_label'>Login</h1>
-            //         </div>
-
-            //         <form>
-
-            //             <div className="login_input">
-
-            //                 <label className='login_label'>Email</label>
-            //                 <input type="text"
-            //                     className="login_userName_input"
-            //                     value={email}
-            //                     onChange={(e) => {
-            //                         console.log("sff")
-            //                         updateEmail(e.value)
-            //                     }}
-
-            //                 />
-
-            //             </div>
-            //             <div className="login_input">
-            //                 <label
-            //                     className='login_label'>Password</label>
-            //                 <input type="text"
-            //                     className="login_userName_input"
-            //                     value={password}
-            //                     onChange={(e) => {
-            //                         console.log("sff")
-            //                         updatePassword(e.value)
-            //                     }}
-            //                 />
-            //             </div>
-            //         </form>
-            //         <div className='login_btn'>
-
-            //             <button type='submit' className='login_btn_submit' onClick={handleSignIn}>log in </button>
-
-
-            //         </div>
-            //             <a href='/create_account' className='sign_up'> Create an account</a>
-
-            //     </div>
-            // </div>
 
         )
     }
@@ -161,8 +219,7 @@ function Navbar() {
             //console.log(e.target.className)
             var isOutsideClicked = login_con.contains(e.target);
             var isUserClicked = user_butt.contains(e.target);
-            console.log(e.target)
-            console.log(isUserClicked)
+
             if ((!isOutsideClicked && !isUserClicked)) {
                 updateDisplayLogin(false)
 

@@ -17,6 +17,11 @@
     text-align: center;
     margin: 2%;
 }
+.createAccount_error{
+    width: 80%;
+    color: red;
+    
+}
 
 /* .createAccount_input{display: flex;} */
 .createAccount_email,.createAccount_password{

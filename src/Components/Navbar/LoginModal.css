@@ -22,6 +22,11 @@
     height: fit-content;
     background-color: lightsteelblue;
     padding: 3%;
+    border: 1px solid black;
+}
+.login_error{
+    width: 80%;
+    color: red;
 }
 .login_logo,.login_signupOptions,.login_remember_me,.login_signup,.login_or,.login_signupUsing{
     text-align: center;

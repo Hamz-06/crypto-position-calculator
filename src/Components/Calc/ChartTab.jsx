@@ -4,7 +4,7 @@ import { GetCandles } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux'
+
 
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
@@ -21,9 +21,9 @@ export const ChartTab = props => {
     const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
     const [positionType, setPosType] = useState('long')  //default
+    
 
-
-    const chartClicked = useSelector((state) => state.chartClicked.value)
+    
 
 
 
@@ -78,13 +78,19 @@ export const ChartTab = props => {
 
 
             window.addEventListener('resize', handleResize);
-            return () => {
-                window.removeEventListener('resize', handleResize);
 
-                chart.remove();
-            };
+
+            var posTypeRadios = document.getElementsByClassName('calc_radio_check');
+            for (let radio of posTypeRadios){
+                radio.onclick = (e) =>{
+                    console.log(e.target.value)
+                    setPosType(e.target.value)
+
+                }
+            }
 
         }, []);
+
 
 
     useEffect(() => {
@@ -157,7 +163,7 @@ export const ChartTab = props => {
 
         }
 
-    }, [props.reload, positionType])
+    }, [props.reload,positionType])
 
 
 
@@ -228,11 +234,7 @@ export const ChartTab = props => {
     }
 
 
-    const size = {
 
-        width: '90%',
-        height: '90%'
-    }
 
 
     const handleChange = (event) => {
@@ -244,7 +246,7 @@ export const ChartTab = props => {
 
     return (
         <>
-            <div className="outerBox" style={chartClicked ? { display: '' } : { display: 'none' }}>
+            <div className="outerBox" >
 
 
                

@@ -50,7 +50,8 @@ export const CalculatorTab = (props) => {
             // console.log("empty")
 
 
-
+            setContract('')
+            setLeverage('')
             setButton(true)
             props.onCalculate([])
 
@@ -129,13 +130,13 @@ export const CalculatorTab = (props) => {
                     <div className="calc_radio">
                         <label>
                             <b>Long </b>
-                            <input type="radio" value="long" checked={positionType === 'long'} onChange={handleChange} />
+                            <input type="radio" value="long" className="calc_radio_check" checked={positionType === 'long'} onChange={handleChange} />
                         </label>
                     </div>
                     <div className="calc_radio">
                         <label>
                             <b>Short </b>
-                            <input type="radio" value="short" checked={positionType === 'short'} onChange={handleChange} />
+                            <input type="radio" value="short" className="calc_radio_check" checked={positionType === 'short'} onChange={handleChange} />
                         </label>
                     </div>
 
