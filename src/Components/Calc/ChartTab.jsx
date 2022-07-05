@@ -21,31 +21,12 @@ export const ChartTab = props => {
     const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
     const [positionType, setPosType] = useState('long')  //default
-    const chartClicked = useSelector((state) => state.chartClicked.value)
-
-    //fixes resize issue when user clicks chart it resizes the chart back to its correct position 
-    useEffect(() => {
-        if (chart.current != null) {
-            
-            chart.current.applyOptions({
-                width: chartContainerRef.current.clientWidth,
-                height: chartContainerRef.current.clientHeight,
-            });
-        }
-    }, [chartClicked])
+    
 
 
     useEffect(
         () => {
 
-            const handleResize = () => {
-                chart.current.applyOptions(
-                    {
-                        width: chartContainerRef.current.clientWidth,
-                        height: chartContainerRef.current.clientHeight,
-                    });
-
-            };
             const chartOptions = {
                 handleScale: {
                     axisPressedMouseMove: true
@@ -85,8 +66,18 @@ export const ChartTab = props => {
 
             //addMarkers(newSeries);
 
+            const resizeO = new ResizeObserver((entries)=>{
+                chart.current.applyOptions(
+                    {
+                        width: chartContainerRef.current.clientWidth,
+                        height: chartContainerRef.current.clientHeight,
+                    });
+            })
 
-            window.addEventListener('resize', handleResize);
+            resizeO.observe(chartContainerRef.current)
+        
+          
+
             
 
             var posTypeRadios = document.getElementsByClassName('calc_radio_check');
@@ -261,7 +252,7 @@ export const ChartTab = props => {
 
                 <div className="chartTab_container">
 
-                    <div ref={chartContainerRef} style={{
+                    <div className='redd' ref={chartContainerRef} style={{
                         'width': '100%',
                         'height': '100%'
                     }}>

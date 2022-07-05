@@ -1,0 +1,41 @@
+.signOut_outer {
+
+    /* Black w/ opacity */
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.signOut_innerbox{
+    width:60%;
+    height: fit-content;
+    background-color: lightsteelblue;
+    padding: 3%;
+    border: 1px solid black;
+
+  
+}
+.signOut_logo{
+    text-align: center;
+    margin: 2%;
+}
+.signOut_icon{
+    display: flex;
+    justify-content: center;
+}
+.signOut_login{
+    text-align: right;
+}
+.signOut_email{
+    
+    align-items: center;
+    text-align: center;
+    margin: 2%;
+}
