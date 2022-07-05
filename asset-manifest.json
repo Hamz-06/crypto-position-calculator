@@ -1,15 +1,15 @@
 {
-  "main.css": "/chart-tools/static/css/main.3d92d5e5.chunk.css",
-  "main.js": "/chart-tools/static/js/main.67162c90.chunk.js",
-  "main.js.map": "/chart-tools/static/js/main.67162c90.chunk.js.map",
-  "static/js/1.6d1c687f.chunk.js": "/chart-tools/static/js/1.6d1c687f.chunk.js",
-  "static/js/1.6d1c687f.chunk.js.map": "/chart-tools/static/js/1.6d1c687f.chunk.js.map",
-  "static/js/2.b9d00d8d.chunk.js": "/chart-tools/static/js/2.b9d00d8d.chunk.js",
-  "static/js/2.b9d00d8d.chunk.js.map": "/chart-tools/static/js/2.b9d00d8d.chunk.js.map",
-  "runtime~main.js": "/chart-tools/static/js/runtime~main.c58fa27a.js",
-  "runtime~main.js.map": "/chart-tools/static/js/runtime~main.c58fa27a.js.map",
-  "static/css/main.3d92d5e5.chunk.css.map": "/chart-tools/static/css/main.3d92d5e5.chunk.css.map",
-  "index.html": "/chart-tools/index.html",
-  "precache-manifest.6ea4803ebc04910e2d8cea811b2e0842.js": "/chart-tools/precache-manifest.6ea4803ebc04910e2d8cea811b2e0842.js",
-  "service-worker.js": "/chart-tools/service-worker.js"
+  "main.css": "/crypto-position-calculator/static/css/main.3d92d5e5.chunk.css",
+  "main.js": "/crypto-position-calculator/static/js/main.74a4a6d1.chunk.js",
+  "main.js.map": "/crypto-position-calculator/static/js/main.74a4a6d1.chunk.js.map",
+  "static/js/1.6d1c687f.chunk.js": "/crypto-position-calculator/static/js/1.6d1c687f.chunk.js",
+  "static/js/1.6d1c687f.chunk.js.map": "/crypto-position-calculator/static/js/1.6d1c687f.chunk.js.map",
+  "static/js/2.b9d00d8d.chunk.js": "/crypto-position-calculator/static/js/2.b9d00d8d.chunk.js",
+  "static/js/2.b9d00d8d.chunk.js.map": "/crypto-position-calculator/static/js/2.b9d00d8d.chunk.js.map",
+  "runtime~main.js": "/crypto-position-calculator/static/js/runtime~main.8c0fa573.js",
+  "runtime~main.js.map": "/crypto-position-calculator/static/js/runtime~main.8c0fa573.js.map",
+  "static/css/main.3d92d5e5.chunk.css.map": "/crypto-position-calculator/static/css/main.3d92d5e5.chunk.css.map",
+  "index.html": "/crypto-position-calculator/index.html",
+  "precache-manifest.e24f9517f9166aa272e08e8ae0fa1d15.js": "/crypto-position-calculator/precache-manifest.e24f9517f9166aa272e08e8ae0fa1d15.js",
+  "service-worker.js": "/crypto-position-calculator/service-worker.js"
 }
