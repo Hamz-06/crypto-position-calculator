@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/crypto-position-calculator/precache-manifest.e09d360b591fc8e69657e3354d4d9443.js"
+  "/chart-tools/precache-manifest.6ea4803ebc04910e2d8cea811b2e0842.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/crypto-position-calculator/index.html", {
+workbox.routing.registerNavigationRoute("/chart-tools/index.html", {
   
   blacklist: [/^\/_/,/\/[^/]+\.[^/]+$/],
 });
