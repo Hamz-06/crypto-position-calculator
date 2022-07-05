@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/crypto-position-calculator/precache-manifest.9f4f9d0a345c5739e7f1d4c1b4cbaba1.js"
+  "/crypto-position-calculator/precache-manifest.3d42f82a94df3b5528ceb9a1247205ed.js"
 );
 
 workbox.clientsClaim();
