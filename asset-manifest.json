@@ -1,15 +1,15 @@
 {
-  "files": {
-    "main.css": "/crypto-position-calculator/static/css/main.28a16c63.css",
-    "main.js": "/crypto-position-calculator/static/js/main.01558bf1.js",
-    "static/js/787.a0e11364.chunk.js": "/crypto-position-calculator/static/js/787.a0e11364.chunk.js",
-    "index.html": "/crypto-position-calculator/index.html",
-    "main.28a16c63.css.map": "/crypto-position-calculator/static/css/main.28a16c63.css.map",
-    "main.01558bf1.js.map": "/crypto-position-calculator/static/js/main.01558bf1.js.map",
-    "787.a0e11364.chunk.js.map": "/crypto-position-calculator/static/js/787.a0e11364.chunk.js.map"
-  },
-  "entrypoints": [
-    "static/css/main.28a16c63.css",
-    "static/js/main.01558bf1.js"
-  ]
+  "main.css": "/crypto-position-calculator/static/css/main.3d92d5e5.chunk.css",
+  "main.js": "/crypto-position-calculator/static/js/main.6c919fa5.chunk.js",
+  "main.js.map": "/crypto-position-calculator/static/js/main.6c919fa5.chunk.js.map",
+  "static/js/1.6d1c687f.chunk.js": "/crypto-position-calculator/static/js/1.6d1c687f.chunk.js",
+  "static/js/1.6d1c687f.chunk.js.map": "/crypto-position-calculator/static/js/1.6d1c687f.chunk.js.map",
+  "static/js/2.b9d00d8d.chunk.js": "/crypto-position-calculator/static/js/2.b9d00d8d.chunk.js",
+  "static/js/2.b9d00d8d.chunk.js.map": "/crypto-position-calculator/static/js/2.b9d00d8d.chunk.js.map",
+  "runtime~main.js": "/crypto-position-calculator/static/js/runtime~main.8c0fa573.js",
+  "runtime~main.js.map": "/crypto-position-calculator/static/js/runtime~main.8c0fa573.js.map",
+  "static/css/main.3d92d5e5.chunk.css.map": "/crypto-position-calculator/static/css/main.3d92d5e5.chunk.css.map",
+  "index.html": "/crypto-position-calculator/index.html",
+  "precache-manifest.e09d360b591fc8e69657e3354d4d9443.js": "/crypto-position-calculator/precache-manifest.e09d360b591fc8e69657e3354d4d9443.js",
+  "service-worker.js": "/crypto-position-calculator/service-worker.js"
 }
