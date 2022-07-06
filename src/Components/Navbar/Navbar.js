@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useRef } from 'react';
 
 import './Navbar.css'
 import { useState } from 'react';
@@ -8,7 +8,8 @@ import { SignOut } from './SignOut';
 import { Login } from './Login.js'
 
 function Navbar() {
-
+    
+    var loginButton = useRef();
     const dispatch = useDispatch();
     const chartClick = useSelector((state) => state.chartClicked.value)
     const userEmail = useSelector((state) => state.userData.value)
@@ -72,14 +73,12 @@ function Navbar() {
                 </div>
             </div>
 
-            {
-                userEmail
-            }
+         
 
 
 
 
-            <div className='menu-icon container' id='userLoginButton'>
+            <div className='menu-icon container' id='userLoginButton' ref={loginButton}>
 
                 <div className='menu-icon' id='login-menu-icon'>
                     {/* shows sign in or out according to user info(taken from redux store) */}
@@ -101,7 +100,7 @@ function Navbar() {
             {
                 //if user is logged in dont shpw log in page, if hes logged in show sign out  
 
-               <Login/>
+               <Login button= {loginButton}/>
                
 
             }

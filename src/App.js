@@ -6,7 +6,7 @@ import { Homepage } from './Components/Pages/Homepage.jsx';
 import { auth } from './Components/Firebase/Firebase';
 import {  onAuthStateChanged } from "firebase/auth";
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import { CreateAccountPage } from './Components/Pages/CreateAccountPage.jsx'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -39,9 +39,9 @@ function App() {
   },[])
 
   return (
-    <Router>
+    <Router basename="/">
       <Routes>
-        <Route path='/' element={
+        <Route exact path='/' element={
 
 
 
@@ -50,7 +50,7 @@ function App() {
 
         } />
 
-        <Route path='create_account' element={
+        <Route path='/create_account' element={
 
 
           <CreateAccountPage />

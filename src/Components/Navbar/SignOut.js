@@ -27,35 +27,38 @@ export const SignOut = () => {
           });
     }
 
+    function click(e){
+       
+        var user_butt = document.getElementById("userLoginButton");
+        var login_con = document.getElementsByClassName('signOut_innerbox')[0];
+    
+    
+        if(currentUserEmail.current){
+
+            var isOutsideClicked = login_con.contains(e.target);
+            var isUserClicked = user_butt.contains(e.target);
+
+         
+            if ((!isOutsideClicked && !isUserClicked)) {
+                updateDisplayLogin(false)
+
+            }
+            if (isUserClicked) {
+                updateDisplayLogin(true)
+            }
+        }    
+    }
+
     //add event listner 
     useEffect(()=>{
         
-        document.addEventListener("click", (e) => {
-            
-            
-            var user_butt = document.getElementById("userLoginButton");
-            var login_con = document.getElementsByClassName('signOut_innerbox')[0];
-        
-        
-            if(currentUserEmail.current){
+        document.addEventListener("click", click);
 
-                var isOutsideClicked = login_con.contains(e.target);
-                var isUserClicked = user_butt.contains(e.target);
+        return () => {
+            document.removeEventListener('click', click)
+        }
 
-                console.log(isOutsideClicked)
-                console.log(isUserClicked)
-                if ((!isOutsideClicked && !isUserClicked)) {
-                    updateDisplayLogin(false)
-
-                }
-                if (isUserClicked) {
-                    updateDisplayLogin(true)
-                }
-            }
-
-
-        });
-    },[])
+    },[displayLogin])
 
     useEffect(()=>{
         currentUserEmail.current=userEmail

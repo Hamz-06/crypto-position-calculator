@@ -1,53 +1,59 @@
-import React,{useRef} from "react";
+import React, { useRef } from "react";
 import { auth } from '../Firebase/Firebase'
 import { GoogleAuthProvider, signInWithPopup, GithubAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import './LoginModal.css'; //made easier for modal 
-
-export const Login = () => {
+import { Link } from "react-router-dom";
+export const Login = (props) => {
 
     const [email, updateEmail] = useState();
     const [password, updatePassword] = useState();
-    const [error,updateError] = useState('');
+    const [error, updateError] = useState('');
     const [displayLogin, updateDisplayLogin] = useState(false)
     // const userInfo = useSelector((state)=>state.userData.value)
 
     const userEmail = useSelector((state) => state.userData.value)
-    var current = useRef();
-    useEffect(()=>{
-        
-        document.addEventListener("click", (e) => {
-            
-            
-            var login_con = document.getElementsByClassName('login_innerbox')[0];
-            var user_butt = document.getElementById("userLoginButton");
-     
-        
-        
-            if(!current.current){
 
-                var isOutsideClicked = login_con.contains(e.target);
-                var isUserClicked = user_butt.contains(e.target);
+    var currentUserEmail = useRef();
 
-                console.log(isOutsideClicked)
-                console.log(isUserClicked)
-                if ((!isOutsideClicked && !isUserClicked)) {
-                    updateDisplayLogin(false)
+    
+    
+    function click(e) {
+        
+        var login_con = document.getElementsByClassName('login_innerbox')[0];
+        var user_butt = document.getElementById("userLoginButton");
 
-                }
-                if (isUserClicked) {
-                    updateDisplayLogin(true)
-                }
+        if(!currentUserEmail.current){
+
+            var isUserClicked = user_butt.contains(e.target);
+            var isOutside = login_con.contains(e.target)
+            if (!isOutside && !isUserClicked) {
+                
+                updateDisplayLogin(false)
             }
+            if(isUserClicked){
+                updateDisplayLogin(true)
+            }
+        }
+    }
+    useEffect(() => {
+
+  
+        document.addEventListener("click", click);
 
 
-        });
-    },[])
+        return () => {
+            document.removeEventListener('click', click)
+        }
+    }, [displayLogin])
 
-    useEffect(()=>{
-        current.current=userEmail
-    },[userEmail])
+    useEffect(() => {
+        currentUserEmail.current = userEmail
+    }, [userEmail])
+
+
+
 
     function handleEmail(e) {
 
@@ -195,7 +201,7 @@ export const Login = () => {
                 </form>
 
                 <div className="login_login">
-                    Create account?<a href='/create_account' className='login_login_link'> click here</a>
+                    Create account?<Link to='/create_account' className='login_login_link'> click here</Link>
                 </div>
 
             </div>

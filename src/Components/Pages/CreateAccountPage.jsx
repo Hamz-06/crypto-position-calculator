@@ -4,6 +4,7 @@ import './CreateAccountPage.css'
 import { Footer } from "../Footer/Footer";
 import { auth } from "../Firebase/Firebase";
 import { createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,GithubAuthProvider } from "firebase/auth";
+import { Link } from "react-router-dom";
 export function CreateAccountPage() {
 
 
@@ -158,7 +159,7 @@ export function CreateAccountPage() {
                 </form>
 
                 <div className="createAccount_login">
-                    have an account?<a href='/' className='createAccount_login_link'> log in</a>
+                    have an account?<Link to='/' className='createAccount_login_link'> log in</Link>
                 </div>
 
             </div>

@@ -66,6 +66,15 @@ export const ChartTab = props => {
 
             //addMarkers(newSeries);
 
+
+            var posTypeRadios = document.getElementsByClassName('calc_radio_check');
+            for (let radio of posTypeRadios) {
+                radio.onclick = (e) => {
+                    console.log(e.target.value)
+                    setPosType(e.target.value)
+
+                }
+            }
             const resizeO = new ResizeObserver((entries)=>{
                 chart.current.applyOptions(
                     {
@@ -75,18 +84,10 @@ export const ChartTab = props => {
             })
 
             resizeO.observe(chartContainerRef.current)
-        
-          
 
-            
-
-            var posTypeRadios = document.getElementsByClassName('calc_radio_check');
-            for (let radio of posTypeRadios) {
-                radio.onclick = (e) => {
-                    console.log(e.target.value)
-                    setPosType(e.target.value)
-
-                }
+    
+            return()=>{
+                resizeO.disconnect()
             }
 
         }, []);
