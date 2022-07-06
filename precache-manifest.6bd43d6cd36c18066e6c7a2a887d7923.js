@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "0d4dd88867c3c1b8de86",
+    "revision": "b9d13cb0284fb81f9c00",
     "url": "/crypto-position-calculator/static/css/main.3d92d5e5.chunk.css"
   },
   {
-    "revision": "0d4dd88867c3c1b8de86",
-    "url": "/crypto-position-calculator/static/js/main.0d4dd888.chunk.js"
+    "revision": "b9d13cb0284fb81f9c00",
+    "url": "/crypto-position-calculator/static/js/main.b9d13cb0.chunk.js"
   },
   {
     "revision": "6d1c687f73f1a0446a07",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/crypto-position-calculator/static/js/runtime~main.8c0fa573.js"
   },
   {
-    "revision": "f9248b022549358904deb296450df957",
+    "revision": "f4aeca4c17fc5245e4d4cd599226bba7",
     "url": "/crypto-position-calculator/index.html"
   }
 ];
