@@ -26,7 +26,7 @@ export function Homepage() {
         </div>
 
         <div className="homePage_row">
-          <div className="homePage_cal_tab">
+          <div className="homePage_cal_tab" style={ chartClicked? {borderRight:'1px solid black'}:{ border:'0' }}>
             {/* ADD EVENT LISTNER INSTEAD  */}
             <React.StrictMode>
               <CalculatorTab onCalculate={fetchData} />

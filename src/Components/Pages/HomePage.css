@@ -1,7 +1,7 @@
 
 .homePage_outer{
     width: 100vw;
-    height: 90vh;
+    height: 100vh;
     padding: 0 2%;
     background: lightsteelblue;
 }
@@ -16,7 +16,7 @@
 }
 .homePage_cal_tab{
     flex: 1;
-    
+    position: relative;
      
 }
 
@@ -70,5 +70,11 @@
     .homePage_logo{
         padding:3%;
     }
+
+    .homePage_cal_tab{
+        height: 80vh;
+        flex: none;
+    }
+ 
 
 }
