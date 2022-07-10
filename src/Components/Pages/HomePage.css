@@ -1,44 +1,30 @@
 
 .homePage_outer{
     width: 100vw;
-    height: 100vh;
-    padding: 0 2%;
+    height: 90vh;
+    padding: 0 8%;
     background: lightsteelblue;
 }
-.homePage_logo{
-    height: 10%;
-    border-bottom: 1px solid black;
-}
+
 .homePage_row{
     display: flex;
-    height: 90%;
+    height: 100%;
     
 }
 .homePage_cal_tab{
     flex: 1;
-    position: relative;
+   
      
 }
 
 .homePage_chart_tab{
     flex: 2;
     background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5% 0;
+
     
 }
 
 
-.homePage_logo{
-    background: white;
-    padding: 0 2%;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 
 
@@ -54,26 +40,18 @@
         padding: 0 2%;
     }
     .homePage_row{
-        display: flex;
-        height: 90%;
+        display: block;
+       
         flex-direction: column;
     }
     .homePage_chart_tab{
-        flex: 1;
-        background: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 5% ;
-        width: 100%;
-    }
-    .homePage_logo{
-        padding:3%;
+        height: 90vh;    
+       
     }
 
     .homePage_cal_tab{
-        height: 80vh;
-        flex: none;
+        height: 90vh;
+   
     }
  
 

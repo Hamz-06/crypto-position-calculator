@@ -40,7 +40,7 @@ function Navbar() {
         }
     ]
 
-
+    
 
     function displaySignin(){
         
@@ -49,7 +49,7 @@ function Navbar() {
 
 
     return (
-
+        
         <nav className="NavbarItems">
 
             <div className='menu-icon container' onClick={menuClicked}>

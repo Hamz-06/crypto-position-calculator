@@ -1,5 +1,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
+import { useEffect } from 'react';
+
 const initialState = {
   value: null,
 }
@@ -11,10 +13,15 @@ const initialState = {
     setUserData: (state,action) => {
       
       state.value = action.payload
+     
+      
     },
 
   },
 })
+
+
+
 
 
 // Action creators are generated for each case reducer function

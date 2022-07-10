@@ -1,99 +1,77 @@
 import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
-import { useSelector } from 'react-redux'
-
+import {GetSymbolInfo} from '../Calc/PriceData'
+import { useEffect } from "react";
 export const CalculatorTab = (props) => {
 
 
-    var marginUsd = useRef('');
-    var riskSizeUsd = useRef('');
-    var stopLossPercent = useRef('');
-    var takeProfPercent = useRef('')
-    var limitOrder = useRef('')
-
-    const [contract, setContract] = useState('');
-    const [leverage, setLeverage] = useState('');
-    const [button, setButton] = useState(true);
-    const [positionType, setPosType] = useState('long')  //default
-    //edit certain margins when div clicked
-
-
-    function updatePortfolio(event) {
+    const [positionType, setPosType] = useState('long')
+    const [orderType, updateOrderType] = useState('marketOrder')
+    const [stopLoss, updateStopLoss] = useState('')
+    const [takeProfit, updateTakeProfit] = useState('')
+    
+    
+    const [limitPrice, updateLimitPrice] = useState('')
 
 
 
-        switch (event.target.id) {
-            case 'inputPort':
-                console.log(event.target.id)
-                takeProfPercent.current = event.target.value;
+    //limit order or market
+    const handleOrderType = (event) => {
 
-                break;
-            case 'marginUsd':
-
-
-                marginUsd.current = event.target.value;
-
-                break;
-            case 'riskSizeUsd':
-
-                riskSizeUsd.current = event.target.value;
-
-                break;
-            case 'stopLossPercent':
-
-                stopLossPercent.current = event.target.value;
-                break;
-            case 'limitOrder':
-                limitOrder.current = event.target.value;
-                break;
-
-        }
-
-
-
-        //if margin percent and takeProfPercent is not empty we will make margin usd
-        if (takeProfPercent.current === "" || marginUsd.current === "" || riskSizeUsd.current === "" || stopLossPercent.current === "") {
-            // console.log("empty")
-
-
-            setContract('')
-            setLeverage('')
-            setButton(true)
-            props.onCalculate([])
-
-            return;
-
-        }
-
-
-        var setContractCalc = riskSizeUsd.current / (stopLossPercent.current / 100)
-        setContractCalc = setContractCalc.toFixed(2)
-        setContract(setContractCalc)
-
-
-
-        //calculate leverage and pass data back into mainTab (has to be timer to load data)
-
-        if (setContractCalc === "") {
-            setButton(true);
-        } else {
-            setButton(false)
-        }
-
-
-        var setLevCalc = Math.ceil(setContractCalc / marginUsd.current)
-        setLeverage(setLevCalc)
-
-        props.onCalculate([stopLossPercent.current, takeProfPercent.current])
-
+        updateOrderType(event.target.id)
 
     }
-    const handleChange = (event) => {
+
+    //long or short 
+    const handlePosition = (event) => {
 
         setPosType((event.target.value));
 
     };
+
+    const MarketOrderDiv = () => {
+        return (
+            <>
+                <div className="calc_inputBox" style={orderType==='marketOrder'?{display:'none'}:{display:'block'}}>
+                    <label className="calc_inputLabel" style={{ color: limitPrice === '' ? 'transparent' : 'black' }} >Limit price</label>
+                    <input type="number" onChange={(event) => { updateLimitPrice(event.target.value) }} className='calc_input' id="LimitPrice" value={limitPrice} placeholder='Limit Price' />
+                </div>
+
+                <div className="calc_inputBox" >
+                    <label className="calc_inputLabel" style={{ color: stopLoss === '' ? 'transparent' : 'black' }} >stop loss</label>
+                    <input type="number" onChange={(event) => { updateStopLoss(event.target.value) }} className='calc_input' id="stopLossPercent" value={stopLoss} placeholder='Stop Loss In Percent' />
+                </div>
+
+
+                <div className="calc_inputBox" >
+                    <label className="calc_inputLabel" style={{ color: takeProfit === '' ? 'transparent' : 'black' }}>take profit</label>
+                    {/* <label style={takeProfPercent.current===''?{display:'none'}:{display:'block'}}>take profit</label> */}
+                    <input type="number" className='calc_input' onChange={(event) => { updateTakeProfit(event.target.value) }} id='takeProfPercent' value={takeProfit} placeholder='Take Profit In Percent' />
+                </div>
+
+                <div className="calc_inputBox">
+
+                    <div className="calc_radio">
+                        <label>
+                            <b>Long </b>
+                            <input type="radio" value="long" className="calc_radio_check" checked={positionType === 'long'} onChange={handlePosition} />
+                        </label>
+                    </div>
+                    <div className="calc_radio">
+                        <label>
+                            <b>Short </b>
+                            <input type="radio" value="short" className="calc_radio_check" checked={positionType === 'short'} onChange={handlePosition} />
+                        </label>
+                    </div>
+                </div>
+
+
+            </>
+        )
+    }
+
+
 
 
 
@@ -103,69 +81,39 @@ export const CalculatorTab = (props) => {
         <>
             <div className="calc_outer" >
 
-
-              
-
-
-                <div className="calc_inputBox" >
-                    <label style={{ color: marginUsd.current === '' ? 'transparent' : 'black' }}>margin size</label>
-                    <input type="number" onChange={updatePortfolio} className="calc_input" id='marginUsd' value={marginUsd.current} placeholder='Margin Size In USD' />
+                <div className="calc_infoBox">
+                    <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/64px-Bitcoin.svg.png' alt="alternatetext"></img>
+                    <p>BTC/USDT</p>
+                    
                 </div>
+                <div className="calc_button">
 
-
-
-                <div className="calc_inputBox" >
-                    <label style={{ color: riskSizeUsd.current === '' ? 'transparent' : 'black' }}>risk size</label>
-                    <input type="number" onChange={updatePortfolio} className='calc_input' id="riskSizeUsd" value={riskSizeUsd.current} placeholder='Risk Size In USD' />
-                </div>
-
-
-                <div className="calc_inputBox" >
-                    <label style={{ color: stopLossPercent.current === '' ? 'transparent' : 'black' }} >stop loss</label>
-                    <input type="number" onChange={updatePortfolio} className='calc_input' id="stopLossPercent" value={stopLossPercent.current} placeholder='Stop Loss In Percent' />
-                </div>
-
-
-                <div className="calc_inputBox" >
-                    <label style={{ color: takeProfPercent.current === '' ? 'transparent' : 'black' }}>take profit</label>
-                    {/* <label style={takeProfPercent.current===''?{display:'none'}:{display:'block'}}>take profit</label> */}
-                    <input type="number" className='calc_input' onChange={updatePortfolio} id='inputPort' value={takeProfPercent.current} placeholder='Take Profit In Percent' />
-                </div>
-
-                <div className="calc_output" >
-
-                    <div>
-
-
-                        <p>Contract <i className="fa-solid fa-copy"></i></p>
-                        <button className="calc_copyButton" hidden={button} onClick={() => { navigator.clipboard.writeText(contract) }}><p className='placeHolderOutput'>{contract}</p></button>
+                    <div className="calc_btn-group">
+                        <button id="marketOrder" onClick={handleOrderType} className='orderType'>Market Order</button>
+                        <button id="limitOrder" onClick={handleOrderType} className='orderType'>Limit Order</button>
 
                     </div>
-                    <div className="calc_inputBox">
+                </div>
+                
 
-                        <div className="calc_radio">
-                            <label>
-                                <b>Long </b>
-                                <input type="radio" value="long" className="calc_radio_check" checked={positionType === 'long'} onChange={handleChange} />
-                            </label>
-                        </div>
-                        <div className="calc_radio">
-                            <label>
-                                <b>Short </b>
-                                <input type="radio" value="short" className="calc_radio_check" checked={positionType === 'short'} onChange={handleChange} />
-                            </label>
-                        </div>
-                    </div>
+                <div className="calc_inputField">
+                    {
 
+                        MarketOrderDiv()
 
-                    <div >
-                        <p>leverage <i className="fa-solid fa-rocket"></i></p>
-                        <p className='placeHolderOutput'>{leverage}</p>
-                    </div>
+                    }
+
 
 
                 </div>
-        
+
+                <div className="calc_output">
+
+
+
+
+                </div>
+
 
 
 

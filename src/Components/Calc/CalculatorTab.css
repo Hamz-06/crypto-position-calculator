@@ -1,41 +1,101 @@
+:root{
+    /* dont change  */
+    --infoBoxHeight:6%;  
+    --BoxButtonHeight:10%;
+    --calcBoxHeight:8%;
+    --buttonRadius:25px;
+}
+
 .calc_outer {
-    width: 100%;
+
     background: white;
+    height: 100%;
+    
+}
+
+.calc_button{
+    height: var(--BoxButtonHeight);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calc_infoBox{
+    height: var(--infoBoxHeight);
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+      
+}
+.calc_infoBox>p{
+    
+    display: inline-block;
+    font-weight: bold;
+}
+.calc_infoBox>img{
+    display: inline-block;
+    width: 30px;
+    margin-right: 5px;
+}
+
+.calc_inputField{
+    height: calc(100% - var(--infoBoxHeight) - var(--BoxButtonHeight) - var(--calcBoxHeight));
+    background-color: red;
     padding: 2% 2% 2% 2%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    height: 100%;
-    
-  
-}
-
-.calc_inputBox {
-
-    
-  
 
 }
 
+/* button group */
+.calc_btn-group button {
+    background-color: rgb(252, 252, 252); /* Green background */
+    border: 1px solid green; /* Green border */
+    color: rgb(0, 0, 0); /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+  }
+  
+  .calc_btn-group button:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+    
+  }
+  .calc_btn-group button:nth-child(1) {
+    border-top-left-radius: var(--buttonRadius);
+    border-bottom-left-radius: var(--buttonRadius);
+  }
+  .calc_btn-group button:nth-last-child(1){
+    
+    border-bottom-right-radius: var(--buttonRadius);
+    border-top-right-radius: var(--buttonRadius);
+  }
 
 
 
-::placeholder {
+
+
+.calc_input::placeholder{
     color: black;
     opacity: 1;
+    font-size: medium;
 }
+
 
 .calc_input {
 
     width: 100%;
-    
-    font-size: large;
-    border: 0;
+    padding: 10px 24px;
+    border-radius: var(--buttonRadius);
+
+    border: 1px solid black;
     outline: 0;
     background: transparent;
-    border-bottom: 1px solid black;
-    font-size: large;
     display: block;
+    font-size: medium;
+    
     text-align: center;
 
 }
@@ -43,7 +103,8 @@
 .calc_output {
     width: 100%;
     
-    
+    justify-content: space-evenly;
+    height: var(--calcBoxHeight);
     display: flex;
     text-align: center;
     font-size: large;
@@ -55,9 +116,9 @@
     width: 100%;
 }
 
-.calc_output{
-    justify-content: space-evenly;
-    align-items: center;
+.calc_inputBox{
+    margin-left: auto;
+    margin-right: auto;
 }
 
     
@@ -88,18 +149,16 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
+
+.calc_inputLabel{
+    margin-left: 4%;
+}
+
+
 @media screen and (max-width:960px) {
-    .calc_outer{
-        
-       
-    }
+    
 
-    .calc_inputBox {
 
-        width: 100%;
-        
-
-    }
 
 
 
@@ -118,16 +177,21 @@ input::-webkit-inner-spin-button {
     .calc_input {
 
         width: 100%;
-        height: 30px;
-        font-size: large;
-        border: 0;
+      
+        font-size: medium;
+       border: 0;
+       border-radius: 0;
         outline: 0;
         background: transparent;
         border-bottom: 1px solid black;
-        font-size: large;
+        
         display: block;
         text-align: center;
     
+    }
+
+    .calc_inputBox{
+        width: 90%;
     }
 
 }

@@ -1,11 +1,9 @@
 
-.outerBox{
-    width: 90%;
-    height: 100%;
+.chartTab_outer{
+    width: 100%;
+    height: 70%;
     z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
     background: lightsteelblue;
    
 }
@@ -14,12 +12,24 @@
     height: 100%;
     padding: 1%;
 }
+.chartTab_info{
+    height: 6%;
+    background-color: red;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.chartTab_info>div{
+    text-align: center;
+}   
+
+
 
 @media screen and (max-width:960px){
 
     .outerBox{
         
-        height: 90vh;
+       
         width: 100%;
         z-index: 1;
         display: flex;

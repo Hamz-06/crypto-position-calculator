@@ -1,10 +1,12 @@
 import './ChartTab.css'
 import React from 'react';
-import { GetCandles } from './PriceData';
+import { GetCandles, GetCryptoInfo, GetLiveCandle } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux'
+
+
+
 
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
@@ -20,8 +22,16 @@ export const ChartTab = props => {
     const stopLossPrice = useRef(null);
     const takeProfPrice = useRef(null);
     const getLivePrice = useRef(null);
-    const [positionType, setPosType] = useState('long')  //default
-    
+    const [positionType, setPosType] = useState('long')  //default should be same as calc
+    const [orderType, updateOrderType] = useState('marketOrder') //default shouuld be same as calc
+    const [cryptoInfo, updateCryptoInfo] = useState([])
+
+    const [limitPrice, updateLimitPrice] = useState('')
+    const [stopLoss, updateStopLoss] = useState('')
+    const [takeProfit, updateTakeProfit] = useState('')
+    const [currentTimeFrame, updateTimeFrame] = useState('30m')
+
+
 
 
     useEffect(
@@ -63,19 +73,29 @@ export const ChartTab = props => {
             //FETCH OLD AND LIVE CANDLES 
             fetchCandle();
 
+            //taken fron priceData.js
+            const conn = new WebSocket(GetLiveCandle());
+            conn.onmessage = function (event) {
+                var liveData = JSON.parse(event.data)
 
-            //addMarkers(newSeries);
-
-
-            var posTypeRadios = document.getElementsByClassName('calc_radio_check');
-            for (let radio of posTypeRadios) {
-                radio.onclick = (e) => {
-                    console.log(e.target.value)
-                    setPosType(e.target.value)
+                var editLiveData = {
+                    time: liveData.k.t / 1000,
+                    open: liveData.k.o,
+                    high: liveData.k.h,
+                    low: liveData.k.l,
+                    close: liveData.k.c
 
                 }
+                getLivePrice.current = editLiveData.close;
+
+                newSeries.current.update(editLiveData)
+                return;
+
             }
-            const resizeO = new ResizeObserver((entries)=>{
+
+
+            //used to resize observer
+            const resizeO = new ResizeObserver((entries) => {
                 chart.current.applyOptions(
                     {
                         width: chartContainerRef.current.clientWidth,
@@ -85,20 +105,107 @@ export const ChartTab = props => {
 
             resizeO.observe(chartContainerRef.current)
 
-    
-            return()=>{
+
+            return () => {
                 resizeO.disconnect()
+                conn.close()
             }
 
         }, []);
 
+    function fetchCandle() {
+        //taken fron priceData.js 
+        GetCandles()
+            .then(Resp => {
+
+                const candles = Resp.data.map((d) => ({
+
+                    'time': d[0] / 1000,
+                    'open': d[1],
+                    'high': d[2],
+                    'low': d[3],
+                    'close': d[4]
+
+                }))
+                newSeries.current.setData(candles)
+            })
 
 
+    }
+    //use effect for bitcoin info
     useEffect(() => {
 
-        //run and load if data is present and priceLine does not exist
-        if (props.reload.length !== 0 && purchasePrice.current === null && stopLossPrice.current === null) {
+        function setTimerInfo() {
+            GetCryptoInfo().then(resp => {
 
+                var priceChangePercent = parseFloat(resp.data.priceChangePercent).toFixed(2)
+                var lowPrice = parseFloat(resp.data.lowPrice).toFixed(2)
+                var dataVolume = parseFloat(resp.data.volume).toFixed(2)
+
+                const cryptoInfo = [priceChangePercent, lowPrice, dataVolume]
+
+                updateCryptoInfo(cryptoInfo)
+            })
+        }
+        //run once on load 
+        setTimerInfo()
+        //stat timer 
+        var getInfoInterval = setInterval(setTimerInfo, 2000)
+        return () => {
+            clearInterval(getInfoInterval)
+        }
+    }, [])
+
+    //used to delete price lines 
+    const deletePriceChart = () => {
+
+        if (purchasePrice.current) {
+
+            newSeries.current.removePriceLine(purchasePrice.current)
+            purchasePrice.current = null
+
+            newSeries.current.removePriceLine(stopLossPrice.current)
+            stopLossPrice.current = null
+
+            newSeries.current.removePriceLine(takeProfPrice.current)
+            takeProfPrice.current = null
+
+        }
+    }
+    //price passed in, position type(long/short), tp or sl
+    const updatePosPriceChart = (price, positionType, stopOrTake, percentChange) => {
+
+        console.log(price, positionType, stopOrTake, percentChange)
+        if (stopOrTake === 'takeProfit') {
+            //if long add +
+            if (positionType === 'long') {
+                var getTp = price + ((percentChange / 100) * price)
+                //if short take away --
+            } else if (positionType === 'short') {
+                var getTp = price - ((percentChange / 100) * price)
+            }
+            return getTp
+        }
+        //adjust stop loss
+        else {
+            //if short 
+            if (positionType === 'long') {
+                var getSl = price - ((percentChange / 100) * price)
+                //if long take away --
+            } else if (positionType === 'short') {
+                var getSl = price + ((percentChange / 100) * price)
+            }
+            return getSl
+        }
+
+    }
+    //used to add and update stop loss and take profit 
+    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal) => {
+
+
+        var priceLines = purchasePrice.current === null && stopLossPrice.current === null && takeProfPrice.current === null
+        //if price line exists 
+        if (priceLines) {
             //create price lines (current price) - subject to change
             purchasePrice.current = newSeries.current.createPriceLine({
 
@@ -107,8 +214,6 @@ export const ChartTab = props => {
                 lineStyle: null,
                 axisLabelVisible: false,
                 lineVisible: true,
-
-
             });
             //create stop loss price
             stopLossPrice.current = newSeries.current.createPriceLine({
@@ -129,150 +234,141 @@ export const ChartTab = props => {
                 axisLabelVisible: true,
                 lineVisible: true
             })
-
-            //remove if data is zero and price line exists 
-        } else if (props.reload.length === 0 && purchasePrice.current !== null && stopLossPrice.current !== null && takeProfPrice.current !== null) {
-
-            newSeries.current.removePriceLine(purchasePrice.current)
-            purchasePrice.current = null
-
-            newSeries.current.removePriceLine(stopLossPrice.current)
-            stopLossPrice.current = null
-
-            newSeries.current.removePriceLine(takeProfPrice.current)
-            takeProfPrice.current = null
-
-        }
-        //update price and stop loss if new data is fetched( first checks if data is not null)
-        if (purchasePrice.current != null && stopLossPrice.current != null && takeProfPrice.current != null) {
-
-
-            purchasePrice.current.applyOptions({
-
-                price: getLivePrice.current
-            })
-
-            takeProfPrice.current.applyOptions({
-                price: createTakeProf(props.reload[1], parseInt(getLivePrice.current), positionType)
-
-            })
-            stopLossPrice.current.applyOptions({
-
-                price: createStopLoss(props.reload[0], parseInt(getLivePrice.current), positionType)
-            })
-
-
         }
 
-    }, [props.reload, positionType])
+        purchasePrice.current.applyOptions({
+
+            price: priceLocal
+        })
 
 
+        takeProfPrice.current.applyOptions({
+            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'takeProfit', takeProfitLocal)
 
-    function createTakeProf(takeProfPercent, currentPrice, posType) {
+        })
 
-        if (posType !== "short") {
+        stopLossPrice.current.applyOptions({
 
-            var getTakePrice = currentPrice + ((takeProfPercent / 100) * currentPrice)
+            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'stopLoss', stopLossLocal)
+        })
 
-        }
-        else {
 
-            var getTakePrice = currentPrice - ((takeProfPercent / 100) * currentPrice)
-        }
-        return getTakePrice
     }
 
+    //used to detect if values are changed 
+    useEffect(() => {
 
-    function createStopLoss(stopLossPercent, currentPrice, posType) {
-        if (posType !== "long") {
+        var limitPriceEmpty = (limitPrice !== '' && stopLoss !== '' && takeProfit !== '')
+        var marketOrderEmpty = (stopLoss !== '' && takeProfit !== '' && limitPrice === '')
 
-            var getStopPrice = currentPrice + ((stopLossPercent / 100) * currentPrice)
+        if (marketOrderEmpty && orderType === 'marketOrder') {
+            console.log(getLivePrice.current)
+            updatePriceChart(getLivePrice.current, stopLoss, takeProfit)
+            return
+        } else if (limitPriceEmpty && orderType === 'limitOrder') {
+            updatePriceChart(limitPrice, stopLoss, takeProfit)
+            return
         }
-        else {
 
-            var getStopPrice = currentPrice - ((stopLossPercent / 100) * currentPrice)
-        }
-        // console.log(getStopPrice + "  --sl-")
-        return getStopPrice
-    }
+        //make sure to remove 
+        deletePriceChart()
+        console.log('empty')
+    }, [limitPrice, stopLoss, takeProfit, positionType])
 
+    //use effect for event listner - add remove feature
+    useEffect(() => {
 
+        //stop loss
+        const stopLossDom = document.getElementById('stopLossPercent');
+        stopLossDom.addEventListener('input', () => {
 
-    function fetchCandle() {
-        //taken fron priceData.js 
-        GetCandles()
-            .then(Resp => {
-                const candles = Resp.data.map((d) => ({
+            const stopLossPercent = document.getElementById('stopLossPercent').value;
 
-                    'time': d[0] / 1000,
-                    'open': d[1],
-                    'high': d[2],
-                    'low': d[3],
-                    'close': d[4]
+            updateStopLoss(stopLossPercent)
+        })
+        //take profit
+        const takeProfPerDom = document.getElementById('takeProfPercent');
+        takeProfPerDom.addEventListener('input', () => {
 
-                }))
-                newSeries.current.setData(candles)
-            })
+            const takeProfPercent = document.getElementById('takeProfPercent').value;
+            updateTakeProfit(takeProfPercent)
+        })
 
-        //taken fron priceData.js
-        const conn = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@kline_30m");
-        conn.onmessage = function (event) {
-            var liveData = JSON.parse(event.data)
+        //buttons for long/short 
+        var posTypeRadios = document.getElementsByClassName('calc_radio_check');
+        for (let radio of posTypeRadios) {
+            radio.onclick = (e) => {
 
-            var editLiveData = {
-                time: liveData.k.t / 1000,
-                open: liveData.k.o,
-                high: liveData.k.h,
-                low: liveData.k.l,
-                close: liveData.k.c
+                setPosType(e.target.value)
 
             }
-            getLivePrice.current = editLiveData.close;
-
-            newSeries.current.update(editLiveData)
-            return;
         }
-    }
+        var orderTypeButtons = document.getElementsByClassName('orderType');
+        for (let orderButton of orderTypeButtons) {
+            orderButton.onclick = (e) => {
+
+                updateOrderType(e.target.id)
+            }
+        }
+
+        //limit price 
+        const limitPriceDom = document.getElementById('LimitPrice');
+
+        limitPriceDom.addEventListener('input', () => {
+            const limitPrice = document.getElementById('LimitPrice').value;
+            updateLimitPrice(limitPrice)
+        })
 
 
 
+    }, [])
 
-
-    const handleChange = (event) => {
-
-        setPosType((event.target.value));
-
-    };
-
+    
+    const timeFrames = ['30m', '1h', '4h']
 
     return (
         <>
-            <div className="outerBox" >
+            <div className="delete" style={{position:'absolute',top:'0'}}>
+                {
+                timeFrames.map((timeFrame)=>{
+                    //console.log(timeFrame)
+                })
+                }
+                <button>lol</button>
+            </div>
 
+            <div className="chartTab_info">
+
+                <div>
+                    24h Percent Change<br />
+                    <p style={cryptoInfo[0] > 0 ? { color: 'green' } : { color: 'red' }}>{cryptoInfo[0]}</p>
+                </div>
+                <div>
+
+                    24h Low<br />
+                    {cryptoInfo[1]}
+                </div>
+                <div>
+                    {console.log('x')}
+                    24h Volume<br />
+                    {currentTimeFrame}
+                </div>
+            </div>
+
+            <div className="chartTab_outer" >
 
 
                 <div className="chartTab_container">
 
-                    <div className='redd' ref={chartContainerRef} style={{
+                    <div ref={chartContainerRef} style={{
                         'width': '100%',
                         'height': '100%'
                     }}>
                     </div>
                 </div>
 
-
-
-
-
             </div>
-
-
-
-
-
 
         </>
     )
-
 }
-
