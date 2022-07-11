@@ -1,5 +1,5 @@
 import './ChartTab.css'
-import React from 'react';
+import React, { memo } from 'react';
 import { GetCandles, GetCryptoInfo, GetLiveCandle } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
@@ -11,7 +11,7 @@ import { useRef } from 'react';
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
 
-export const ChartTab = props => {
+export const ChartTab = () => {
 
 
 
@@ -24,12 +24,14 @@ export const ChartTab = props => {
     const getLivePrice = useRef(null);
     const [positionType, setPosType] = useState('long')  //default should be same as calc
     const [orderType, updateOrderType] = useState('marketOrder') //default shouuld be same as calc
-    const [cryptoInfo, updateCryptoInfo] = useState([])
+
 
     const [limitPrice, updateLimitPrice] = useState('')
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
     const [currentTimeFrame, updateTimeFrame] = useState('30m')
+
+
 
 
 
@@ -71,27 +73,9 @@ export const ChartTab = props => {
 
             newSeries.current = chart.current.addCandlestickSeries()
             //FETCH OLD AND LIVE CANDLES 
-            fetchCandle();
 
-            //taken fron priceData.js
-            const conn = new WebSocket(GetLiveCandle());
-            conn.onmessage = function (event) {
-                var liveData = JSON.parse(event.data)
 
-                var editLiveData = {
-                    time: liveData.k.t / 1000,
-                    open: liveData.k.o,
-                    high: liveData.k.h,
-                    low: liveData.k.l,
-                    close: liveData.k.c
 
-                }
-                getLivePrice.current = editLiveData.close;
-
-                newSeries.current.update(editLiveData)
-                return;
-
-            }
 
 
             //used to resize observer
@@ -108,14 +92,33 @@ export const ChartTab = props => {
 
             return () => {
                 resizeO.disconnect()
-                conn.close()
             }
 
         }, []);
 
-    function fetchCandle() {
+    useEffect(() => {
+
+        //taken fron priceData.js
+        const conn = new WebSocket(GetLiveCandle(currentTimeFrame));
+        conn.onmessage = function (event) {
+            var liveData = JSON.parse(event.data)
+
+            var editLiveData = {
+                time: liveData.k.t / 1000,
+                open: liveData.k.o,
+                high: liveData.k.h,
+                low: liveData.k.l,
+                close: liveData.k.c
+
+            }
+
+            getLivePrice.current = editLiveData.close;
+
+            newSeries.current.update(editLiveData)
+
+        }
         //taken fron priceData.js 
-        GetCandles()
+        GetCandles(currentTimeFrame)
             .then(Resp => {
 
                 const candles = Resp.data.map((d) => ({
@@ -127,34 +130,15 @@ export const ChartTab = props => {
                     'close': d[4]
 
                 }))
+
                 newSeries.current.setData(candles)
             })
-
-
-    }
-    //use effect for bitcoin info
-    useEffect(() => {
-
-        function setTimerInfo() {
-            GetCryptoInfo().then(resp => {
-
-                var priceChangePercent = parseFloat(resp.data.priceChangePercent).toFixed(2)
-                var lowPrice = parseFloat(resp.data.lowPrice).toFixed(2)
-                var dataVolume = parseFloat(resp.data.volume).toFixed(2)
-
-                const cryptoInfo = [priceChangePercent, lowPrice, dataVolume]
-
-                updateCryptoInfo(cryptoInfo)
-            })
-        }
-        //run once on load 
-        setTimerInfo()
-        //stat timer 
-        var getInfoInterval = setInterval(setTimerInfo, 2000)
         return () => {
-            clearInterval(getInfoInterval)
+            conn.close()
         }
-    }, [])
+    }, [currentTimeFrame])
+
+
 
     //used to delete price lines 
     const deletePriceChart = () => {
@@ -272,7 +256,7 @@ export const ChartTab = props => {
 
         //make sure to remove 
         deletePriceChart()
-        console.log('empty')
+
     }, [limitPrice, stopLoss, takeProfit, positionType])
 
     //use effect for event listner - add remove feature
@@ -323,38 +307,51 @@ export const ChartTab = props => {
 
     }, [])
 
-    
-    const timeFrames = ['30m', '1h', '4h']
 
+
+
+    const timeFrames = ['30m', '1h', '4h']
     return (
         <>
-            <div className="delete" style={{position:'absolute',top:'0'}}>
-                {
+            <div className="delete" style={{ position: 'absolute', top: '0' }}>
+                {/* {
                 timeFrames.map((timeFrame)=>{
                     //console.log(timeFrame)
                 })
-                }
-                <button>lol</button>
-            </div>
+                } */}
 
+            </div>
             <div className="chartTab_info">
 
-                <div>
-                    24h Percent Change<br />
-                    <p style={cryptoInfo[0] > 0 ? { color: 'green' } : { color: 'red' }}>{cryptoInfo[0]}</p>
-                </div>
-                <div>
+                {/* this is updated every 2 seconds hence its a user defined component  */}
+                <ChartTabTopUpdate />
 
-                    24h Low<br />
-                    {cryptoInfo[1]}
-                </div>
                 <div>
-                    {console.log('x')}
-                    24h Volume<br />
-                    {currentTimeFrame}
+                    <div className="chartTab_timerDropDown">
+                        Time Frame
+
+                        <br />
+                        {currentTimeFrame}
+                        <div className="chartTab_timerDropDown-content">
+
+                            {
+                                timeFrames.map((timeFrame, index) => {
+                                    return (<p className='chartTab_timerDropDown-content-button' key={index} >
+                                        <button onClick={() => { updateTimeFrame(timeFrame) }}>{timeFrame}</button>
+                                        <br />
+                                    </p>)
+
+                                })
+                            }
+                        </div>
+
+                        <i className="fa-solid fa-angle-down"></i>
+                    </div>
+
                 </div>
             </div>
 
+            
             <div className="chartTab_outer" >
 
 
@@ -367,6 +364,56 @@ export const ChartTab = props => {
                     </div>
                 </div>
 
+            </div>
+
+        </>
+    )
+}
+
+
+//used to update 24 hour time (change to coin geko in the future)- user defined component 
+function ChartTabTopUpdate() {
+    const [cryptoInfo, updateCryptoInfo] = useState([])
+    //use effect for bitcoin info
+    useEffect(() => {
+
+        function setTimerInfo() {
+
+
+            GetCryptoInfo().then(resp => {
+
+                var priceChangePercent = parseFloat(resp.data.priceChangePercent).toFixed(2)
+                var lowPrice = parseFloat(resp.data.lowPrice).toFixed(2)
+                var dataVolume = parseFloat(resp.data.volume).toFixed(2)
+
+                const cryptoInfo = [priceChangePercent, lowPrice, dataVolume]
+
+                updateCryptoInfo(cryptoInfo)
+
+            })
+        }
+        //run once on load 
+        setTimerInfo()
+        //stat timer 
+        var getInfoInterval = setInterval(setTimerInfo, 2000)
+        return () => {
+            clearInterval(getInfoInterval)
+        }
+    }, [])
+
+    //these components are updated every 2 seconds 
+    return (
+
+        <>
+            <div>
+                24h Percent Change<br />
+                <p style={cryptoInfo[0] > 0 ? { color: 'green' } : { color: 'red' }}>{cryptoInfo[0]}</p>
+
+            </div>
+            <div>
+
+                24h Low<br />
+                {cryptoInfo[1]}
             </div>
 
         </>

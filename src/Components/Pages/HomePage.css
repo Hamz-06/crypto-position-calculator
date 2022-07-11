@@ -4,6 +4,7 @@
     height: 90vh;
     padding: 0 8%;
     background: lightsteelblue;
+
 }
 
 .homePage_row{
@@ -13,22 +14,18 @@
 }
 .homePage_cal_tab{
     flex: 1;
-   
+    border-left: 1px solid black;
      
 }
 
 .homePage_chart_tab{
     flex: 2;
-    background: white;
+    background: red;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
 
     
 }
-
-
-
-
-
-
 
 
 

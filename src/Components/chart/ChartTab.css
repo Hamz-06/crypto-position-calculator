@@ -1,0 +1,106 @@
+.chartTab_outer {
+    width: 100%;
+    height: 70%;
+    z-index: 1;
+
+    background: lightsteelblue;
+
+}
+
+.chartTab_container {
+    width: 100%;
+    height: 100%;
+    padding: 1%;
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+
+.chartTab_info {
+    height: 6%;
+    background-color: #cccccc;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.chartTab_info>div {
+    text-align: center;
+}
+
+.chartTab_timerDropDown {
+    position: relative;
+}
+
+.chartTab_timerDropDown-content {
+    position: absolute;
+    display: none;
+    width: 250%;
+    left: 50%;
+
+    transform: translate(-50%);
+    z-index: 3;
+    background-color: pink;
+    padding: 20%;
+}
+
+.chartTab_timerDropDown:hover .chartTab_timerDropDown-content {
+    background-color: yellow;
+    display: block;
+
+}
+
+/* p tag that contains a button (p>button) */
+.chartTab_timerDropDown-content-button>button {
+    margin: 3%;
+    padding: 3%;
+    width: 30%;
+
+    border-radius: 8px;
+    border-width: 0;
+    font-style: normal;
+    list-style: none;
+   
+    background-color: lightsteelblue;
+    border: 1px solid black;
+}
+
+.fa-angle-down{
+    transition: transform 1s;
+    margin-left: 5%;
+}
+
+
+.chartTab_timerDropDown:hover .fa-angle-down{
+    color: red;
+    transform: rotate(180deg);
+        
+}
+
+
+
+
+@media screen and (max-width:960px) {
+
+    .outerBox {
+
+
+        width: 100%;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: lightsteelblue;
+
+    }
+
+    
+
+    /* p tag that contains a button (p>button) */
+    .chartTab_timerDropDown-content-button>button {
+        margin: 3%;
+        padding: 5%;
+        width: 50%;
+    }
+
+}

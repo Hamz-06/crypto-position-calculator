@@ -1,9 +1,9 @@
 import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
-import {GetSymbolInfo} from '../Calc/PriceData'
+import {GetSymbolInfo} from '../chart/PriceData'
 import { useEffect } from "react";
-export const CalculatorTab = (props) => {
+export const CalculatorTab = () => {
 
 
     const [positionType, setPosType] = useState('long')
@@ -54,13 +54,13 @@ export const CalculatorTab = (props) => {
 
                     <div className="calc_radio">
                         <label>
-                            <b>Long </b>
+                            <a>Long </a>
                             <input type="radio" value="long" className="calc_radio_check" checked={positionType === 'long'} onChange={handlePosition} />
                         </label>
                     </div>
                     <div className="calc_radio">
                         <label>
-                            <b>Short </b>
+                            <a>Short </a>
                             <input type="radio" value="short" className="calc_radio_check" checked={positionType === 'short'} onChange={handlePosition} />
                         </label>
                     </div>
@@ -86,7 +86,7 @@ export const CalculatorTab = (props) => {
                     <p>BTC/USDT</p>
                     
                 </div>
-                <div className="calc_button">
+                <div className="calc_Pos_Button">
 
                     <div className="calc_btn-group">
                         <button id="marketOrder" onClick={handleOrderType} className='orderType'>Market Order</button>
@@ -106,10 +106,10 @@ export const CalculatorTab = (props) => {
 
 
                 </div>
-
+              
                 <div className="calc_output">
 
-
+                    <button className="calc_output_button" >Add Trade To Portfolio</button>
 
 
                 </div>
