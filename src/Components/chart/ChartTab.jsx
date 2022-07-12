@@ -1,10 +1,11 @@
 import './ChartTab.css'
 import React, { memo } from 'react';
-import { GetCandles, GetCryptoInfo, GetLiveCandle } from './PriceData';
+import { GetCandles, GetLiveCandle } from './PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-
+import { useCallback } from 'react';
+import { ChartTabTopContainer } from './ChartTabTopCont'
 
 
 
@@ -30,6 +31,7 @@ export const ChartTab = () => {
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
     const [currentTimeFrame, updateTimeFrame] = useState('30m')
+
 
 
 
@@ -324,7 +326,7 @@ export const ChartTab = () => {
             <div className="chartTab_info">
 
                 {/* this is updated every 2 seconds hence its a user defined component  */}
-                <ChartTabTopUpdate />
+                <ChartTabTopContainer />
 
                 <div>
                     <div className="chartTab_timerDropDown">
@@ -368,54 +370,6 @@ export const ChartTab = () => {
 
         </>
     )
+
 }
 
-
-//used to update 24 hour time (change to coin geko in the future)- user defined component 
-function ChartTabTopUpdate() {
-    const [cryptoInfo, updateCryptoInfo] = useState([])
-    //use effect for bitcoin info
-    useEffect(() => {
-
-        function setTimerInfo() {
-
-
-            GetCryptoInfo().then(resp => {
-
-                var priceChangePercent = parseFloat(resp.data.priceChangePercent).toFixed(2)
-                var lowPrice = parseFloat(resp.data.lowPrice).toFixed(2)
-                var dataVolume = parseFloat(resp.data.volume).toFixed(2)
-
-                const cryptoInfo = [priceChangePercent, lowPrice, dataVolume]
-
-                updateCryptoInfo(cryptoInfo)
-
-            })
-        }
-        //run once on load 
-        setTimerInfo()
-        //stat timer 
-        var getInfoInterval = setInterval(setTimerInfo, 2000)
-        return () => {
-            clearInterval(getInfoInterval)
-        }
-    }, [])
-
-    //these components are updated every 2 seconds 
-    return (
-
-        <>
-            <div>
-                24h Percent Change<br />
-                <p style={cryptoInfo[0] > 0 ? { color: 'green' } : { color: 'red' }}>{cryptoInfo[0]}</p>
-
-            </div>
-            <div>
-
-                24h Low<br />
-                {cryptoInfo[1]}
-            </div>
-
-        </>
-    )
-}

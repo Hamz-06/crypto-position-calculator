@@ -1,0 +1,91 @@
+
+.tracker_table_container {
+    width: 100%;
+    height: 100%;
+    padding: 1%;
+    background-color: #cccccc;
+    position: relative;
+    
+}
+
+/* edit button div */
+.tracker_moreInfo_icon{
+    position: absolute;
+    top: 0;
+    right:0;
+  
+    width: 40px;
+    height: 40px;
+    background-color: rgb(176, 196, 222, 0.7);
+    transform:translate(50%,-50%);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    z-index: 3;
+    transition: 1s;
+
+}
+.tracker_moreInfo_icon:hover{
+    background-color: rgb(136, 188, 255, 1);
+    color: orange;
+    transform:scale(2)
+    translate(25%,-25%)
+    
+}
+.tracker_moreInfo_icon:hover .fa-pen-to-square{
+    
+    transform: rotate(360deg);
+    transition: 1s;
+}
+
+/* more info next to edit button
+.tracker_moreInfo{
+    visibility: hidden;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-20%,-50%);
+    background-color: white;
+    border-radius: 20px;
+    padding: 1%;
+    z-index: 3;
+} */
+
+
+.tracker_table{
+    overflow-y: scroll;
+    overflow-x: auto;
+    position: relative;
+    height: 100%;
+
+}
+
+.tracker_table>table {
+    width: 100%;
+    border-collapse: collapse; 
+}
+
+
+.tracker_table tr{
+    border-bottom: 1px solid black;
+  
+    
+}
+
+.tracker_table th{
+    padding: 2%;
+}
+.tracker_table td{
+    padding: 1%;
+    text-align: center;
+}
+
+@media screen and (max-width:960px){
+
+    .tracker_moreInfo_icon{
+        display: none;
+    }
+}

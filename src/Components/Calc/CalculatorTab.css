@@ -1,6 +1,6 @@
 :root {
     /* dont change  */
-    --infoBoxHeight: 6%;
+    --infoBoxHeight: 42px;
     --BoxButtonHeight: 10%;
     --calcBoxHeight: 15%;
     --buttonRadius: 25px;
@@ -206,14 +206,7 @@ input::-webkit-inner-spin-button {
 
 
 
-
-
-
 @media screen and (max-width:960px) {
-
-
-
-
 
 
 

@@ -1,6 +1,10 @@
+:root{
+    --chartTab_info_height:42px;
+}
+
 .chartTab_outer {
     width: 100%;
-    height: 70%;
+    height: calc(100% - var(--chartTab_info_height));
     z-index: 1;
 
     background: lightsteelblue;
@@ -16,7 +20,7 @@
 }
 
 .chartTab_info {
-    height: 6%;
+    height: var(--chartTab_info_height);
     background-color: #cccccc;
     display: flex;
     justify-content: space-around;
