@@ -17,6 +17,17 @@ export const GetLiveCandle = (currentTimeFrame)=>{
   return "wss://stream.binance.com:9443/ws/btcusdt@kline_"+currentTimeFrame
 }
 
+//get 
+export const cryptoCoins = [
+  {
+    cryptoName:'BTC/USDT',
+    cryptoImage:'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png'
+  },{
+    cryptoName:'ETH/USDT',
+    cryptoImage:'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
 
+  }
+
+]
 
 

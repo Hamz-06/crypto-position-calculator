@@ -1,6 +1,6 @@
 import './ChartTab.css'
 import React, { memo } from 'react';
-import { GetCandles, GetLiveCandle } from './PriceData';
+import { GetCandles, GetLiveCandle } from '../ApiReq/PriceData';
 import { useEffect, useState } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
@@ -13,7 +13,6 @@ import { ChartTabTopContainer } from './ChartTabTopCont'
 //https://rmolinamir.github.io/typescript-cheatsheet/
 
 export const ChartTab = () => {
-
 
 
     var chart = useRef(null);
@@ -31,11 +30,6 @@ export const ChartTab = () => {
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
     const [currentTimeFrame, updateTimeFrame] = useState('30m')
-
-
-
-
-
 
 
     useEffect(
@@ -186,7 +180,7 @@ export const ChartTab = () => {
 
     }
     //used to add and update stop loss and take profit 
-    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal) => {
+    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal, positionTypeLocal) => {
 
 
         var priceLines = purchasePrice.current === null && stopLossPrice.current === null && takeProfPrice.current === null
@@ -229,13 +223,13 @@ export const ChartTab = () => {
 
 
         takeProfPrice.current.applyOptions({
-            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'takeProfit', takeProfitLocal)
+            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'takeProfit', takeProfitLocal, positionType)
 
         })
 
         stopLossPrice.current.applyOptions({
 
-            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'stopLoss', stopLossLocal)
+            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'stopLoss', stopLossLocal, positionType)
         })
 
 
@@ -248,7 +242,6 @@ export const ChartTab = () => {
         var marketOrderEmpty = (stopLoss !== '' && takeProfit !== '' && limitPrice === '')
 
         if (marketOrderEmpty && orderType === 'marketOrder') {
-            console.log(getLivePrice.current)
             updatePriceChart(getLivePrice.current, stopLoss, takeProfit)
             return
         } else if (limitPriceEmpty && orderType === 'limitOrder') {
@@ -263,7 +256,7 @@ export const ChartTab = () => {
 
     //use effect for event listner - add remove feature
     useEffect(() => {
-
+       
         //stop loss
         const stopLossDom = document.getElementById('stopLossPercent');
         stopLossDom.addEventListener('input', () => {

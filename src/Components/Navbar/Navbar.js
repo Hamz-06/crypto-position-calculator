@@ -1,4 +1,4 @@
-import React, { Component, useRef } from 'react';
+import React, { Component, useEffect, useRef } from 'react';
 
 import './Navbar.css'
 import { useState } from 'react';
@@ -17,7 +17,7 @@ function Navbar() {
     const [menuClick, updateMenuClick] = useState(false)
     const [settingClick, updateSettingclick] = useState(false)
 
-    const [displayLogin, updateDisplayLogin] = useState()
+    
 
 
     const menuClicked = () => {
@@ -40,12 +40,9 @@ function Navbar() {
         }
     ]
 
+
     
 
-    function displaySignin(){
-        
-        
-    }
 
 
     return (

@@ -1,8 +1,9 @@
 import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
-import {GetSymbolInfo} from '../chart/PriceData'
-import { useEffect } from "react";
+import { cryptoCoins } from "../ApiReq/PriceData";
+
+
 export const CalculatorTab = () => {
 
 
@@ -82,9 +83,9 @@ export const CalculatorTab = () => {
             <div className="calc_outer" >
 
                 <div className="calc_infoBox">
-                    <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/64px-Bitcoin.svg.png' alt="alternatetext"></img>
-                    <p>BTC/USDT</p>
-                    
+                    <img src={cryptoCoins[0].cryptoImage} alt="alternatetext"></img>
+                    <p>{cryptoCoins[0].cryptoName}</p>
+                  
                 </div>
                 <div className="calc_Pos_Button">
 

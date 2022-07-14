@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import './TradeTrackerPrev.css'
+import {createUserTradeDataBase} from '../Firebase/Firebase_user_info'
+
 export function TradeTracker() {
+
+    useEffect(()=>{
+        createUserTradeDataBase()
+    },[])
     return (
 
 

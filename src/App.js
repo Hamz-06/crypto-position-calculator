@@ -11,27 +11,29 @@ import { CreateAccountPage } from './Components/Pages/CreateAccountPage.jsx'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setUserData } from './Components/Storage/Userdata'
-
+import {createUserDataBase} from '../src/Components/Firebase/Firebase_user_info'
 
 
 function App() {
 
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.userData.value)
+  
   const [load, updateLoad] = useState(false)
 
 
 
 
   useEffect(() => {
-
     const unsub = onAuthStateChanged(auth, (user) => {
+  
       if (user) {
+       
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
-
         dispatch(setUserData(user.email))
+        //createUserDataBase(uid)
+     
         // ...
       } else {
         // User is signed out
@@ -49,7 +51,7 @@ function App() {
       {load ?
         (<Router basename="/">
           
-
+         
           <Routes>
 
             <Route exact path='/' element={
