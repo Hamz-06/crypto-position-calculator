@@ -54,6 +54,10 @@
     z-index: 3;
 } */
 
+.fa-trash-can:hover{
+    color: red;
+}
+
 
 .tracker_table{
     overflow-y: scroll;

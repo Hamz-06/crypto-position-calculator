@@ -12,7 +12,7 @@ import { CreateAccountPage } from './Components/Pages/CreateAccountPage.jsx'
 import { useSelector, useDispatch } from 'react-redux'
 import { setUserData } from './Components/Storage/Userdata'
 import {createUserDataBase} from '../src/Components/Firebase/Firebase_user_info'
-
+import {setUserId} from './Components/Storage/UserId'
 
 function App() {
 
@@ -32,13 +32,17 @@ function App() {
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
         dispatch(setUserData(user.email))
+        dispatch(setUserId(uid))
         //createUserDataBase(uid)
+
+
      
         // ...
       } else {
         // User is signed out
         // ...
         dispatch(setUserData(null))
+        dispatch(setUserId(null))
       }
     });
     updateLoad(true)

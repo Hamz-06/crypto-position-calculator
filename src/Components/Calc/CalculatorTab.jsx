@@ -2,17 +2,17 @@ import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
 import { cryptoCoins } from "../ApiReq/PriceData";
-
-
+import { useDispatch } from "react-redux";
+import {setNewTrade} from '../Storage/NewTrade'
 export const CalculatorTab = () => {
 
-
+    const dispatch = useDispatch();
     const [positionType, setPosType] = useState('long')
     const [orderType, updateOrderType] = useState('marketOrder')
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
-    
-    
+
+
     const [limitPrice, updateLimitPrice] = useState('')
 
 
@@ -31,10 +31,19 @@ export const CalculatorTab = () => {
 
     };
 
+    const handleAddToPortfolio = () => {
+        
+        dispatch(setNewTrade({
+            posType: positionType,
+            entryPrice: 22000,
+            
+        }))
+    }
+
     const MarketOrderDiv = () => {
         return (
             <>
-                <div className="calc_inputBox" style={orderType==='marketOrder'?{display:'none'}:{display:'block'}}>
+                <div className="calc_inputBox" style={orderType === 'marketOrder' ? { display: 'none' } : { display: 'block' }}>
                     <label className="calc_inputLabel" style={{ color: limitPrice === '' ? 'transparent' : 'black' }} >Limit price</label>
                     <input type="number" onChange={(event) => { updateLimitPrice(event.target.value) }} className='calc_input' id="LimitPrice" value={limitPrice} placeholder='Limit Price' />
                 </div>
@@ -75,8 +84,6 @@ export const CalculatorTab = () => {
 
 
 
-
-
     return (
 
         <>
@@ -85,7 +92,7 @@ export const CalculatorTab = () => {
                 <div className="calc_infoBox">
                     <img src={cryptoCoins[0].cryptoImage} alt="alternatetext"></img>
                     <p>{cryptoCoins[0].cryptoName}</p>
-                  
+
                 </div>
                 <div className="calc_Pos_Button">
 
@@ -95,22 +102,17 @@ export const CalculatorTab = () => {
 
                     </div>
                 </div>
-                
+
 
                 <div className="calc_inputField">
                     {
-
                         MarketOrderDiv()
-
                     }
-
-
-
                 </div>
-              
+
                 <div className="calc_output">
 
-                    <button className="calc_output_button" >Add Trade To Portfolio</button>
+                    <button className="calc_output_button" onClick={handleAddToPortfolio} >Add Trade To Portfolio</button>
 
 
                 </div>
@@ -121,4 +123,6 @@ export const CalculatorTab = () => {
             </div>
         </>
     )
+
+
 };

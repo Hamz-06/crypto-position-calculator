@@ -1,6 +1,6 @@
 import { db } from "./Firebase";
 import { collection, setDoc, doc, getDoc, getDocs, query, addDoc} from "firebase/firestore"; 
-
+import {cryptoCoins} from '../ApiReq/PriceData'
 
 
 //create a user database
@@ -23,17 +23,43 @@ export const createUserDataBase=async(userId)=>{
         await setDoc(doc(db,'test',userId),{})
     }
 }
-//add trade 
-export const createUserTradeDataBase=async()=>{
+//get image 
+const getCryptoImage=(getCoin)=>{
+
+    var coin=cryptoCoins.find((crypto)=>{
+        return crypto.cryptoName = getCoin
+    })
+    // console.log(coin.cryptoImage)
+    return coin.cryptoImage
     
-    // display all trades
+}
+//add trade 
+export const displayTradeDataBase=async()=>{
+    var trades = ['x','y','z']
+
+    // // display all trades
     // const getUserCollRef = collection(db,'test','Lle06OUXy7WdlscUd12TsxMCmfI3','trade');
     // //const docSnap = query(getUserCollRef)
     // const docSnap = await getDocs(getUserCollRef)
     // docSnap.forEach((doc)=>{
-    //     console.log(doc.data(),doc.id)
+    //     var tradeDataObj ={
+    //         tradeId:doc.id,
+    //         tradeImage: getCryptoImage('BTC/USDT'),
+    //         entryPrice: doc.data().filled,
+    //         limitOrder: doc.data().long,
+    //         posType:doc.data().posType
+    //     }
+    //     trades.push(tradeDataObj)
+        
     // })
+    //console.log(trades)
+    return trades
 
+    
+}
+
+export const addTradeDatabase=()=>{
+    
     //add a trade
     // await addDoc(collection(db,'test','Lle06OUXy7WdlscUd12TsxMCmfI3','trade'),{
     //     long:21000,
@@ -41,13 +67,7 @@ export const createUserTradeDataBase=async()=>{
     //     posType:'long',
     //     limitOrder:null,
     //     filled:true,
-
+    
     // })
-
-
-    
-
-    
-
 }
 
