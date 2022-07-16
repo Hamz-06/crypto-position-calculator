@@ -1,12 +1,13 @@
 import './ChartTab.css'
-import React, { memo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GetCandles, GetLiveCandle } from '../ApiReq/PriceData';
-import { useEffect, useState } from 'react';
+
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
 import { useCallback } from 'react';
 import { ChartTabTopContainer } from './ChartTabTopCont'
 
+import {GetCryptoInfo} from '../ApiReq/PriceData'
 
 
 
@@ -31,7 +32,7 @@ export const ChartTab = () => {
     const [takeProfit, updateTakeProfit] = useState('')
     const [currentTimeFrame, updateTimeFrame] = useState('30m')
 
-
+  
     useEffect(
         () => {
 
@@ -301,10 +302,11 @@ export const ChartTab = () => {
 
 
     }, [])
+    ////////////////////////
 
 
-
-
+    
+    ////////////////////////
     const timeFrames = ['30m', '1h', '4h']
     return (
         <>
@@ -320,9 +322,7 @@ export const ChartTab = () => {
 
                 {/* this is updated every 2 seconds hence its a user defined component  */}
                 <ChartTabTopContainer />
-
-                <div>
-                    <div className="chartTab_timerDropDown">
+                <div className="chartTab_timerDropDown">
                         Time Frame
 
                         <br />
@@ -342,13 +342,10 @@ export const ChartTab = () => {
 
                         <i className="fa-solid fa-angle-down"></i>
                     </div>
-
-                </div>
             </div>
 
             
             <div className="chartTab_outer" >
-
 
                 <div className="chartTab_container">
 

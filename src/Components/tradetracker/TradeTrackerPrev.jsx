@@ -6,30 +6,24 @@ import { useRef } from "react";
 import { useCallback } from "react";
 export function TradeTracker() {
 
-
-    const [trades, updateTrades] = useState()
+    
     const userId = useSelector((state) => state.userId.value)
-    const fetchTrade = useSelector((state) => state.newTrade.value)
-    const [newTrades, updateNewTrades] = useState([])
-    useEffect(() => {
-        //fetches trade from firebase database 
-        displayTradeDataBase().then((res) => {
-            updateTrades(res)
-        })
-    }, [])
-
-
-    useEffect(() => {
-
-        if(!fetchTrade) return;
-        updateNewTrades([...newTrades,fetchTrade])
         
-    }, [fetchTrade])
 
-    const displayOldTrades = useCallback(() => {
-        console.log('refresh')
-        if (!trades) return
-        return trades.map((trade, key) => {
+    const DisplayOldTrades = () => {
+        
+        const [oldTrades, updateOldTrades] = useState()
+       
+        
+        useEffect(() => {
+            //fetches trade from firebase database 
+            displayTradeDataBase().then((res) => {
+                updateOldTrades(res)
+            })
+        }, [])
+
+        if (!oldTrades) return
+        return oldTrades.map((trade, key) => {
             
             return (
                 < tr key={key}>
@@ -40,15 +34,26 @@ export function TradeTracker() {
                 </tr >
             )
         })
-    },[trades])
+    }
     
     
-    const displayNewTrades =() => {
+    const DisplayNewTrades = () => {
+
+        const [newTrades, updateNewTrades] = useState([])
+        const fetchTrade = useSelector((state) => state.newTrade.value)
         
-        
+        useEffect(() => {
+            if(!fetchTrade) return;
+            updateNewTrades([...newTrades,fetchTrade])
+            
+        }, [fetchTrade])
+
+        console.log('refresh')
+
         return newTrades.map((trade, key)=>{
+         
             return (
-                < tr key={key}>
+                < tr key={key} style={(key===0)?{color:'blue', borderBottom:'2px solid green'}:{color:'red'}}>
                     <td>{trade.posType}</td>
                     <td>{trade.entryPrice}</td>
                     <td>lol</td>
@@ -86,12 +91,12 @@ export function TradeTracker() {
                         </tr>
 
                         {
-                            userId && displayNewTrades()
+                            userId && <DisplayNewTrades/>
                         }
 
                         {
                             // user needs to be logged in for this to load 
-                            userId && displayOldTrades(trades)
+                            userId && <DisplayOldTrades/>
                         }
 
 

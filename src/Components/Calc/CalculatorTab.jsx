@@ -33,6 +33,7 @@ export const CalculatorTab = () => {
 
     const handleAddToPortfolio = () => {
         
+        
         dispatch(setNewTrade({
             posType: positionType,
             entryPrice: 22000,

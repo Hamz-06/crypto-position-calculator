@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {GetCryptoInfo} from '../ApiReq/PriceData'
 //used to update 24 hour time (change to coin geko in the future)- user defined component 
 export const ChartTabTopContainer = () => {
-    const [cryptoInfo, updateCryptoInfo] = useState([])
 
+    const [cryptoInfo, updateCryptoInfo] = useState([])
     //use effect for bitcoin info
     useEffect(() => {
 
