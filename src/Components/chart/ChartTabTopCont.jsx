@@ -1,9 +1,11 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {GetCryptoInfo} from '../ApiReq/PriceData'
+import React, { useState, useEffect, useCallback } from 'react';
+import { GetCryptoInfo } from '../ApiReq/PriceData'
 //used to update 24 hour time (change to coin geko in the future)- user defined component 
 export const ChartTabTopContainer = () => {
 
+    const timeFrames = ['30m', '1h', '4h']
     const [cryptoInfo, updateCryptoInfo] = useState([])
+    
     //use effect for bitcoin info
     useEffect(() => {
 
@@ -12,9 +14,9 @@ export const ChartTabTopContainer = () => {
             GetCryptoInfo().then(resp => {
                 var priceChangePercent = parseFloat(resp.data.priceChangePercent).toFixed(2)
                 var lowPrice = parseFloat(resp.data.lowPrice).toFixed(2)
-                var dataVolume = parseFloat(resp.data.volume).toFixed(2)
+                var openPrice = parseFloat(resp.data.openPrice).toFixed(2)
 
-                const cryptoInfo = [priceChangePercent, lowPrice, dataVolume]
+                const cryptoInfo = [priceChangePercent, lowPrice, openPrice]
 
                 updateCryptoInfo(cryptoInfo)
 
@@ -29,10 +31,13 @@ export const ChartTabTopContainer = () => {
         }
     }, [])
 
+    
+
     //these components are updated every 2 seconds 
     return (
 
         <>
+
             <div>
                 24h Percent Change<br />
                 <p style={cryptoInfo[0] > 0 ? { color: 'green' } : { color: 'red' }}>{cryptoInfo[0]}</p>

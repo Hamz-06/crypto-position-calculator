@@ -6,15 +6,15 @@ import { useRef } from "react";
 import { useCallback } from "react";
 export function TradeTracker() {
 
-    
+
     const userId = useSelector((state) => state.userId.value)
-        
+
 
     const DisplayOldTrades = () => {
-        
+
         const [oldTrades, updateOldTrades] = useState()
-       
-        
+
+
         useEffect(() => {
             //fetches trade from firebase database 
             displayTradeDataBase().then((res) => {
@@ -24,7 +24,7 @@ export function TradeTracker() {
 
         if (!oldTrades) return
         return oldTrades.map((trade, key) => {
-            
+
             return (
                 < tr key={key}>
                     <td>19/12/21</td>
@@ -35,29 +35,34 @@ export function TradeTracker() {
             )
         })
     }
-    
-    
+
+
     const DisplayNewTrades = () => {
 
-        const [newTrades, updateNewTrades] = useState([])
         const fetchTrade = useSelector((state) => state.newTrade.value)
-        
+        const [newTrades, updateNewTrades] = useState([])
+
+
         useEffect(() => {
-            if(!fetchTrade) return;
-            updateNewTrades([...newTrades,fetchTrade])
-            
+            console.log(fetchTrade)
+            if (!fetchTrade) return;
+            updateNewTrades([ fetchTrade,...newTrades])
+
         }, [fetchTrade])
 
-        console.log('refresh')
 
-        return newTrades.map((trade, key)=>{
-         
+
+        return newTrades.map((trade, key) => {
+
             return (
-                < tr key={key} style={(key===0)?{color:'blue', borderBottom:'2px solid green'}:{color:'red'}}>
-                    <td>{trade.posType}</td>
+                < tr key={key} style={(key === 0) ? { color: 'blue', borderBottom: '2px solid black' } : {}}>
+                    <td>
+                        {trade.date}<br />
+                        <p>{trade.time}</p>
+                    </td>
+                    <td>{trade.cryptoCoin}</td>
                     <td>{trade.entryPrice}</td>
-                    <td>lol</td>
-                    <td>lol</td>
+                    <td>{trade.posType}</td>
                 </tr >
             )
         })
@@ -66,7 +71,7 @@ export function TradeTracker() {
     return (
 
         <div className="tracker_table_container">
-            
+
             <div className="tracker_table">
                 <table>
                     <thead>
@@ -91,14 +96,14 @@ export function TradeTracker() {
                         </tr>
 
                         {
-                            userId && <DisplayNewTrades/>
+                            // user needs to be logged in for this to load 
+                            userId && <DisplayNewTrades />
                         }
 
                         {
                             // user needs to be logged in for this to load 
-                            userId && <DisplayOldTrades/>
+                            userId && <DisplayOldTrades />
                         }
-
 
 
                     </tbody>

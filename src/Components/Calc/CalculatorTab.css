@@ -169,6 +169,14 @@
 .calc_inputBox {
     margin-left: auto;
     margin-right: auto;
+    
+}
+
+.calc_inputBox_info{
+    text-align: center;
+}
+.calc_inputBox_info>p{
+    padding: 4%;
 }
 
 

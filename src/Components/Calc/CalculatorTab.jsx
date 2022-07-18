@@ -2,20 +2,21 @@ import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
 import { cryptoCoins } from "../ApiReq/PriceData";
-import { useDispatch } from "react-redux";
-import {setNewTrade} from '../Storage/NewTrade'
+import { useDispatch, useSelector } from "react-redux";
+import { setNewTrade } from '../Storage/NewTrade'
+import { useCallback } from "react";
+import { extraInfo } from "../Storage/ExtraInfo";
+import { elementAcceptingRef } from "@mui/utils";
+
 export const CalculatorTab = () => {
 
     const dispatch = useDispatch();
-    const [positionType, setPosType] = useState('long')
-    const [orderType, updateOrderType] = useState('marketOrder')
+    
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
-
-
     const [limitPrice, updateLimitPrice] = useState('')
-
-
+    const [positionType, setPosType] = useState('long')
+    const [orderType, updateOrderType] = useState('marketOrder')
 
     //limit order or market
     const handleOrderType = (event) => {
@@ -23,7 +24,6 @@ export const CalculatorTab = () => {
         updateOrderType(event.target.id)
 
     }
-
     //long or short 
     const handlePosition = (event) => {
 
@@ -31,19 +31,14 @@ export const CalculatorTab = () => {
 
     };
 
-    const handleAddToPortfolio = () => {
-        
-        
-        dispatch(setNewTrade({
-            posType: positionType,
-            entryPrice: 22000,
-            
-        }))
-    }
+
+
+
 
     const MarketOrderDiv = () => {
         return (
             <>
+
                 <div className="calc_inputBox" style={orderType === 'marketOrder' ? { display: 'none' } : { display: 'block' }}>
                     <label className="calc_inputLabel" style={{ color: limitPrice === '' ? 'transparent' : 'black' }} >Limit price</label>
                     <input type="number" onChange={(event) => { updateLimitPrice(event.target.value) }} className='calc_input' id="LimitPrice" value={limitPrice} placeholder='Limit Price' />
@@ -82,11 +77,44 @@ export const CalculatorTab = () => {
         )
     }
 
+    // const CalcExtraInfo = () => {
+    //     const extraInfo = useSelector((state) => state.extraInfo.value)
 
+    //     return (
+    //         <div className="calc_inputBox_info" >
+    //             <p>Price: {(extraInfo !== null ? extraInfo.price : '')}</p>
+    //             <p>StopLoss: {(extraInfo !== null ? extraInfo.takeProfit : '')}</p>
+    //             <p>TakeProfit: {(extraInfo !== null ? extraInfo.stopLoss : '')}</p>
+    //         </div>
+    //     )
+    // }
+    
+    const ButtonAddToPortfolio = () => {
 
+        const extraInfo = useSelector((state) => state.extraInfo.value)
+    
+        const handleAddToPortfolio = () => {
+            var current = new Date()
+            var date = current.toLocaleDateString();
+            var time = current.toLocaleTimeString();
+           
+            if (!extraInfo) return;
+            dispatch(setNewTrade({
+                posType: positionType,
+                entryPrice: extraInfo.price,
+                takeProfit:extraInfo.takeProfit,
+                stopLoss:extraInfo.stopLoss,
+                date: date,
+                time:time,
+                cryptoCoin:cryptoCoins[0].cryptoName
+    
+            }))
+        }
+    
+        return <button className="calc_output_button" onClick={handleAddToPortfolio} >Add Trade To Portfolio</button>
+    }
 
     return (
-
         <>
             <div className="calc_outer" >
 
@@ -104,22 +132,21 @@ export const CalculatorTab = () => {
                     </div>
                 </div>
 
-
                 <div className="calc_inputField">
                     {
                         MarketOrderDiv()
                     }
+
                 </div>
 
                 <div className="calc_output">
 
-                    <button className="calc_output_button" onClick={handleAddToPortfolio} >Add Trade To Portfolio</button>
+                    {
+                        <ButtonAddToPortfolio/>
+                    }
 
 
                 </div>
-
-
-
 
             </div>
         </>
@@ -127,3 +154,4 @@ export const CalculatorTab = () => {
 
 
 };
+

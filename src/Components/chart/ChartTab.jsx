@@ -7,8 +7,9 @@ import { useRef } from 'react';
 import { useCallback } from 'react';
 import { ChartTabTopContainer } from './ChartTabTopCont'
 
-import {GetCryptoInfo} from '../ApiReq/PriceData'
-
+import { GetCryptoInfo } from '../ApiReq/PriceData'
+import { setExtraInfo } from '../Storage/ExtraInfo'
+import { useDispatch } from 'react-redux';
 
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
@@ -16,23 +17,25 @@ import {GetCryptoInfo} from '../ApiReq/PriceData'
 export const ChartTab = () => {
 
 
+    const [currentTimeFrame, updateTimeFrame] = useState('30m')
+    const timeFrames = ['30m', '1h', '4h']
+    const getLivePrice = useRef(null);
+
+
+    var dispatch = useDispatch()
     var chart = useRef(null);
-    const chartContainerRef = useRef();
     var newSeries = useRef(null);
+    const chartContainerRef = useRef();
     const purchasePrice = useRef(null);
     const stopLossPrice = useRef(null);
     const takeProfPrice = useRef(null);
-    const getLivePrice = useRef(null);
     const [positionType, setPosType] = useState('long')  //default should be same as calc
     const [orderType, updateOrderType] = useState('marketOrder') //default shouuld be same as calc
-
-
     const [limitPrice, updateLimitPrice] = useState('')
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
-    const [currentTimeFrame, updateTimeFrame] = useState('30m')
 
-  
+    //create chart 
     useEffect(
         () => {
 
@@ -93,8 +96,8 @@ export const ChartTab = () => {
 
         }, []);
 
+    //update price chart 
     useEffect(() => {
-
         //taken fron priceData.js
         const conn = new WebSocket(GetLiveCandle(currentTimeFrame));
         conn.onmessage = function (event) {
@@ -106,7 +109,6 @@ export const ChartTab = () => {
                 high: liveData.k.h,
                 low: liveData.k.l,
                 close: liveData.k.c
-
             }
 
             getLivePrice.current = editLiveData.close;
@@ -125,7 +127,6 @@ export const ChartTab = () => {
                     'high': d[2],
                     'low': d[3],
                     'close': d[4]
-
                 }))
 
                 newSeries.current.setData(candles)
@@ -135,9 +136,7 @@ export const ChartTab = () => {
         }
     }, [currentTimeFrame])
 
-
-
-    //used to delete price lines 
+    //used to delete price lines function
     const deletePriceChart = () => {
 
         if (purchasePrice.current) {
@@ -153,10 +152,11 @@ export const ChartTab = () => {
 
         }
     }
+
     //price passed in, position type(long/short), tp or sl
     const updatePosPriceChart = (price, positionType, stopOrTake, percentChange) => {
 
-        console.log(price, positionType, stopOrTake, percentChange)
+
         if (stopOrTake === 'takeProfit') {
             //if long add +
             if (positionType === 'long') {
@@ -180,8 +180,9 @@ export const ChartTab = () => {
         }
 
     }
-    //used to add and update stop loss and take profit 
-    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal, positionTypeLocal) => {
+
+    //used to add and update stop loss and take profit - used to dispatch price sl and tp to calc 
+    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal) => {
 
 
         var priceLines = purchasePrice.current === null && stopLossPrice.current === null && takeProfPrice.current === null
@@ -217,47 +218,34 @@ export const ChartTab = () => {
             })
         }
 
+        var takeProfitUsd = updatePosPriceChart(parseInt(priceLocal), positionType, 'takeProfit', takeProfitLocal, positionType)
+        var stopLossUsd = updatePosPriceChart(parseInt(priceLocal), positionType, 'stopLoss', stopLossLocal, positionType)
         purchasePrice.current.applyOptions({
 
             price: priceLocal
         })
 
-
         takeProfPrice.current.applyOptions({
-            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'takeProfit', takeProfitLocal, positionType)
-
+            price: takeProfitUsd
         })
 
         stopLossPrice.current.applyOptions({
-
-            price: updatePosPriceChart(parseInt(priceLocal), positionType, 'stopLoss', stopLossLocal, positionType)
+            price: stopLossUsd
         })
 
+        //dispatch to calculator tab
+        dispatch(setExtraInfo({
+            price: parseInt(priceLocal).toFixed(2),
+            stopLoss: stopLossUsd,
+            takeProfit: takeProfitUsd
+        }))
 
     }
 
-    //used to detect if values are changed 
-    useEffect(() => {
-
-        var limitPriceEmpty = (limitPrice !== '' && stopLoss !== '' && takeProfit !== '')
-        var marketOrderEmpty = (stopLoss !== '' && takeProfit !== '' && limitPrice === '')
-
-        if (marketOrderEmpty && orderType === 'marketOrder') {
-            updatePriceChart(getLivePrice.current, stopLoss, takeProfit)
-            return
-        } else if (limitPriceEmpty && orderType === 'limitOrder') {
-            updatePriceChart(limitPrice, stopLoss, takeProfit)
-            return
-        }
-
-        //make sure to remove 
-        deletePriceChart()
-
-    }, [limitPrice, stopLoss, takeProfit, positionType])
 
     //use effect for event listner - add remove feature
     useEffect(() => {
-       
+
         //stop loss
         const stopLossDom = document.getElementById('stopLossPercent');
         stopLossDom.addEventListener('input', () => {
@@ -302,12 +290,32 @@ export const ChartTab = () => {
 
 
     }, [])
-    ////////////////////////
+
+    //used to detect if values are changed 
+    useEffect(() => {
 
 
-    
-    ////////////////////////
-    const timeFrames = ['30m', '1h', '4h']
+        var limitPriceEmpty = (limitPrice !== '' && stopLoss !== '' && takeProfit !== '')
+        var marketOrderEmpty = (stopLoss !== '' && takeProfit !== '')
+
+        if (marketOrderEmpty && orderType === 'marketOrder') {
+            updatePriceChart(getLivePrice.current, stopLoss, takeProfit)
+            return
+        } else if (limitPriceEmpty && orderType === 'limitOrder') {
+            updatePriceChart(limitPrice, stopLoss, takeProfit)
+            return
+        }
+        dispatch(setExtraInfo(null))
+        //make sure to remove 
+        deletePriceChart()
+
+    }, [limitPrice, stopLoss, takeProfit, positionType, orderType])
+
+
+
+
+
+
     return (
         <>
             <div className="delete" style={{ position: 'absolute', top: '0' }}>
@@ -319,32 +327,36 @@ export const ChartTab = () => {
 
             </div>
             <div className="chartTab_info">
-
                 {/* this is updated every 2 seconds hence its a user defined component  */}
                 <ChartTabTopContainer />
+
+
+                {/* chart tab btc price
+                <div className="chartTab_priceChart">
+                    lol<br/>
+                    <p>{livePrice}</p>
+                </div> */}
                 <div className="chartTab_timerDropDown">
-                        Time Frame
+                    Time Frame
+                    <br />
+                    {currentTimeFrame}
+                    <div className="chartTab_timerDropDown-content">
 
-                        <br />
-                        {currentTimeFrame}
-                        <div className="chartTab_timerDropDown-content">
+                        {
+                            timeFrames.map((timeFrame, index) => {
+                                return (<p className='chartTab_timerDropDown-content-button' key={index} >
+                                    <button onClick={() => { updateTimeFrame(timeFrame) }}>{timeFrame}</button>
+                                    <br />
+                                </p>)
 
-                            {
-                                timeFrames.map((timeFrame, index) => {
-                                    return (<p className='chartTab_timerDropDown-content-button' key={index} >
-                                        <button onClick={() => { updateTimeFrame(timeFrame) }}>{timeFrame}</button>
-                                        <br />
-                                    </p>)
-
-                                })
-                            }
-                        </div>
-
-                        <i className="fa-solid fa-angle-down"></i>
+                            })
+                        }
                     </div>
+                    <i className="fa-solid fa-angle-down"></i>
+                </div>
+
             </div>
 
-            
             <div className="chartTab_outer" >
 
                 <div className="chartTab_container">

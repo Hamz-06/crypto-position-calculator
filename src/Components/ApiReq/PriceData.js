@@ -16,8 +16,12 @@ export const GetCryptoInfo=()=>{
 export const GetLiveCandle = (currentTimeFrame)=>{
   return "wss://stream.binance.com:9443/ws/btcusdt@kline_"+currentTimeFrame
 }
+//gets current bitcoin price 
+export const GetCurrentPrice = ()=>{
+  return axios.get('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
+}
 
-//get 
+//get coins 
 export const cryptoCoins = [
   {
     cryptoName:'BTC/USDT',

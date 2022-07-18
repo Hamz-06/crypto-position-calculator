@@ -109,6 +109,7 @@ export function CreateAccountPage() {
 
                 <div className="createAccount_logo">
                     <h1>Create Account</h1>
+                    
                 </div>
 
 
