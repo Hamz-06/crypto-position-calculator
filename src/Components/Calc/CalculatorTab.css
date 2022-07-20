@@ -127,11 +127,9 @@
 
 }
 
-/* CSS */
+/* CSS for user button*/
 .calc_output_button {
-
-
-
+    
     border-radius: 8px;
     border-width: 0;
     display: inline-block;
@@ -155,10 +153,103 @@
 
     color: #fff;
     background-size: 100% 100%, auto;
+  
 
 }
+/* lock image if user not logged in*/
+.calc_output_button_false>i{
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: red; 
+}
 
+.calc_output_button_false{
 
+    border-radius: 8px;
+    border-width: 0;
+    display: inline-block;
+    font-style: normal;
+    list-style: none;
+    margin: 0;
+    padding: 15px 12px;
+    transform: translateY(50%);
+    border: 1px solid black;
+    background-image: linear-gradient(dodgerblue, dodgerblue), linear-gradient(lightsteelblue, lightsteelblue);
+    background-size: 0 100%, auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.5s ease-out;
+    font-size: 16px;
+}
+
+/* user not signed in  */
+.calc_output_button_notSignedIn{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 3;
+    background-color: lightskyblue;
+    width: 30%;
+    height: 30%;
+    padding: 2%;
+    border: 1px solid black;
+}
+.calc_output_button_notSignedIn>p:nth-of-type(n){
+    
+    padding: 2%;
+}
+.calc_output_button_notSignedIn>p:nth-of-type(1){
+    font-weight: bold;
+    font-size: large;
+   
+    padding-bottom: 4%;
+}
+
+.fa-location-crosshairs{
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%,-50%);
+    background-color: white;
+    border-radius: 20px;
+    padding: 2%;
+    border: 1px solid black;
+    
+}
+
+.fa-location-crosshairs:hover{
+    background-color: lightgray;
+    color: red;
+    
+}
+
+/* /////////////////////////////////// */
+@keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+  
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+  /* .calc_inputBox:hover{
+      animation:shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  } */
+  
+/* ////////////////// */
 
 .calc_radio {
     margin: 2%;

@@ -87,19 +87,9 @@ function Navbar() {
             </div>
      
 
-
-
-
-
-
-
-
             {
                 //if user is logged in dont shpw log in page, if hes logged in show sign out  
-
-               <Login button= {loginButton}/>
-               
-
+               <Login button= {loginButton}/>         
             }
             {
                 <SignOut/>

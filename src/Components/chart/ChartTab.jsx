@@ -128,7 +128,10 @@ export const ChartTab = () => {
                     'low': d[3],
                     'close': d[4]
                 }))
+                //As web scoket is delayed by 2 seconds, im setting live price to last candle open price 
+                const candleLen = candles.length
 
+                getLivePrice.current = candles[candleLen-1].open
                 newSeries.current.setData(candles)
             })
         return () => {

@@ -33,10 +33,8 @@ function App() {
         const uid = user.uid;
         dispatch(setUserData(user.email))
         dispatch(setUserId(uid))
-        //createUserDataBase(uid)
+        createUserDataBase(uid)
 
-
-     
         // ...
       } else {
         // User is signed out
