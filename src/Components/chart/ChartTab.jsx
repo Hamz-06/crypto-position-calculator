@@ -355,7 +355,7 @@ export const ChartTab = () => {
                             })
                         }
                     </div>
-                    <i className="fa-solid fa-angle-down"></i>
+                    <i className="fa-solid fa-angle-up"></i>
                 </div>
 
             </div>

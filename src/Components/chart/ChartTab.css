@@ -49,7 +49,8 @@
 }
 
 .chartTab_timerDropDown:hover .chartTab_timerDropDown-content {
-    background-color: yellow;
+    background-color: #cccccc;
+    border: 1px solid black;
     display: block;
 
 }
@@ -68,14 +69,17 @@
     background-color: lightsteelblue;
     border: 1px solid black;
 }
-
-.fa-angle-down{
+.chartTab_timerDropDown-content-button>button:hover{
+    color: white;
+    background-color: dodgerblue;
+}
+.fa-angle-up{
     transition: transform 1s;
     margin-left: 5%;
 }
 
 
-.chartTab_timerDropDown:hover .fa-angle-down{
+.chartTab_timerDropDown:hover .fa-angle-up{
     color: red;
     transform: rotate(180deg);
         

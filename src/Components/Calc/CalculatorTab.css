@@ -113,7 +113,7 @@
     display: block;
     font-size: 16px;
     background-color: white;
-    
+
 
     text-align: center;
 
@@ -127,9 +127,74 @@
 
 }
 
+/* calc button double verification */
+.calc_output_button_confirm {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    width: 30%;
+    height: 15%;
+    background-color: lightsteelblue;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid black;
+
+}
+
+.calc_output_button_confirm_cancel,
+.calc_output_button_confirm_confirm {
+    width: 30%;
+    height: 50%;
+    border-radius: 8px;
+    border-width: 0;
+    display: inline-block;
+    font-style: normal;
+    list-style: none;
+    margin: 0;
+
+    border: 1px solid black;
+    background-size: 0 100%, auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    /* transition: all 0.5s ease-out; */
+    font-size: 16px;
+ 
+
+}
+
+@keyframes effec {
+from{
+    color: black;
+    background-size: 0% 0%, auto;
+}
+    to {
+        color: white;
+        background-size: 100% 100%, auto;
+    }
+}
+
+.calc_output_button_confirm_confirm {
+    background-image: linear-gradient(dodgerblue, dodgerblue), linear-gradient(rgb(132, 255, 0), rgb(103, 205, 77));
+}
+
+.calc_output_button_confirm_cancel {
+    background-image: linear-gradient(dodgerblue, dodgerblue), linear-gradient(rgb(212, 50, 50), rgb(255, 81, 0));
+}
+
+.calc_output_button_confirm_confirm:hover,
+.calc_output_button_confirm_cancel:hover {
+    animation: shake 1s infinite;
+  
+
+}
+
 /* CSS for user button*/
 .calc_output_button {
-    
+
     border-radius: 8px;
     border-width: 0;
     display: inline-block;
@@ -153,20 +218,21 @@
 
     color: #fff;
     background-size: 100% 100%, auto;
-  
+
 
 }
+
 /* lock image if user not logged in*/
-.calc_output_button_false>i{
-    
+.calc_output_button_false>i {
+
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    color: red; 
+    transform: translate(-50%, -50%);
+    color: red;
 }
 
-.calc_output_button_false{
+.calc_output_button_false {
 
     border-radius: 8px;
     border-width: 0;
@@ -186,11 +252,11 @@
 }
 
 /* user not signed in  */
-.calc_output_button_notSignedIn{
+.calc_output_button_notSignedIn {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     z-index: 3;
     background-color: lightskyblue;
     width: 30%;
@@ -198,57 +264,66 @@
     padding: 2%;
     border: 1px solid black;
 }
-.calc_output_button_notSignedIn>p:nth-of-type(n){
-    
+
+.calc_output_button_notSignedIn>p:nth-of-type(n) {
+
     padding: 2%;
 }
-.calc_output_button_notSignedIn>p:nth-of-type(1){
+
+.calc_output_button_notSignedIn>p:nth-of-type(1) {
     font-weight: bold;
     font-size: large;
-   
+
     padding-bottom: 4%;
 }
 
-.fa-location-crosshairs{
+.fa-location-crosshairs {
     position: absolute;
     top: 0;
     right: 0;
-    transform: translate(50%,-50%);
+    transform: translate(50%, -50%);
     background-color: white;
     border-radius: 20px;
     padding: 2%;
     border: 1px solid black;
-    
+
 }
 
-.fa-location-crosshairs:hover{
+.fa-location-crosshairs:hover {
     background-color: lightgray;
     color: red;
-    
+
 }
 
 /* /////////////////////////////////// */
 @keyframes shake {
-    10%, 90% {
-      transform: translate3d(-1px, 0, 0);
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
     }
-    
-    20%, 80% {
-      transform: translate3d(2px, 0, 0);
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
     }
-  
-    30%, 50%, 70% {
-      transform: translate3d(-4px, 0, 0);
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
     }
-  
-    40%, 60% {
-      transform: translate3d(4px, 0, 0);
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
     }
-  }
-  /* .calc_inputBox:hover{
+}
+
+/* .calc_inputBox:hover{
       animation:shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   } */
-  
+
 /* ////////////////// */
 
 .calc_radio {
@@ -260,13 +335,14 @@
 .calc_inputBox {
     margin-left: auto;
     margin-right: auto;
-    
+
 }
 
-.calc_inputBox_info{
+.calc_inputBox_info {
     text-align: center;
 }
-.calc_inputBox_info>p{
+
+.calc_inputBox_info>p {
     padding: 4%;
 }
 
@@ -329,6 +405,21 @@ input::-webkit-inner-spin-button {
 
     .calc_inputBox {
         width: 90%;
+    }
+
+    /* confimration for trade add to port */
+    .calc_output_button_confirm{
+        width: 70%;
+        height: 30%;
+    }
+
+    /* not signed in for trade add button */
+    .calc_output_button_notSignedIn{
+        width: 70%;
+        height: 50%;
+    }
+    .calc_output_button_notSignedIn>p:nth-of-type(n){
+        padding: 5%;
     }
 
 }

@@ -34,4 +34,21 @@ export const cryptoCoins = [
 
 ]
 
+export const getCryptoImage=(getCoin)=>{
+
+  var coin=cryptoCoins.find((crypto)=>{
+      return crypto.cryptoName = getCoin
+  })
+  // console.log(coin.cryptoImage)
+  return coin.cryptoImage
+  
+}
+
+export const unixToDate=(unix)=>{
+  const milliseconds = unix 
+  const dateObject = new Date(milliseconds)
+  const humanDateFormat = dateObject.toLocaleString()
+  return humanDateFormat
+}
+
 

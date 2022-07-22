@@ -8,6 +8,7 @@
     
 }
 
+
 /* edit button div */
 .tracker_moreInfo_icon{
     position: absolute;
@@ -62,7 +63,7 @@
 .tracker_table{
     overflow-y: scroll;
     overflow-x: auto;
-    position: relative;
+   
     height: 100%;
 
 }
@@ -98,6 +99,17 @@ td>div{
     justify-content: center;
 }
 
+/* delete confirmation */
+.tradcker_deleteConfirmation{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 4;
+    transform: translate(-50%,-50%);
+    width: 30%;
+    height: 15%;
+    background-color: red;
+}
 
 @media screen and (max-width:960px){
 

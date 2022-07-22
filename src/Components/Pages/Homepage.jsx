@@ -6,24 +6,29 @@ import { Footer } from '../Footer/Footer.jsx';
 import './HomePage.css';
 import { useSelector } from 'react-redux'
 import { TradeTracker } from '../tradetracker/TradeTrackerPrev.jsx'
+import { useSpring, animated } from 'react-spring'
 export function Homepage() {
   const chartClicked = useSelector((state) => state.chartClicked.value)
 
 
-
-
+  const props = useSpring({
+    
+    to: { x: 0 },
+    from: { x: -200 },
+  })
 
   return (
     <>
       <Navbar />
       {/* entire screen outer */}
-      <div className="homePage_outer">
+      <animated.div className="homePage_outer">
         {/* home page row splits into two with a aspect ratio of 1 to 2  */}
         <div className="homePage_row">
 
-          <div className="homePage_cal_tab">
+          <animated.div className="homePage_cal_tab" style={props} >
             <CalculatorTab />
-          </div>
+          </animated.div>
+
           <div className="homePage_second_tab" style={chartClicked ? { display: 'block' } : { display: 'none' }}>
             <div className="homePage_second_tab_chart">
               <ChartTab />
@@ -35,7 +40,7 @@ export function Homepage() {
 
           </div>
         </div>
-      </div>
+      </animated.div>
       <Footer />
 
 

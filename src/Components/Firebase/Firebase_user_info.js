@@ -1,5 +1,5 @@
 import { db } from "./Firebase";
-import { collection, setDoc, doc, getDoc, getDocs, where, addDoc, query } from "firebase/firestore";
+import { collection, setDoc, doc, getDoc, getDocs, where, addDoc, query,deleteDoc } from "firebase/firestore";
 
 
 
@@ -13,12 +13,8 @@ export const createUserDataBase = async (userId) => {
     const docSnap = await getDoc(getUserRef);
     //check if user exists
     if (docSnap.exists()) {
-
-
         //if no existence create one 
     } else {
-
-
         //get collection of all users 
         await setDoc(doc(db, 'user', userId), {})
     }
@@ -42,15 +38,15 @@ export const displayTradeDataBase = async (userId) => {
             takeProfit: doc.data().takeProfit,
             stopLoss: doc.data().stopLoss,
             date: doc.data().date,
-            time: doc.data().time,
             cryptoCoin: doc.data().cryptoCoin
         }
         //fetches old to new trades 
+        
         trades.push(trade)
     })
 
-    //we have to reverse the trades so new -> old
-    trades = trades.reverse();
+    //we have to reverse the trades so new -> old b-a and sort date 
+    trades = trades.sort((a,b)=>b.date-a.date);
    
 
     return trades
@@ -67,24 +63,27 @@ export const addTradeDatabase = async (tradeInfo,uniqueId) => {
         takeProfit: tradeInfo.takeProfit,
         stopLoss: tradeInfo.stopLoss,
         date: tradeInfo.date,
-        time: tradeInfo.time,
         cryptoCoin: tradeInfo.cryptoCoin
 
     })
 }
 
 //used to fetch and delete a trade (this could be used to edit in the future)
-export const fetchTradeDataBase =async (tradeDate,tradeTime, uniqueId) => {
+export const fetchTradeDataBase =async (tradeDate, uniqueId) => {
     const userColl = collection(db, "user", uniqueId, 'trade');
     // Create a query against the collection.
-    const trade = query(userColl, where("date", "==", tradeDate),where("time","==",tradeTime));
+    const trade = query(userColl, where("date", "==", tradeDate));
 
     const tradeSnapshot = await getDocs(trade);
+    var docId;
     tradeSnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         console.log(doc.id, " => ", doc.data());
+        docId = doc.id
     });
     
+    await deleteDoc(doc(db, "user", uniqueId,'trade',docId));
+
 
 
 }
