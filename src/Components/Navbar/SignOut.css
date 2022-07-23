@@ -19,6 +19,7 @@
     background-color: lightsteelblue;
     padding: 3%;
     border: 1px solid black;
+    position: relative;
 
   
 }
@@ -38,4 +39,7 @@
     align-items: center;
     text-align: center;
     margin: 2%;
+}
+.signOut_closeButton{
+    
 }

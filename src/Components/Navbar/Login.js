@@ -10,48 +10,10 @@ export const Login = (props) => {
     const [email, updateEmail] = useState();
     const [password, updatePassword] = useState();
     const [error, updateError] = useState('');
-    const [displayLogin, updateDisplayLogin] = useState(false)
-    // const userInfo = useSelector((state)=>state.userData.value)
-
     const userEmail = useSelector((state) => state.userData.value)
 
-    var currentUserEmail = useRef();
-
-    
-    
-    function click(e) {
-        
-        var login_con = document.getElementsByClassName('login_innerbox')[0];
-        var user_butt = document.getElementById("userLoginButton");
-
-        if(!currentUserEmail.current){
-
-            var isUserClicked = user_butt.contains(e.target);
-            var isOutside = login_con.contains(e.target)
-            if (!isOutside && !isUserClicked) {
-                
-                updateDisplayLogin(false)
-            }
-            if(isUserClicked){
-                updateDisplayLogin(true)
-            }
-        }
-    }
-    useEffect(() => {
-
-  
-        document.addEventListener("click", click);
-
-
-        return () => {
-            document.removeEventListener('click', click)
-        }
-    }, [displayLogin])
-
-    useEffect(() => {
-        currentUserEmail.current = userEmail
-    }, [userEmail])
-
+    var displayLogin = props.display.displayLogin
+    var updateDisplayLogin = props.display.updateDisplayLogin
 
 
 
@@ -139,9 +101,8 @@ export const Login = (props) => {
             });
 
     }
-
-    return (
-        <div className="login_outer" style={displayLogin ? { display: 'flex' } : { display: 'none' }}>
+    return (displayLogin && userEmail === null) ? (
+        <div className="login_outer">
 
             <div className="login_innerbox">
 
@@ -172,9 +133,6 @@ export const Login = (props) => {
                     <p>or sign in:</p>
                 </div>
 
-
-
-
                 <form onSubmit={handleaccount}>
 
                     <div className="login_input">
@@ -203,11 +161,12 @@ export const Login = (props) => {
                 <div className="login_login">
                     Create account?<Link to='/create_account' className='login_login_link'> click here</Link>
                 </div>
+                <i onClick={()=>updateDisplayLogin(false)} className="fa-solid fa-location-crosshairs fa-2x"></i>
 
             </div>
         </div>
 
 
-    )
+    ) : ' '
 
 }

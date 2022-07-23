@@ -9,7 +9,8 @@ import { ChartTabTopContainer } from './ChartTabTopCont'
 
 import { GetCryptoInfo } from '../ApiReq/PriceData'
 import { setExtraInfo } from '../Storage/ExtraInfo'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import AllTrades from '../Storage/AllTrades';
 
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
@@ -20,7 +21,7 @@ export const ChartTab = () => {
     const [currentTimeFrame, updateTimeFrame] = useState('30m')
     const timeFrames = ['30m', '1h', '4h']
     const getLivePrice = useRef(null);
-
+    const allTrades = useSelector((state) => state.allTrades.value)
 
     var dispatch = useDispatch()
     var chart = useRef(null);
@@ -34,11 +35,10 @@ export const ChartTab = () => {
     const [limitPrice, updateLimitPrice] = useState('')
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
-
+    const onClickSubsData = useRef()
     //create chart 
     useEffect(
         () => {
-
             const chartOptions = {
                 handleScale: {
                     axisPressedMouseMove: true
@@ -66,20 +66,29 @@ export const ChartTab = () => {
                 },
                 width: chartContainerRef.current.clientWidth,
                 height: chartContainerRef.current.clientHeight,
+                timeScale: {
+                    timeVisible: true,
+                    secondVisible: false,
+                    // borderVisible:false
+                }
             };
 
             chart.current = createChart(chartContainerRef.current, chartOptions);
             chart.current.timeScale().fitContent();
+            function myClickHandler(param) {
+                if (!param.point) {
+                    return;
+                }
+
+                console.log(`Click at ${param.point.x}, ${param.point.y}. The time is ${param.time}.`);
+            }
+            chart.current.subscribeClick(myClickHandler);
 
             newSeries.current = chart.current.addCandlestickSeries()
             //FETCH OLD AND LIVE CANDLES 
 
-
-
-
-
             //used to resize observer
-            const resizeO = new ResizeObserver((entries) => {
+            const resizeO = new ResizeObserver(() => {
                 chart.current.applyOptions(
                     {
                         width: chartContainerRef.current.clientWidth,
@@ -131,7 +140,7 @@ export const ChartTab = () => {
                 //As web scoket is delayed by 2 seconds, im setting live price to last candle open price 
                 const candleLen = candles.length
 
-                getLivePrice.current = candles[candleLen-1].open
+                getLivePrice.current = candles[candleLen - 1].open
                 newSeries.current.setData(candles)
             })
         return () => {
@@ -314,13 +323,27 @@ export const ChartTab = () => {
 
     }, [limitPrice, stopLoss, takeProfit, positionType, orderType])
 
+    //display all trades
+    useEffect(() => {
+        if (allTrades === null) return
+        var markers = [];
 
+        console.log(allTrades)
+        var markers = [{ time: 1658428948, position: 'aboveBar', color: '#f68410', shape: 'circle', text: 'D' }];
 
+        allTrades.map((trade) => {
+            // console.log(typeof(trade.date))
+            // console.log(trade.date)
+            markers.push({ time: trade.date / 1000, position: (trade.posType === 'short') ? 'aboveBar' : 'belowBar', color: (trade.posType === 'short') ? '#e91e63' : '#008000', shape: (trade.posType === 'short') ? 'arrowDown' : 'arrowUp', text: (trade.posType === 'short') ? 'Sell' : 'Buy' })
+        })
 
+        newSeries.current.setMarkers(markers);
+    }, [allTrades])
 
 
     return (
         <>
+
             <div className="delete" style={{ position: 'absolute', top: '0' }}>
                 {/* {
                 timeFrames.map((timeFrame)=>{

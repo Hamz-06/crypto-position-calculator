@@ -55,7 +55,7 @@ export const displayTradeDataBase = async (userId) => {
 }
 
 export const addTradeDatabase = async (tradeInfo,uniqueId) => {
-    console.log(tradeInfo, uniqueId)
+    
     //add a trade
     await addDoc(collection(db, 'user', uniqueId, 'trade'), {
         posType: tradeInfo.posType,

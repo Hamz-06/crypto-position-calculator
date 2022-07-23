@@ -23,6 +23,7 @@
     background-color: lightsteelblue;
     padding: 3%;
     border: 1px solid black;
+    position: relative;
 }
 .login_error{
     width: 80%;
@@ -46,6 +47,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 }
 .login_signupOptions .fa-brands{
     margin: 0 2% 0 2%;

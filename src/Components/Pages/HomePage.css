@@ -19,15 +19,14 @@
 }
 .homePage_cal_tab{
     flex: 1;
-    border-left: 1px solid black;
+ 
      
 }
 /* right side */
 .homePage_second_tab{
     flex: 2;
-   
-    border-right: 1px solid black;
-    border-left: 1px solid black; 
+   outline: 1px solid black;
+
 }
 .homePage_second_tab_chart{
     height: var(--homePage_second_tab_chart_height);
@@ -57,7 +56,8 @@
     }
     
     .homePage_cal_tab{
-        height: 90vh;
+        height: 100vh;
+        margin-bottom: 2%;
         
     }
     .homePage_second_tab_chart{
