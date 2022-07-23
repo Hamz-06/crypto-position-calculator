@@ -1,41 +1,69 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import './TradeTrackerPrev.css'
 import { displayTradeDataBase } from '../Firebase/Firebase_user_info'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import { useRef } from "react";
 import { addTradeDatabase, fetchTradeDataBase } from '../Firebase/Firebase_user_info'
 import { cryptoCoins, getCryptoImage, unixToDate } from '../ApiReq/PriceData'
-
+import { useSpring, animated, useTransition } from 'react-spring'
+import { Link } from "react-router-dom";
+import { setAllTrades } from "../Storage/AllTrades";
 export function TradeTracker() {
 
-
     const userId = useSelector((state) => state.userId.value)
+    const fetchTrade = useSelector((state) => state.newTrade.value)
+    const [oldTrades, updateOldTrades] = useState(null) //starts with null
+    const [newTrades, updateNewTrades] = useState([])
+    const dispatch = useDispatch()
+
+    //redux - send old + new trades to redux storage
+    useEffect(()=>{
+        if (oldTrades===null)return;
+   
+        const allTrades = oldTrades.concat(newTrades)
+        dispatch(setAllTrades(allTrades))
+        
 
 
+    },[oldTrades,newTrades])
+
+    //delete trade 
+    function deleteTrade(index, date, userId, array, updateArray) {
+        const newArray = array.filter((_, i) => index !== i)
+        // console.log(oldTrades,newArray)
+        // console.log(oldTrades.length, newArray.length)
+        fetchTradeDataBase(date, userId)
+        updateArray(newArray)
+    }
+
+    //used to fetch old trades 
+    useEffect(() => {
+        if (!userId) return;
+        //fetches trade from firebase database 
+        displayTradeDataBase(userId)
+            .then((res) => {
+                updateOldTrades(res)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    }, [userId])
+    //used to fetcch new trades
+    useEffect(() => {
+
+
+        //fetch trade starts at null
+        if (!fetchTrade) return;
+        addTradeDatabase(fetchTrade, userId)
+        updateNewTrades([fetchTrade, ...newTrades])
+
+    }, [fetchTrade])
 
     //display old trade 
     const DisplayOldTrades = () => {
-
-        const [oldTrades, updateOldTrades] = useState()
-
-        useEffect(() => {
-            //fetches trade from firebase database 
-            console.log(userId)
-            displayTradeDataBase(userId).then((res) => {
-                updateOldTrades(res)
-
-            })
-        }, [])
-
-        //delete trade 
-        function deleteOldTrade(index, date, userId) {
-            const newArray = oldTrades.filter((_, i) => index !== i)
-            // console.log(oldTrades,newArray)
-            // console.log(oldTrades.length, newArray.length)
-            fetchTradeDataBase(date, userId)
-            updateOldTrades(newArray)
-        }
-
+       
+        const tradeTrackAnim = useSpring({ to: { opacity: 1, x: 0, y: 0 }, from: { opacity: 0, x: 200, y: 0 } })
         //if there is data inside old trades
         if (!oldTrades) return
         return oldTrades.map((trade, key) => {
@@ -45,7 +73,7 @@ export function TradeTracker() {
             const dateAndTime = unixToDate(trade.date)
             const arrayDate = dateAndTime.split(',')
             return (
-                < tr key={key}>
+                < animated.tr key={key} style={tradeTrackAnim}>
                     <td>
                         {arrayDate[0]}<br />{arrayDate[1]}
                     </td>
@@ -60,8 +88,8 @@ export function TradeTracker() {
                     <td>{trade.entryPrice}</td>
                     <td>{trade.posType}</td>
                     {/* used to delete the trade */}
-                    <td><i /** onClick={() => deleteOldTrade(key, trade.date, userId)}*/ className="fa-solid fa-trash-can"></i></td>
-                </tr >
+                    <td><i onClick={() => deleteTrade(key, trade.date, userId, oldTrades, updateOldTrades)} className="fa-solid fa-trash-can"></i></td>
+                </animated.tr >
             )
         })
     }
@@ -70,58 +98,34 @@ export function TradeTracker() {
     //display new trades
     const DisplayNewTrades = () => {
 
-        const fetchTrade = useSelector((state) => state.newTrade.value)
-        const [newTrades, updateNewTrades] = useState([])
+        const tradeTrackAnim = useSpring({ to: { opacity: 1, x: 0, y: 0 }, from: { opacity: 0, x: 200, y: 0 } })
 
-        useEffect(() => {
-
-
-            //fetch trade starts at null
-            if (!fetchTrade) return;
-            addTradeDatabase(fetchTrade, userId)
-            updateNewTrades([fetchTrade, ...newTrades])
-
-        }, [fetchTrade])
-
-        //delete trade 
-        function deleteNewTrade(index, date, userId) {
-
-
-            const newArray = newTrades.filter((_, i) => index !== i)
-            //used to fetch trade and delete it
-            fetchTradeDataBase(date, userId)
-            updateNewTrades(newArray)
-
-        }
-
+        if(!userId) return;
         return newTrades.map((trade, key) => {
             //get date and time -> 21/07/2022, 01:03:50 --- splice comma 
             const dateAndTime = unixToDate(trade.date)
             const arrayDate = dateAndTime.split(',')
 
             return (
-                <tbody>
-                    < tr
-                        key={key}
-                    // style={(key === 0) ? { color: 'blue', borderBottom: '2px solid black' } : {}}
-                    >
-                        <td>
-                            {arrayDate[0]}<br />{arrayDate[1]}
 
-                        </td>
-                        <td>
-                            <div>
-                                {trade.cryptoCoin}
-                                <img src={trade.cryptoImage} alt="alternatetext"></img>
+                < animated.tr key={key} style={tradeTrackAnim}>
+                    <td>
+                        {arrayDate[0]}<br />{arrayDate[1]}
 
-                            </div>
+                    </td>
+                    <td>
+                        <div>
+                            {trade.cryptoCoin}
+                            <img src={trade.cryptoImage} alt="alternatetext"></img>
 
-                        </td>
-                        <td>{trade.entryPrice}</td>
-                        <td>{trade.posType}</td>
-                        <td><i onClick={() => deleteNewTrade(key, trade.date, userId)} className="fa-solid fa-trash-can"></i></td>
-                    </tr >
-                </tbody>
+                        </div>
+
+                    </td>
+                    <td>{trade.entryPrice}</td>
+                    <td>{trade.posType}</td>
+                    <td><i onClick={() => deleteTrade(key, trade.date, userId, newTrades, updateNewTrades)} className="fa-solid fa-trash-can"></i></td>
+                </animated.tr >
+
             )
         })
     }
@@ -132,6 +136,7 @@ export function TradeTracker() {
 
 
             <div className="tracker_table_container">
+
 
 
                 <div className="tracker_table">
@@ -149,16 +154,16 @@ export function TradeTracker() {
                         </thead>
 
                         {/* table body */}
-                      
+
                         <tbody>
 
                             {
                                 // user needs to be logged in for this to load 
-                                userId && <DisplayNewTrades />
+                                <DisplayNewTrades />
                             }
                             {
                                 // user needs to be logged in for this to load 
-                                userId && <DisplayOldTrades />
+                                <DisplayOldTrades />
                             }
 
                         </tbody>
@@ -167,14 +172,14 @@ export function TradeTracker() {
                 </div>
 
 
-                <div className="tracker_moreInfo_icon">
+                <Link to='/view_trades&potfolio' className="tracker_moreInfo_icon">
                     <i className="fa-solid fa-pen-to-square"></i>
-                </div>
+                </Link>
                 {/* <div className="tracker_moreInfo">
                 <i className="fa-solid fa-info"></i>  Coming Out Soon
             </div> */}
             </div>
-           
+
 
 
         </>

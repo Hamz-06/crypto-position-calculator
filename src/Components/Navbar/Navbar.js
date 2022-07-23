@@ -17,6 +17,7 @@ function Navbar() {
     const [menuClick, updateMenuClick] = useState(false)
     const [settingClick, updateSettingclick] = useState(false)
 
+    const [displayLogin, updateDisplayLogin] = useState(false)
     
 
 
@@ -30,7 +31,6 @@ function Navbar() {
         updateSettingclick(!settingClick)
     }
 
-
     const Value = [
 
         {
@@ -39,11 +39,6 @@ function Navbar() {
             cName: 'nav-links'
         }
     ]
-
-
-    
-
-
 
     return (
         
@@ -75,7 +70,7 @@ function Navbar() {
 
 
 
-            <div className='menu-icon container' id='userLoginButton' ref={loginButton}>
+            <div className='menu-icon container' id='userLoginButton' onClick={()=>updateDisplayLogin(!displayLogin)}>
 
                 <div className='menu-icon' id='login-menu-icon'>
                     {/* shows sign in or out according to user info(taken from redux store) */}
@@ -89,10 +84,11 @@ function Navbar() {
 
             {
                 //if user is logged in dont shpw log in page, if hes logged in show sign out  
-               <Login button= {loginButton}/>         
+               <Login display = {{displayLogin,updateDisplayLogin}}/>         
             }
+
             {
-                <SignOut/>
+                <SignOut display = {{displayLogin,updateDisplayLogin}}/>
             }
 
             <ul className={menuClick ? 'nav-menu active' : 'nav-menu'}>

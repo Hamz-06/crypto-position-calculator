@@ -10,18 +10,15 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import { CreateAccountPage } from './Components/Pages/CreateAccountPage.jsx'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setUserData } from './Components/Storage/Userdata'
+import { setUserData } from './Components/Storage/UserEmail'
 import {createUserDataBase} from '../src/Components/Firebase/Firebase_user_info'
 import {setUserId} from './Components/Storage/UserId'
-
+import {ViewTrades_Port} from './Components/Pages/ViewTades_Port'
 function App() {
 
   const dispatch = useDispatch();
   
   const [load, updateLoad] = useState(false)
-
-
-
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -57,22 +54,16 @@ function App() {
           <Routes>
 
             <Route exact path='/' element={
-
-
               <Homepage />
-
-
-
             } />
 
             <Route path='/create_account' element={
-
-
               <CreateAccountPage />
-
-
             } />
 
+            <Route path='/view_trades&potfolio' element={
+              <ViewTrades_Port />
+            } />
 
           </Routes>
 
