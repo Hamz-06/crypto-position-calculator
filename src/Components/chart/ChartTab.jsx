@@ -8,7 +8,8 @@ import { useCallback } from 'react';
 import { ChartTabTopContainer } from './ChartTabTopCont'
 
 import { GetCryptoInfo } from '../ApiReq/PriceData'
-import { setExtraInfo } from '../Storage/ExtraInfo'
+import { setExtraInfo } from '../Storage/ExtraInfoFromChart'
+import { setParamClick } from '../Storage/ParamClickChart'
 import { useDispatch, useSelector } from 'react-redux';
 import AllTrades from '../Storage/AllTrades';
 
@@ -30,12 +31,8 @@ export const ChartTab = () => {
     const purchasePrice = useRef(null);
     const stopLossPrice = useRef(null);
     const takeProfPrice = useRef(null);
-    const [positionType, setPosType] = useState('long')  //default should be same as calc
-    const [orderType, updateOrderType] = useState('marketOrder') //default shouuld be same as calc
-    const [limitPrice, updateLimitPrice] = useState('')
-    const [stopLoss, updateStopLoss] = useState('')
-    const [takeProfit, updateTakeProfit] = useState('')
-    const onClickSubsData = useRef()
+    const calcTabInfo = useSelector(state => state.calcInfo.value)
+
     //create chart 
     useEffect(
         () => {
@@ -73,19 +70,28 @@ export const ChartTab = () => {
                 }
             };
 
+            //create chart at chartContainerRef with rhose options 
             chart.current = createChart(chartContainerRef.current, chartOptions);
             chart.current.timeScale().fitContent();
+            //FETCH OLD AND LIVE CANDLES 
+            newSeries.current = chart.current.addCandlestickSeries()
+
+            //event clicker used to send data to calc tab(if user wants to add old trade)
             function myClickHandler(param) {
                 if (!param.point) {
                     return;
                 }
+                const price = newSeries.current.coordinateToPrice(param.point.y)
+                const time = (param.time) * 1000
+                console.log(time)
+                dispatch(setParamClick({
+                    price: price,
+                    time: time
+                }))
 
-                console.log(`Click at ${param.point.x}, ${param.point.y}. The time is ${param.time}.`);
+                // console.log(`Click at ${param.point.x}, ${param.point.y}. The time is ${param.time}.`);
             }
             chart.current.subscribeClick(myClickHandler);
-
-            newSeries.current = chart.current.addCandlestickSeries()
-            //FETCH OLD AND LIVE CANDLES 
 
             //used to resize observer
             const resizeO = new ResizeObserver(() => {
@@ -194,7 +200,7 @@ export const ChartTab = () => {
     }
 
     //used to add and update stop loss and take profit - used to dispatch price sl and tp to calc 
-    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal) => {
+    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal, positionType) => {
 
 
         var priceLines = purchasePrice.current === null && stopLossPrice.current === null && takeProfPrice.current === null
@@ -230,8 +236,8 @@ export const ChartTab = () => {
             })
         }
 
-        var takeProfitUsd = updatePosPriceChart(parseInt(priceLocal), positionType, 'takeProfit', takeProfitLocal, positionType)
-        var stopLossUsd = updatePosPriceChart(parseInt(priceLocal), positionType, 'stopLoss', stopLossLocal, positionType)
+        var takeProfitUsd = updatePosPriceChart(parseInt(priceLocal), positionType, 'takeProfit', takeProfitLocal)
+        var stopLossUsd = updatePosPriceChart(parseInt(priceLocal), positionType, 'stopLoss', stopLossLocal)
         purchasePrice.current.applyOptions({
 
             price: priceLocal
@@ -255,80 +261,45 @@ export const ChartTab = () => {
     }
 
 
-    //use effect for event listner - add remove feature
-    useEffect(() => {
-
-        //stop loss
-        const stopLossDom = document.getElementById('stopLossPercent');
-        stopLossDom.addEventListener('input', () => {
-
-            const stopLossPercent = document.getElementById('stopLossPercent').value;
-
-            updateStopLoss(stopLossPercent)
-        })
-        //take profit
-        const takeProfPerDom = document.getElementById('takeProfPercent');
-        takeProfPerDom.addEventListener('input', () => {
-
-            const takeProfPercent = document.getElementById('takeProfPercent').value;
-            updateTakeProfit(takeProfPercent)
-        })
-
-        //buttons for long/short 
-        var posTypeRadios = document.getElementsByClassName('calc_radio_check');
-        for (let radio of posTypeRadios) {
-            radio.onclick = (e) => {
-
-                setPosType(e.target.value)
-
-            }
-        }
-        var orderTypeButtons = document.getElementsByClassName('orderType');
-        for (let orderButton of orderTypeButtons) {
-            orderButton.onclick = (e) => {
-
-                updateOrderType(e.target.id)
-            }
-        }
-
-        //limit price 
-        const limitPriceDom = document.getElementById('LimitPrice');
-
-        limitPriceDom.addEventListener('input', () => {
-            const limitPrice = document.getElementById('LimitPrice').value;
-            updateLimitPrice(limitPrice)
-        })
-
-
-
-    }, [])
-
     //used to detect if values are changed 
     useEffect(() => {
+    
+        
+        if (calcTabInfo === null) {
+            //as there is not data coming from calc, we reset and send null data back 
+            dispatch(setExtraInfo(null))
+            //make sure to remove price lines 
+            deletePriceChart()
+            return;
+        }
+        var orderType = calcTabInfo.orderType;
+        var stopLoss = calcTabInfo.stopLoss;
+        var takeProfit = calcTabInfo.takeProfit;
+        var takeProfit = calcTabInfo.takeProfit;
+        var price = calcTabInfo.price;
+        var positionType = calcTabInfo.positionType;
 
-
-        var limitPriceEmpty = (limitPrice !== '' && stopLoss !== '' && takeProfit !== '')
-        var marketOrderEmpty = (stopLoss !== '' && takeProfit !== '')
-
-        if (marketOrderEmpty && orderType === 'marketOrder') {
-            updatePriceChart(getLivePrice.current, stopLoss, takeProfit)
+        if (orderType === 'marketOrder') {
+            updatePriceChart(getLivePrice.current, stopLoss, takeProfit, positionType)
             return
-        } else if (limitPriceEmpty && orderType === 'limitOrder') {
-            updatePriceChart(limitPrice, stopLoss, takeProfit)
+        } else if (orderType === 'limitOrder') {
+            updatePriceChart(price, stopLoss, takeProfit, positionType)
+
+        } else if (orderType === 'addTrade') {
+
+            updatePriceChart(price, stopLoss, takeProfit, positionType)
             return
         }
-        dispatch(setExtraInfo(null))
-        //make sure to remove 
-        deletePriceChart()
 
-    }, [limitPrice, stopLoss, takeProfit, positionType, orderType])
+
+    }, [calcTabInfo])
 
     //display all trades
     useEffect(() => {
         if (allTrades === null) return
         var markers = [];
 
-        console.log(allTrades)
+
         var markers = [{ time: 1658428948, position: 'aboveBar', color: '#f68410', shape: 'circle', text: 'D' }];
 
         allTrades.map((trade) => {

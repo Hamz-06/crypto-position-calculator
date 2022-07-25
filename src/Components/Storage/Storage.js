@@ -3,17 +3,21 @@ import chartClickedReducer from './Chartclicked_data'
 import userEmailReducer from './UserEmail'
 import userIdSlicer from './UserId'
 import newTradeSlice from './NewTrade'
-import extraInfoSlice from './ExtraInfo'
+import extraInfoSlice from './ExtraInfoFromChart'
 import allTradesSlice from './AllTrades'
+import paramClickSlice from './ParamClickChart'
+import extraInfoCalctSlice from './ExtraInfroFromCalc'
 
 export const Store = configureStore({
-  reducer: {
+reducer: {
     chartClicked: chartClickedReducer,
     userData: userEmailReducer,
     userId:userIdSlicer,
     newTrade:newTradeSlice,
     extraInfo:extraInfoSlice,
-    allTrades:allTradesSlice
+    allTrades:allTradesSlice,
+    paramClick:paramClickSlice,
+    calcInfo:extraInfoCalctSlice,
 
   },
 })
