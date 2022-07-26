@@ -1,11 +1,13 @@
 import React, { useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
-import { cryptoCoins, getCryptoImage } from "../ApiReq/PriceData";
+import { cryptoCoins, getCryptoImage, unixToDate } from "../ApiReq/PriceData";
 import { useDispatch, useSelector } from "react-redux";
 import { setNewTrade } from '../Storage/NewTrade'
 import { useEffect } from "react";
 import { setCalcInfo } from '../Storage/ExtraInfroFromCalc'
+import { update } from "react-spring";
+
 
 
 export const CalculatorTab = () => {
@@ -18,8 +20,11 @@ export const CalculatorTab = () => {
     const [positionType, setPosType] = useState('long')
     const [orderType, updateOrderType] = useState('marketOrder')
     const [filled, updateFill] = useState(false)
+    const [checkBox, updateCheckBox] = useState(false)
+    const [time, updateTime] = useState('')
+    const [date,updateDate] = useState('')
     var paramChartClicked = useSelector(state => state.paramClick.value)
-    
+
 
     //limit order or market
     const handleOrderType = (event) => {
@@ -33,14 +38,18 @@ export const CalculatorTab = () => {
         setPosType((event.target.value));
 
     };
+    //handle checkbox - clear data when pressed
+    const handleCheckBox = ()=>{
+        updateCheckBox(!checkBox)
+        updateLimitPrice('')
+    }
 
 
-  
+
     //send data to chart tab
     useEffect(() => {
         var limitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '')
         var marketOrderEmpty = (stopLoss === '' || takeProfit === '')
-        var addTradeEmpty = (stopLoss === '' || takeProfit === '')
 
         if (limitPriceEmpty && orderType === 'limitOrder') {
             dispatch(setCalcInfo(null));
@@ -48,48 +57,92 @@ export const CalculatorTab = () => {
         } else if (marketOrderEmpty && orderType === 'marketOrder') {
             dispatch(setCalcInfo(null));
             return;
-        } else if (addTradeEmpty && orderType === 'addTrade') {
-            dispatch(setCalcInfo(null));
-            return;
         }
-        if (orderType === 'limitOrder' || orderType === 'marketOrder') {
+        if (orderType === 'marketOrder') {
 
             dispatch(setCalcInfo({
                 orderType: orderType,
                 stopLoss: stopLoss,
                 takeProfit: takeProfit,
+                price: null,
+                positionType: positionType,
+                checkBox: false,
+
+            }))
+        } else if (orderType === 'limitOrder') {
+           
+
+            dispatch(setCalcInfo({
+                orderType: orderType,
+                takeProfit: takeProfit,
+                stopLoss: stopLoss,
                 price: limitPrice,
                 positionType: positionType,
+                checkBox: checkBox,
+            })
 
-            }))
-        } else if (orderType === 'addTrade' && paramChartClicked !== null) {
-
-            dispatch(setCalcInfo({
-                orderType: orderType,
-                stopLoss: stopLoss,
-                takeProfit: takeProfit,
-                price: paramChartClicked.price,
-                positionType: positionType,
-            }))
+            )
         }
-    }, [stopLoss, takeProfit, limitPrice, positionType, orderType, paramChartClicked])
+    }, [stopLoss, takeProfit, limitPrice, positionType, orderType, paramChartClicked, checkBox])
 
+    useEffect(() => {
+        if (checkBox){
+            console.log(paramChartClicked)
+            console.log(limitPrice)
+            updateLimitPrice(paramChartClicked.price)
+            updateTime(paramChartClicked.time)
+            var date = unixToDate(paramChartClicked.time)
+            console.log(date)
+            updateDate(date)
+        }
 
+    }, [paramChartClicked])
 
+    const colorStyleTime = (input)=> {
+        return{
+
+            border: (filled&&input === '') ? '1px solid red' : '1px solid black' ,
+            backgroundColor: (checkBox)? '#9f9f9f': '#ffffff'
+        }
+    }
     const MarketOrderDiv = () => {
         return (
             <div className="calc_inputField_outer">
-                {(orderType === 'addTrade') ?
-                    (<div className="calc_inputField_addTrade_help">
-                        Click the chart at where you would like to place the trade!
-                    </div>) : ''
-                }
+
+
                 <div className="calc_inputField">
+                    {(checkBox)?( <div className="calc_inputBox">
+                        click on the chart where you would like to placed a trade !!
+                    </div> ) :''}
+
+                    
+                    {(checkBox) ? (
+                        
+                        <div className="calc_inputBox" style={{ display: (orderType === 'limitOrder') ? 'block' : 'none' }}>
+                            <label className="calc_inputLabel" style={{ color: time === '' ? 'transparent' : 'black' }} >Time</label>
+                            <input
+                            style={colorStyleTime(time)}
+                                readOnly={true}
+                               
+                                className='calc_input'
+                                placeholder='Time'
+                                value={date} />
+                        </div>
+                    ) : ''}
+
                     <div className="calc_inputBox" style={{ display: (orderType === 'limitOrder') ? 'block' : 'none' }}>
                         <label className="calc_inputLabel" style={{ color: limitPrice === '' ? 'transparent' : 'black' }} >Limit price</label>
-                        <input type="number" onChange={(event) => { updateLimitPrice(event.target.value) }} className='calc_input' id="LimitPrice" value={limitPrice} placeholder='Limit Price'
-                            style={(filled && stopLoss === '') ? { border: '1px solid red' } : { color: '1px solid black' }} />
+                        <input
+                            readOnly={checkBox}
+                            type="number"
+                            onChange={(event) => { updateLimitPrice(event.target.value) }}
+                            className='calc_input'
+                            id="LimitPrice"
+                            value={limitPrice}
+                            placeholder='Limit Price'
+                            style={colorStyleTime(limitPrice)} />
                     </div>
+
 
                     <div className="calc_inputBox" >
                         <label className="calc_inputLabel" style={{ color: stopLoss === '' ? 'transparent' : 'black' }} >stop loss</label>
@@ -102,8 +155,15 @@ export const CalculatorTab = () => {
                         <label className="calc_inputLabel" style={{ color: takeProfit === '' ? 'transparent' : 'black' }}>take profit</label>
                         {/* <label style={takeProfPercent.current===''?{display:'none'}:{display:'block'}}>take profit</label> */}
                         <input type="number" className='calc_input' onChange={(event) => { updateTakeProfit(event.target.value) }} id='takeProfPercent' value={takeProfit} placeholder='Take Profit In Percent'
-                            style={(filled && stopLoss === '') ? { border: '1px solid red' } : { color: '1px solid black' }} />
+                            style={(filled && takeProfit === '') ? { border: '1px solid red' } : { color: '1px solid black' }} />
                     </div>
+                    {(orderType === 'limitOrder') ? (
+
+                        <div className="calc_inputBox">
+                            <label>Click on the Chart  </label>
+                            <input type="checkbox" checked={checkBox} onChange={handleCheckBox} />
+                        </div>) : ''
+                    }
 
                     <div className="calc_inputBox">
 
@@ -127,7 +187,9 @@ export const CalculatorTab = () => {
 
         )
     }
-
+    useEffect(()=>{
+        console.log(limitPrice)
+    },[limitPrice])
 
     const ButtonAddToPortfolio = () => {
 
@@ -144,7 +206,7 @@ export const CalculatorTab = () => {
             const date = new Date().getTime()
 
             //dispatch if data is received from chart tab
-            if (infoChartTab && orderType !== 'addTrade') {
+            if (infoChartTab && orderType === 'marketOrder') {
                 dispatch(setNewTrade({
                     posType: positionType,
                     entryPrice: infoChartTab.price,
@@ -155,13 +217,14 @@ export const CalculatorTab = () => {
                     cryptoImage: getCryptoImage(cryptoCoins[0].cryptoName)
                 }))
             }
-            else if (infoChartTab && orderType === 'addTrade') {
+            //fix
+            else if (infoChartTab && orderType === 'limitOrder') {
                 dispatch(setNewTrade({
                     posType: positionType,
                     entryPrice: infoChartTab.price,
                     takeProfit: infoChartTab.takeProfit,
                     stopLoss: infoChartTab.stopLoss,
-                    date: paramChartClicked.time,
+                    date: (paramChartClicked) ? paramChartClicked.time : date,
                     cryptoCoin: cryptoCoins[0].cryptoName,
                     cryptoImage: getCryptoImage(cryptoCoins[0].cryptoName)
                 }))
@@ -170,26 +233,32 @@ export const CalculatorTab = () => {
             updateStopLoss('')
             updateTakeProfit('')
             updateTakeProfit('')
+            updateLimitPrice('')
+            updateDate('')
+            updateTime('')
+            
             updateFill(false)
         }
         //used when add to portfolio button is pressed
         const handleAddToPortfolio = () => {
-            var limitPriceEmpty = (limitPrice === '' && stopLoss === '' && takeProfit === '')
-            var marketOrderEmpty = (stopLoss === '' && takeProfit === '')
-            var addTradeEmpty = (stopLoss === '' && takeProfit === '')
+            var limitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '')
+            var dateLimitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === ''|| time==='')
+            var marketOrderEmpty = (stopLoss === '' || takeProfit === '')
+            console.log(limitPrice)
             //check if there is a value 
             if (marketOrderEmpty && orderType === 'marketOrder') {
                 console.log('Plase Fill Market Info')
                 updateFill(true)
                 return
-            } else if (limitPriceEmpty && orderType === 'limitOrder') {
+            } else if (limitPriceEmpty && orderType === 'limitOrder' && !checkBox) {
                 console.log('Please Fill Limit Info')
                 updateFill(true)
                 return
-            } else if (addTradeEmpty && orderType === 'addTrade' || paramChartClicked === null) {
-                console.log('please fill')
+            } else if (dateLimitPriceEmpty && orderType=='limitOrder' && checkBox){
+                console.log('Please Fill Limit Info')
                 updateFill(true)
-                return;
+                return
+                
             }
             //All of the values are filled and now confirmation button appears 
 
@@ -246,10 +315,6 @@ export const CalculatorTab = () => {
                         <button id="limitOrder" onClick={handleOrderType} className='orderType'>Limit Order</button>
                     </div>
 
-                    <div className="calc_btn-group">
-                        <button id="addTrade" onClick={handleOrderType} className='orderType'>Add Trade</button>
-
-                    </div>
 
                 </div>
                 {

@@ -1,7 +1,10 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
-  value: null,
+  value:{
+    price:'',
+    time:''
+  }
 }
 
  const paramClickSlice = createSlice({

@@ -11,7 +11,7 @@ import { GetCryptoInfo } from '../ApiReq/PriceData'
 import { setExtraInfo } from '../Storage/ExtraInfoFromChart'
 import { setParamClick } from '../Storage/ParamClickChart'
 import { useDispatch, useSelector } from 'react-redux';
-import AllTrades from '../Storage/AllTrades';
+
 
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
@@ -54,6 +54,7 @@ export const ChartTab = () => {
                 },
                 crosshair: {
                     mode: CrosshairMode.Normal,
+   
                 },
                 priceScale: {
                     borderColor: '#485c7b',
@@ -76,14 +77,14 @@ export const ChartTab = () => {
             //FETCH OLD AND LIVE CANDLES 
             newSeries.current = chart.current.addCandlestickSeries()
 
-            //event clicker used to send data to calc tab(if user wants to add old trade)
             function myClickHandler(param) {
                 if (!param.point) {
                     return;
                 }
-                const price = newSeries.current.coordinateToPrice(param.point.y)
-                const time = (param.time) * 1000
-                console.log(time)
+                const price = newSeries.current.coordinateToPrice(param.point.y).toFixed(2)
+                var time = (param.time) * 1000
+                time = (Number.isNaN(time))?'':time
+                // console.log(time)
                 dispatch(setParamClick({
                     price: price,
                     time: time
@@ -91,6 +92,7 @@ export const ChartTab = () => {
 
                 // console.log(`Click at ${param.point.x}, ${param.point.y}. The time is ${param.time}.`);
             }
+            
             chart.current.subscribeClick(myClickHandler);
 
             //used to resize observer
@@ -154,6 +156,7 @@ export const ChartTab = () => {
         }
     }, [currentTimeFrame])
 
+
     //used to delete price lines function
     const deletePriceChart = () => {
 
@@ -200,7 +203,7 @@ export const ChartTab = () => {
     }
 
     //used to add and update stop loss and take profit - used to dispatch price sl and tp to calc 
-    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal, positionType) => {
+    const updatePriceChart = (priceLocal, stopLossLocal, takeProfitLocal, positionType, checkBox) => {
 
 
         var priceLines = purchasePrice.current === null && stopLossPrice.current === null && takeProfPrice.current === null
@@ -278,18 +281,15 @@ export const ChartTab = () => {
         var takeProfit = calcTabInfo.takeProfit;
         var price = calcTabInfo.price;
         var positionType = calcTabInfo.positionType;
-
+        var checkBox = calcTabInfo.checkBox;
+       
         if (orderType === 'marketOrder') {
-            updatePriceChart(getLivePrice.current, stopLoss, takeProfit, positionType)
+            updatePriceChart(getLivePrice.current, stopLoss, takeProfit, positionType,checkBox)
             return
         } else if (orderType === 'limitOrder') {
-            updatePriceChart(price, stopLoss, takeProfit, positionType)
+            updatePriceChart(price, stopLoss, takeProfit, positionType,checkBox)
 
-        } else if (orderType === 'addTrade') {
-
-            updatePriceChart(price, stopLoss, takeProfit, positionType)
-            return
-        }
+        } 
 
 
     }, [calcTabInfo])
@@ -300,16 +300,15 @@ export const ChartTab = () => {
         var markers = [];
 
 
-        var markers = [{ time: 1658428948, position: 'aboveBar', color: '#f68410', shape: 'circle', text: 'D' }];
-
         allTrades.map((trade) => {
             // console.log(typeof(trade.date))
             // console.log(trade.date)
             markers.push({ time: trade.date / 1000, position: (trade.posType === 'short') ? 'aboveBar' : 'belowBar', color: (trade.posType === 'short') ? '#e91e63' : '#008000', shape: (trade.posType === 'short') ? 'arrowDown' : 'arrowUp', text: (trade.posType === 'short') ? 'Sell' : 'Buy' })
         })
-
         newSeries.current.setMarkers(markers);
     }, [allTrades])
+    
+
 
 
     return (
