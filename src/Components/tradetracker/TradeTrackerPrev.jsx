@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import './TradeTrackerPrev.css'
 import { displayTradeDataBase } from '../Firebase/Firebase_user_info'
-import { useSelector,useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useRef } from "react";
 import { addTradeDatabase, fetchTradeDataBase } from '../Firebase/Firebase_user_info'
 import { cryptoCoins, getCryptoImage, unixToDate } from '../ApiReq/PriceData'
@@ -17,15 +17,13 @@ export function TradeTracker() {
     const dispatch = useDispatch()
 
     //redux - send old + new trades to redux storage
-    useEffect(()=>{
-        if (oldTrades===null)return;
-   
+    useEffect(() => {
+        if (oldTrades === null) return;
+
         const allTrades = oldTrades.concat(newTrades)
         dispatch(setAllTrades(allTrades))
-        
 
-
-    },[oldTrades,newTrades])
+    }, [oldTrades, newTrades])
 
     //delete trade 
     function deleteTrade(index, date, userId, array, updateArray) {
@@ -39,6 +37,7 @@ export function TradeTracker() {
     //used to fetch old trades 
     useEffect(() => {
         if (!userId) return;
+        
         //fetches trade from firebase database 
         displayTradeDataBase(userId)
             .then((res) => {
@@ -62,13 +61,14 @@ export function TradeTracker() {
 
     //display old trade 
     const DisplayOldTrades = () => {
-       
+        
         const tradeTrackAnim = useSpring({ to: { opacity: 1, x: 0, y: 0 }, from: { opacity: 0, x: 200, y: 0 } })
         //if there is data inside old trades
         if (!oldTrades) return
         return oldTrades.map((trade, key) => {
             //gets logo of symbol
             var symbolLogo = getCryptoImage(trade.cryptoCoin)
+
             //get date and time -> 21/07/2022, 01:03:50 --- splice comma 
             const dateAndTime = unixToDate(trade.date)
             const arrayDate = dateAndTime.split(',')
@@ -100,7 +100,7 @@ export function TradeTracker() {
 
         const tradeTrackAnim = useSpring({ to: { opacity: 1, x: 0, y: 0 }, from: { opacity: 0, x: 200, y: 0 } })
 
-        if(!userId) return;
+        if (!userId) return;
         return newTrades.map((trade, key) => {
             //get date and time -> 21/07/2022, 01:03:50 --- splice comma 
             const dateAndTime = unixToDate(trade.date)
@@ -136,9 +136,12 @@ export function TradeTracker() {
 
 
             <div className="tracker_table_container">
-
-
-
+                {
+                    //if user not logged in display lock
+                    (!userId)?(   
+                        <p className="signInPrompt">Please sign in</p>
+                    ):''
+                }
                 <div className="tracker_table">
                     <table>
 

@@ -4,7 +4,7 @@
     --BoxButtonHeight: 10%;
     --calcBoxHeight: 15%;
     --buttonRadius: 25px;
-   
+
 }
 
 .calc_outer {
@@ -24,46 +24,84 @@
     background-color: #cccccc;
     flex-direction: column;
 }
+/* info Box */
+.calc_infoBox:hover .fa-angle-up{
+    color: red;
+    transform: rotate(180deg);     
+}
 
 .calc_infoBox {
     height: var(--infoBoxHeight);
     background-color: #cccccc;
+    outline: 1px solid black;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    outline: 1px solid black;
-
 }
 
-.calc_infoBox>p {
+.calc_infoBox_cryptoDropDown-content {
+    position: absolute;
+    width: 90%;
+    background-color: lightsteelblue;
+    left: +50%;
+    top: 100%;
+    display: none;
+    outline: 1px solid black;
+    transform: translate(-50%,0);
+    
+}
+
+.calc_infoBox:hover .calc_infoBox_cryptoDropDown-content{
+    display: block;
+}
+
+.calc_infoBox_cryptoDropDown-content-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+}
+.calc_infoBox_cryptoDropDown-content-div:nth-of-type(2n+1) {
+    
+    background-color: #cccccc;
+    
+}
+.calc_infoBox_cryptoDropDown-content-div:hover{
+    color: white;
+}
+.cryptoName {
 
     display: inline-block;
     font-weight: bold;
 }
 
-.calc_infoBox>img {
+.cryptoImage {
     display: inline-block;
     width: 30px;
     margin-right: 5px;
 }
-.calc_inputField_outer{
-    
+/* next section */
+.calc_inputField_outer {
+
     height: calc(100% - var(--infoBoxHeight) - var(--BoxButtonHeight) - var(--calcBoxHeight));
     outline: 1px solid black;
     background-color: #cccccc;
     padding: 2% 2% 2% 2%;
 }
+
 .calc_inputField {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     text-align: center;
-    
+
 }
-.calc_inputField_addTrade_help{
+
+.calc_inputField_addTrade_help {
     text-align: center;
-    
+
 }
 
 /* button group */
@@ -81,11 +119,13 @@
     float: left;
     /* Float the buttons side by side */
     font-size: 16px;
-    
+
 }
-.calc_btn-group{
+
+.calc_btn-group {
     margin: 1%;
 }
+
 .calc_btn-group button:not(:last-child) {
     border-right: none;
     /* Prevent double borders */
@@ -148,12 +188,12 @@
     transform: translate(-50%, -50%);
     z-index: 4;
     width: 30%;
-    height: 15%;
+    height: 11%;
     background-color: lightsteelblue;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    border-radius: 20px;
+    
     border: 1px solid black;
 
 }
@@ -161,8 +201,8 @@
 .calc_output_button_confirm_cancel,
 .calc_output_button_confirm_confirm {
     width: 30%;
-    height: 50%;
-    border-radius: 8px;
+    height: 63%;
+    
     border-width: 0;
     display: inline-block;
     font-style: normal;
@@ -175,15 +215,16 @@
     background-position: center center;
     /* transition: all 0.5s ease-out; */
     font-size: 16px;
- 
+
 
 }
 
 @keyframes effec {
-from{
-    color: black;
-    background-size: 0% 0%, auto;
-}
+    from {
+        color: black;
+        background-size: 0% 0%, auto;
+    }
+
     to {
         color: white;
         background-size: 100% 100%, auto;
@@ -191,19 +232,16 @@ from{
 }
 
 .calc_output_button_confirm_confirm {
-    background-image: linear-gradient(dodgerblue, dodgerblue), linear-gradient(rgb(132, 255, 0), rgb(103, 205, 77));
+    background-color: green;
 }
 
 .calc_output_button_confirm_cancel {
-    background-image: linear-gradient(dodgerblue, dodgerblue), linear-gradient(rgb(212, 50, 50), rgb(255, 81, 0));
+    background-color: red;
+}
+.calc_output_button_confirm_confirm:hover,.calc_output_button_confirm_cancel:hover{
+    color: white;
 }
 
-.calc_output_button_confirm_confirm:hover,
-.calc_output_button_confirm_cancel:hover {
-    animation: shake 1s infinite;
-  
-
-}
 
 /* CSS for user button*/
 .calc_output_button {
@@ -236,13 +274,17 @@ from{
 }
 
 /* lock image if user not logged in*/
-.calc_output_button_false>i {
+.calc_output_button_false>.fa-lock {
 
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: red;
+    background-color: lightsteelblue;
+    border-radius: 10px;
+    padding: 2%;
+    border: 1px solid black;
 }
 
 .calc_output_button_false {
@@ -308,30 +350,7 @@ from{
 
 }
 
-/* /////////////////////////////////// */
-@keyframes shake {
 
-    10%,
-    90% {
-        transform: translate3d(-1px, 0, 0);
-    }
-
-    20%,
-    80% {
-        transform: translate3d(2px, 0, 0);
-    }
-
-    30%,
-    50%,
-    70% {
-        transform: translate3d(-4px, 0, 0);
-    }
-
-    40%,
-    60% {
-        transform: translate3d(4px, 0, 0);
-    }
-}
 
 /* .calc_inputBox:hover{
       animation:shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
@@ -397,20 +416,16 @@ input::-webkit-inner-spin-button {
 @media screen and (max-width:960px) {
 
 
-
-
     /* shrink input box */
     .calc_input {
 
         width: 100%;
-
         font-size: medium;
-        border: 0;
+        border: 0 !important;
         border-radius: 0;
         outline: 0;
-        background: transparent;
-        border-bottom: 1px solid black;
-
+        background: transparent !important;
+        border-bottom: 1px solid black !important;
         display: block;
         text-align: center;
 
@@ -421,21 +436,22 @@ input::-webkit-inner-spin-button {
     }
 
     /* confimration for trade add to port */
-    .calc_output_button_confirm{
+    .calc_output_button_confirm {
         width: 70%;
         height: 30%;
     }
 
     /* not signed in for trade add button */
-    .calc_output_button_notSignedIn{
+    .calc_output_button_notSignedIn {
         width: 70%;
         height: 50%;
     }
-    .calc_output_button_notSignedIn>p:nth-of-type(n){
+
+    .calc_output_button_notSignedIn>p:nth-of-type(n) {
         padding: 5%;
     }
- 
-    .calc_inputBox:nth-of-type(6){
+
+    .calc_inputBox:nth-of-type(4) {
         display: none;
     }
 

@@ -81,8 +81,7 @@
 
 .chartTab_timerDropDown:hover .fa-angle-up{
     color: red;
-    transform: rotate(180deg);
-        
+    transform: rotate(180deg);     
 }
 
 

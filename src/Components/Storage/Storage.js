@@ -7,6 +7,7 @@ import extraInfoSlice from './ExtraInfoFromChart'
 import allTradesSlice from './AllTrades'
 import paramClickSlice from './ParamClickChart'
 import extraInfoCalctSlice from './ExtraInfroFromCalc'
+import cryptoCoinSlice from './CryptoCoin'
 
 export const Store = configureStore({
 reducer: {
@@ -18,6 +19,7 @@ reducer: {
     allTrades:allTradesSlice,
     paramClick:paramClickSlice,
     calcInfo:extraInfoCalctSlice,
+    cryptoCoin:cryptoCoinSlice,
 
   },
 })

@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useCallback, useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
 import { cryptoCoins, getCryptoImage, unixToDate } from "../ApiReq/PriceData";
@@ -7,7 +7,8 @@ import { setNewTrade } from '../Storage/NewTrade'
 import { useEffect } from "react";
 import { setCalcInfo } from '../Storage/ExtraInfroFromCalc'
 import { update } from "react-spring";
-
+import { margin, textAlign } from "@mui/system";
+import { setCoin } from '../Storage/CryptoCoin'
 
 
 export const CalculatorTab = () => {
@@ -21,9 +22,10 @@ export const CalculatorTab = () => {
     const [orderType, updateOrderType] = useState('marketOrder')
     const [filled, updateFill] = useState(false)
     const [checkBox, updateCheckBox] = useState(false)
-    const [time, updateTime] = useState('')
-    const [date,updateDate] = useState('')
+    const [time, updateTime] = useState(['', ''])
+
     var paramChartClicked = useSelector(state => state.paramClick.value)
+    var currentCoin = useSelector(state => state.cryptoCoin.value)
 
 
     //limit order or market
@@ -39,12 +41,20 @@ export const CalculatorTab = () => {
 
     };
     //handle checkbox - clear data when pressed
-    const handleCheckBox = ()=>{
+    const handleCheckBox = () => {
         updateCheckBox(!checkBox)
         updateLimitPrice('')
+        updateStopLoss('')
+        updateTakeProfit('')
+        updateTime(['', ''])
     }
-
-
+    //clear input when another chart is clicked 
+    useEffect(() => {
+        updateLimitPrice('')
+        updateStopLoss('')
+        updateTakeProfit('')
+        updateTime(['', ''])
+    }, [currentCoin])
 
     //send data to chart tab
     useEffect(() => {
@@ -70,7 +80,7 @@ export const CalculatorTab = () => {
 
             }))
         } else if (orderType === 'limitOrder') {
-           
+
 
             dispatch(setCalcInfo({
                 orderType: orderType,
@@ -85,48 +95,48 @@ export const CalculatorTab = () => {
         }
     }, [stopLoss, takeProfit, limitPrice, positionType, orderType, paramChartClicked, checkBox])
 
+    //when clicked on chart update input
     useEffect(() => {
-        if (checkBox){
-            console.log(paramChartClicked)
-            console.log(limitPrice)
+        if (checkBox) {
+
             updateLimitPrice(paramChartClicked.price)
-            updateTime(paramChartClicked.time)
             var date = unixToDate(paramChartClicked.time)
-            console.log(date)
-            updateDate(date)
+            updateTime([paramChartClicked.time, date])
+
         }
 
     }, [paramChartClicked])
+    //change time and limit order style
+    const colorStyleTime = (input) => {
+        return {
 
-    const colorStyleTime = (input)=> {
-        return{
-
-            border: (filled&&input === '') ? '1px solid red' : '1px solid black' ,
-            backgroundColor: (checkBox)? '#9f9f9f': '#ffffff'
+            border: (filled && input === '') ? '1px solid red' : '1px solid black',
+            backgroundColor: (checkBox) ? '#9f9f9f' : '#ffffff'
         }
     }
+
     const MarketOrderDiv = () => {
         return (
             <div className="calc_inputField_outer">
 
 
                 <div className="calc_inputField">
-                    {(checkBox)?( <div className="calc_inputBox">
+                    {(checkBox) ? (<div className="calc_inputBox">
                         click on the chart where you would like to placed a trade !!
-                    </div> ) :''}
+                    </div>) : ''}
 
-                    
+
                     {(checkBox) ? (
-                        
+
                         <div className="calc_inputBox" style={{ display: (orderType === 'limitOrder') ? 'block' : 'none' }}>
-                            <label className="calc_inputLabel" style={{ color: time === '' ? 'transparent' : 'black' }} >Time</label>
+                            <label className="calc_inputLabel" style={{ color: time[0] === '' ? 'transparent' : 'black' }} >Time</label>
                             <input
-                            style={colorStyleTime(time)}
+                                style={colorStyleTime(time[0])}
                                 readOnly={true}
-                               
+
                                 className='calc_input'
                                 placeholder='Time'
-                                value={date} />
+                                value={time[1]} />
                         </div>
                     ) : ''}
 
@@ -187,17 +197,16 @@ export const CalculatorTab = () => {
 
         )
     }
-    useEffect(()=>{
-        console.log(limitPrice)
-    },[limitPrice])
+
 
     const ButtonAddToPortfolio = () => {
-
+        
         //requires validation
         const infoChartTab = useSelector((state) => state.extraInfo.value)
         const userEmail = useSelector((state) => state.userData.value)
         const [confirmAdd, updateConfirmAdd] = useState(false)
         const [displayNotLogged, updateDisplayNotLogged] = useState(false)
+
 
 
         //used when confirm is pressed on pop up 
@@ -213,8 +222,8 @@ export const CalculatorTab = () => {
                     takeProfit: infoChartTab.takeProfit,
                     stopLoss: infoChartTab.stopLoss,
                     date: date,
-                    cryptoCoin: cryptoCoins[0].cryptoName,
-                    cryptoImage: getCryptoImage(cryptoCoins[0].cryptoName)
+                    cryptoCoin: currentCoin.cryptoCoin,
+                    cryptoImage: getCryptoImage(currentCoin.cryptoCoin)
                 }))
             }
             //fix
@@ -225,26 +234,25 @@ export const CalculatorTab = () => {
                     takeProfit: infoChartTab.takeProfit,
                     stopLoss: infoChartTab.stopLoss,
                     date: (paramChartClicked) ? paramChartClicked.time : date,
-                    cryptoCoin: cryptoCoins[0].cryptoName,
-                    cryptoImage: getCryptoImage(cryptoCoins[0].cryptoName)
+                    cryptoCoin: currentCoin.cryptoCoin,
+                    cryptoImage: getCryptoImage(currentCoin.cryptoCoin)
                 }))
             }
             updateConfirmAdd(false)
             updateStopLoss('')
             updateTakeProfit('')
-            updateTakeProfit('')
             updateLimitPrice('')
-            updateDate('')
-            updateTime('')
-            
+            updateTime(['', ''])
+
+
             updateFill(false)
         }
         //used when add to portfolio button is pressed
         const handleAddToPortfolio = () => {
             var limitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '')
-            var dateLimitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === ''|| time==='')
+            var dateLimitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '' || time[0] === '')
             var marketOrderEmpty = (stopLoss === '' || takeProfit === '')
-            console.log(limitPrice)
+
             //check if there is a value 
             if (marketOrderEmpty && orderType === 'marketOrder') {
                 console.log('Plase Fill Market Info')
@@ -254,11 +262,11 @@ export const CalculatorTab = () => {
                 console.log('Please Fill Limit Info')
                 updateFill(true)
                 return
-            } else if (dateLimitPriceEmpty && orderType=='limitOrder' && checkBox){
+            } else if (dateLimitPriceEmpty && orderType == 'limitOrder' && checkBox) {
                 console.log('Please Fill Limit Info')
                 updateFill(true)
                 return
-                
+
             }
             //All of the values are filled and now confirmation button appears 
 
@@ -281,7 +289,11 @@ export const CalculatorTab = () => {
                     className={(userEmail !== null) ? 'calc_output_button' : 'calc_output_button_false'}
                     onClick={() => (userEmail !== null) ? handleAddToPortfolio() : updateDisplayNotLogged(true)}>
                     <p>Add Trade To Portfolio</p>
-                    <i style={(userEmail !== null) ? { display: 'none' } : {}} className="fa-solid fa-lock fa-2x"></i>
+                    {
+                        (!userEmail) ? (
+                            <i className="fa-solid fa-lock fa-2x"></i>
+                        ) : ''
+                    }
                 </button>
 
                 {(displayNotLogged) ?
@@ -290,22 +302,48 @@ export const CalculatorTab = () => {
                         <i onClick={() => updateDisplayNotLogged(false)} className="fa-solid fa-location-crosshairs fa-2x"></i>
 
                         <p>You need to sign in !</p>
-                        <p>• Sign in to track trades</p>
-                        <p>• View and track portfolio(coming soon)</p>
-                        <p>• View trades on chart(coming soon)</p>
+                        <p>• Sign in to add trades</p>
+                        <p>• View trades on chart </p>
+                        <p>• View and track portfolio (coming soon)</p>
                     </div>) : ''
                 }
+         
             </>
         )
     }
+
 
     return (
         <>
             <div className="calc_outer" >
 
                 <div className="calc_infoBox">
-                    <img src={cryptoCoins[0].cryptoImage} alt="alternatetext"></img>
-                    <p>{cryptoCoins[0].cryptoName}</p>
+
+                    <img className="cryptoImage" src={currentCoin.cryptoImage} alt="alternatetext"></img>
+                    <p className="cryptoName">{currentCoin.cryptoCoin}</p>
+                    <i className="fa-solid fa-angle-up"></i>
+
+                    <div className="calc_infoBox_cryptoDropDown-content">
+                        {
+                            cryptoCoins.map((coin, index) => {
+
+                                return (
+                                    <div
+                                        key={index}
+                                        className='calc_infoBox_cryptoDropDown-content-div'
+                                        onClick={() => dispatch(setCoin({
+                                            cryptoCoin: coin.cryptoName,
+                                            cryptoImage: coin.cryptoImage
+                                        }))}>
+
+                                        <img className="cryptoImage" src={coin.cryptoImage} alt="alternatetext"></img>
+                                        <p>{coin.cryptoName}</p>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+
 
                 </div>
                 <div className="calc_Pos_Button">
@@ -321,10 +359,10 @@ export const CalculatorTab = () => {
                     MarketOrderDiv()
                 }
                 <div className="calc_output">
-
-                    {
-                        <ButtonAddToPortfolio />
-                    }
+                    
+    
+                    <ButtonAddToPortfolio />
+                
 
                 </div>
             </div>

@@ -144,13 +144,7 @@ export function CreateAccountPage() {
                     </div>
 
 
-                    <div className="createAccount_remember_me">
-                        <label>
-                            Remember Me
-                            <input type="checkbox" className="createAccount_checkbox" value="Bike" />
-
-                        </label>
-                    </div>
+            
 
                     <div className="createAccount_signup">
                         <button type='submit' className="createAccount_button" > Create Account </button>

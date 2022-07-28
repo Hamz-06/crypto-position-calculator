@@ -2,42 +2,57 @@
 import axios from "axios";
 
 //gets 500 candle sticks 
-export const GetCandles=(currentTimeFrame)=>{
+export const GetCandles=(currentTimeFrame,currentCoin)=>{
 
-  return axios.get('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval='+currentTimeFrame)
-
+  
+  return axios.get('https://api.binance.com/api/v3/klines?symbol='+currentCoin+'&interval='+currentTimeFrame+'&limit=1000')
+  
 }
 
 //gets 24 hour percent change and crypto info
-export const GetCryptoInfo=()=>{
-  return axios.get('https://api.binance.com/api/v3/ticker?symbol=BTCUSDT')
+export const GetCryptoInfo=(currentCoin)=>{
+  return axios.get('https://api.binance.com/api/v3/ticker?symbol='+currentCoin)
 }
 //gets current candle stick info from binance 
-export const GetLiveCandle = (currentTimeFrame)=>{
-  return "wss://stream.binance.com:9443/ws/btcusdt@kline_"+currentTimeFrame
+export const GetLiveCandle = (currentTimeFrame, currentCoin)=>{
+
+  var symbol_LowerCase = currentCoin
+  var symbol_LowerCase = symbol_LowerCase.toLowerCase()
+  return 'wss://stream.binance.com:9443/ws/'+symbol_LowerCase+'@kline_'+currentTimeFrame
 }
+
 //gets current bitcoin price 
-export const GetCurrentPrice = ()=>{
-  return axios.get('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
-}
+// export const GetCurrentPrice = ()=>{
+//   return axios.get('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
+// }
 
 //get coins 
 export const cryptoCoins = [
   {
-    cryptoName:'BTC/USDT',
+    cryptoName:'BTCUSDT',
     cryptoImage:'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png'
   },{
-    cryptoName:'ETH/USDT',
+    cryptoName:'ETHUSDT',
     cryptoImage:'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
 
+  },{
+    cryptoName:'SOLUSDT',
+    cryptoImage:'https://s2.coinmarketcap.com/static/img/coins/64x64/2010.png'
+  },{
+    cryptoName:'DOTUSDT',
+    cryptoImage:'https://s2.coinmarketcap.com/static/img/coins/64x64/6636.png'
+  },{
+    cryptoName:'AVAXUSDT',
+    cryptoImage:'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png'
   }
 
 ]
 
+//incorrect function
 export const getCryptoImage=(getCoin)=>{
 
   var coin=cryptoCoins.find((crypto)=>{
-      return crypto.cryptoName = getCoin
+      return crypto.cryptoName === getCoin
   })
   // console.log(coin.cryptoImage)
   return coin.cryptoImage
