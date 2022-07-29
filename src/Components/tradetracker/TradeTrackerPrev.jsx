@@ -175,9 +175,9 @@ export function TradeTracker() {
                 </div>
 
 
-                <Link to='/view_trades&potfolio' className="tracker_moreInfo_icon">
+                <a href='https://hamz-06.github.io/crypto-position-calculator/#/view_trades&potfolio' className="tracker_moreInfo_icon" target="_blank">
                     <i className="fa-solid fa-pen-to-square"></i>
-                </Link>
+                </a>
                 {/* <div className="tracker_moreInfo">
                 <i className="fa-solid fa-info"></i>  Coming Out Soon
             </div> */}

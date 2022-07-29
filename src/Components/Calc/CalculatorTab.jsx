@@ -228,6 +228,7 @@ export const CalculatorTab = () => {
             }
             //fix
             else if (infoChartTab && orderType === 'limitOrder') {
+              
                 dispatch(setNewTrade({
                     posType: positionType,
                     entryPrice: infoChartTab.price,
