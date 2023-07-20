@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from "firebase/auth"
 import { auth } from "../Firebase/Firebase";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 //render both and show only the real one using user info 
 
 export const SignOut = (props) => {
@@ -55,7 +56,7 @@ export const SignOut = (props) => {
 
                     <div className="signOut_login">
 
-                        Sign Out?<a href='/' className='login_login_link' onClick={firebase_signOut}> here</a>
+                        Sign Out?<Link to='/create_account' className='login_login_link' onClick={firebase_signOut}> here</Link>
                     </div>
                 <i onClick={()=>updateDisplayLogin(false)} className="fa-solid fa-location-crosshairs fa-2x"></i>
                 </div>

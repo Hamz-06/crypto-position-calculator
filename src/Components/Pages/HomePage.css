@@ -19,6 +19,7 @@
 }
 .homePage_cal_tab{
     flex: 1;
+    min-height: 700px;
  
      
 }
@@ -26,6 +27,7 @@
 .homePage_second_tab{
     flex: 2;
    outline: 1px solid black;
+   min-height: 700px;
 
 }
 .homePage_second_tab_chart{

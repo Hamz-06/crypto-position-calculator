@@ -110,9 +110,7 @@ export const Login = (props) => {
                 <div className="login_logo">
                     <h1>Log in </h1>
                 </div>
-                <div className="login_line">
 
-                </div>
 
                 <div className="login_signupUsing">
                     <p>Log in using :</p>
@@ -161,7 +159,7 @@ export const Login = (props) => {
                 <div className="login_login">
                     Create account?<Link to='/create_account' className='login_login_link'> click here</Link>
                 </div>
-                <i onClick={()=>updateDisplayLogin(false)} className="fa-solid fa-location-crosshairs fa-2x"></i>
+                <i onClick={() => updateDisplayLogin(false)} className="fa-solid fa-location-crosshairs fa-2x"></i>
 
             </div>
         </div>

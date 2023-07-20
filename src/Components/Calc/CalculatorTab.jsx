@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react"
+import React, { memo, useCallback, useRef } from "react"
 import { useState } from 'react';
 import './CalculatorTab.css'
 import { cryptoCoins, getCryptoImage, unixToDate } from "../ApiReq/PriceData";
@@ -9,12 +9,13 @@ import { setCalcInfo } from '../Storage/ExtraInfroFromCalc'
 import { update } from "react-spring";
 import { margin, textAlign } from "@mui/system";
 import { setCoin } from '../Storage/CryptoCoin'
+import { addTradeDatabase } from "../Firebase/Firebase_user_info";
 
 
-export const CalculatorTab = () => {
+export const CalculatorTab = memo(() => {
 
     const dispatch = useDispatch();
-
+    const userId = useSelector((state) => state.userId.value)
     const [stopLoss, updateStopLoss] = useState('')
     const [takeProfit, updateTakeProfit] = useState('')
     const [limitPrice, updateLimitPrice] = useState('')
@@ -199,24 +200,24 @@ export const CalculatorTab = () => {
     }
 
 
-    const ButtonAddToPortfolio = () => {
+    const ButtonAddToPortfolio = useCallback(() => {
         
         //requires validation
         const infoChartTab = useSelector((state) => state.extraInfo.value)
         const userEmail = useSelector((state) => state.userData.value)
         const [confirmAdd, updateConfirmAdd] = useState(false)
         const [displayNotLogged, updateDisplayNotLogged] = useState(false)
-
-
-
+        
+        
         //used when confirm is pressed on pop up 
         const addNewTrade = () => {
-
+            
+            
             const date = new Date().getTime()
 
             //dispatch if data is received from chart tab
-            if (infoChartTab && orderType === 'marketOrder') {
-                dispatch(setNewTrade({
+            if (infoChartTab &&confirmAdd && orderType === 'marketOrder') {
+                const newTrade = {
                     posType: positionType,
                     entryPrice: infoChartTab.price,
                     takeProfit: infoChartTab.takeProfit,
@@ -224,12 +225,14 @@ export const CalculatorTab = () => {
                     date: date,
                     cryptoCoin: currentCoin.cryptoCoin,
                     cryptoImage: getCryptoImage(currentCoin.cryptoCoin)
-                }))
+                }
+                dispatch(setNewTrade(newTrade))
+                addTradeDatabase(newTrade, userId);
             }
             //fix
-            else if (infoChartTab && orderType === 'limitOrder') {
-              
-                dispatch(setNewTrade({
+            else if (infoChartTab&&confirmAdd && orderType === 'limitOrder') {
+                
+                const newTrade = {
                     posType: positionType,
                     entryPrice: infoChartTab.price,
                     takeProfit: infoChartTab.takeProfit,
@@ -237,7 +240,9 @@ export const CalculatorTab = () => {
                     date: (paramChartClicked) ? paramChartClicked.time : date,
                     cryptoCoin: currentCoin.cryptoCoin,
                     cryptoImage: getCryptoImage(currentCoin.cryptoCoin)
-                }))
+                }
+                dispatch(setNewTrade(newTrade))
+                addTradeDatabase(newTrade, userId);
             }
             updateConfirmAdd(false)
             updateStopLoss('')
@@ -250,6 +255,7 @@ export const CalculatorTab = () => {
         }
         //used when add to portfolio button is pressed
         const handleAddToPortfolio = () => {
+            
             var limitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '')
             var dateLimitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '' || time[0] === '')
             var marketOrderEmpty = (stopLoss === '' || takeProfit === '')
@@ -311,7 +317,7 @@ export const CalculatorTab = () => {
          
             </>
         )
-    }
+    },[stopLoss, takeProfit, limitPrice, positionType, orderType, checkBox])
 
 
     return (
@@ -350,8 +356,8 @@ export const CalculatorTab = () => {
                 <div className="calc_Pos_Button">
 
                     <div className="calc_btn-group">
-                        <button id="marketOrder" onClick={handleOrderType} className='orderType'>Market Order</button>
-                        <button id="limitOrder" onClick={handleOrderType} className='orderType'>Limit Order</button>
+                        <button id="marketOrder" onClick={(e)=>handleOrderType(e)} className='orderType'>Market Order</button>
+                        <button id="limitOrder" onClick={(e)=>handleOrderType(e)} className='orderType'>Limit Order</button>
                     </div>
 
 
@@ -371,5 +377,5 @@ export const CalculatorTab = () => {
     )
 
 
-};
+});
 
