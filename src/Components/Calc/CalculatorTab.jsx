@@ -10,6 +10,7 @@ import { update } from "react-spring";
 import { margin, textAlign } from "@mui/system";
 import { setCoin } from '../Storage/CryptoCoin'
 import { addTradeDatabase } from "../Firebase/Firebase_user_info";
+import { setExtraInfo } from "../Storage/ExtraInfoFromChart";
 
 
 export const CalculatorTab = memo(() => {
@@ -24,6 +25,12 @@ export const CalculatorTab = memo(() => {
     const [filled, updateFill] = useState(false)
     const [checkBox, updateCheckBox] = useState(false)
     const [time, updateTime] = useState(['', ''])
+
+    const infoChartTab = useSelector((state) => state.extraInfo.value)
+    const userEmail = useSelector((state) => state.userData.value)
+    const [confirmAdd, updateConfirmAdd] = useState(false)
+    const [displayNotLogged, updateDisplayNotLogged] = useState(false)
+
 
     var paramChartClicked = useSelector(state => state.paramClick.value)
     var currentCoin = useSelector(state => state.cryptoCoin.value)
@@ -98,14 +105,17 @@ export const CalculatorTab = memo(() => {
 
     //when clicked on chart update input
     useEffect(() => {
+        
         if (checkBox) {
-
+            if (!paramChartClicked?.price || !paramChartClicked?.time){
+                updateLimitPrice('') 
+                updateTime(['', ''])
+                return
+            }
             updateLimitPrice(paramChartClicked.price)
             var date = unixToDate(paramChartClicked.time)
             updateTime([paramChartClicked.time, date])
-
         }
-
     }, [paramChartClicked])
     //change time and limit order style
     const colorStyleTime = (input) => {
@@ -172,7 +182,7 @@ export const CalculatorTab = memo(() => {
 
                         <div className="calc_inputBox">
                             <label>Click on the Chart  </label>
-                            <input type="checkbox" checked={checkBox} onChange={handleCheckBox} />
+                            <input type="checkbox" checked={checkBox} onChange={()=>handleCheckBox()} />
                         </div>) : ''
                     }
 
@@ -181,13 +191,13 @@ export const CalculatorTab = memo(() => {
                         <div className="calc_radio">
                             <label>
                                 <a>Long </a>
-                                <input type="radio" value="long" className="calc_radio_check" checked={positionType === 'long'} onChange={handlePosition} />
+                                <input type="radio" value="long" className="calc_radio_check" checked={positionType === 'long'} onChange={()=>handlePosition()} />
                             </label>
                         </div>
                         <div className="calc_radio">
                             <label>
                                 <a>Short </a>
-                                <input type="radio" value="short" className="calc_radio_check" checked={positionType === 'short'} onChange={handlePosition} />
+                                <input type="radio" value="short" className="calc_radio_check" checked={positionType === 'short'} onChange={()=>handlePosition()} />
                             </label>
                         </div>
                     </div>
@@ -203,20 +213,14 @@ export const CalculatorTab = memo(() => {
     const ButtonAddToPortfolio = useCallback(() => {
         
         //requires validation
-        const infoChartTab = useSelector((state) => state.extraInfo.value)
-        const userEmail = useSelector((state) => state.userData.value)
-        const [confirmAdd, updateConfirmAdd] = useState(false)
-        const [displayNotLogged, updateDisplayNotLogged] = useState(false)
-        
         
         //used when confirm is pressed on pop up 
         const addNewTrade = () => {
-            
-            
+             
             const date = new Date().getTime()
 
-            //dispatch if data is received from chart tab
-            if (infoChartTab &&confirmAdd && orderType === 'marketOrder') {
+            // dispatch if data is received from chart tab
+            if (infoChartTab && confirmAdd && orderType === 'marketOrder') {
                 const newTrade = {
                     posType: positionType,
                     entryPrice: infoChartTab.price,
@@ -226,8 +230,10 @@ export const CalculatorTab = memo(() => {
                     cryptoCoin: currentCoin.cryptoCoin,
                     cryptoImage: getCryptoImage(currentCoin.cryptoCoin)
                 }
-                dispatch(setNewTrade(newTrade))
+                dispatch(setNewTrade([newTrade]))
                 addTradeDatabase(newTrade, userId);
+                dispatch(setExtraInfo(null))
+                
             }
             //fix
             else if (infoChartTab&&confirmAdd && orderType === 'limitOrder') {
@@ -241,9 +247,11 @@ export const CalculatorTab = memo(() => {
                     cryptoCoin: currentCoin.cryptoCoin,
                     cryptoImage: getCryptoImage(currentCoin.cryptoCoin)
                 }
-                dispatch(setNewTrade(newTrade))
+                dispatch(setNewTrade([newTrade]))
                 addTradeDatabase(newTrade, userId);
+                dispatch(setExtraInfo(null))
             }
+            
             updateConfirmAdd(false)
             updateStopLoss('')
             updateTakeProfit('')
@@ -256,6 +264,8 @@ export const CalculatorTab = memo(() => {
         //used when add to portfolio button is pressed
         const handleAddToPortfolio = () => {
             
+            
+
             var limitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '')
             var dateLimitPriceEmpty = (limitPrice === '' || stopLoss === '' || takeProfit === '' || time[0] === '')
             var marketOrderEmpty = (stopLoss === '' || takeProfit === '')
@@ -276,10 +286,9 @@ export const CalculatorTab = memo(() => {
 
             }
             //All of the values are filled and now confirmation button appears 
-
             updateConfirmAdd(true)
         }
-
+        
         return (
             <>
 
@@ -293,11 +302,11 @@ export const CalculatorTab = memo(() => {
                 }
 
                 <button
-                    className={(userEmail !== null) ? 'calc_output_button' : 'calc_output_button_false'}
-                    onClick={() => (userEmail !== null) ? handleAddToPortfolio() : updateDisplayNotLogged(true)}>
+                    className={(userId !== null) ? 'calc_output_button' : 'calc_output_button_false'}
+                    onClick={() => (userId !== null) ? handleAddToPortfolio() : updateDisplayNotLogged(true)}>
                     <p>Add Trade To Portfolio</p>
                     {
-                        (!userEmail) ? (
+                        (!userId) ? (
                             <i className="fa-solid fa-lock fa-2x"></i>
                         ) : ''
                     }
@@ -317,7 +326,7 @@ export const CalculatorTab = memo(() => {
          
             </>
         )
-    },[stopLoss, takeProfit, limitPrice, positionType, orderType, checkBox])
+    },[stopLoss, takeProfit, limitPrice, positionType, orderType, checkBox, userId, infoChartTab, confirmAdd])
 
 
     return (

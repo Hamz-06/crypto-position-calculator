@@ -1,39 +1,44 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect } from "react";
 import "./TradeTrackerPrev.css";
 import { displayTradeDataBase } from "../Firebase/Firebase_user_info";
 import { useSelector, useDispatch } from "react-redux";
-import { useRef } from "react";
 import {
-  addTradeDatabase,
   fetchTradeDataBase,
 } from "../Firebase/Firebase_user_info";
 import { cryptoCoins, getCryptoImage, unixToDate } from "../ApiReq/PriceData";
 import { useSpring, animated, useTransition } from "react-spring";
-import { Link } from "react-router-dom";
-import { setAllTrades } from "../Storage/AllTrades";
+import { deleteNewTrade, setNewTrade } from "../Storage/NewTrade";
+import { setLoading } from "../Storage/loading";
+
 export function TradeTracker() {
+
   const userId = useSelector((state) => state.userId.value);
   const fetchTrade = useSelector((state) => state.newTrade.value);
-  const [oldTrades, updateOldTrades] = useState(null); //starts with null
-  const [newTrades, updateNewTrades] = useState([]);
+  const loading = useSelector((state) => state.loading.value);
+
+
+  // const [newTrades, updateNewTrades] = useState([]);
   const dispatch = useDispatch();
 
   //redux - send old + new trades to redux storage
-  useEffect(() => {
-    if (oldTrades === null) return;
-
-    const allTrades = oldTrades.concat(newTrades);
-    dispatch(setAllTrades(allTrades));
-  }, [oldTrades, newTrades]);
-
   //delete trade
-  function deleteTrade(index, date, userId, array, updateArray) {
-    const newArray = array.filter((_, i) => index !== i);
-    // console.log(oldTrades,newArray)
-    // console.log(oldTrades.length, newArray.length)
-    fetchTradeDataBase(date, userId);
-    updateArray(newArray);
+  async function deleteTrade(index, date) {
+
+    const newArray = fetchTrade.filter((_, i) => index !== i);
+    
+    try {
+      dispatch(setLoading(true));
+      await fetchTradeDataBase(date, userId);
+
+    } catch (error) {
+
+    } finally {
+      dispatch(deleteNewTrade(newArray));
+      dispatch(setLoading(false));
+    }
   }
+
+
 
   //used to fetch old trades
   useEffect(() => {
@@ -42,83 +47,35 @@ export function TradeTracker() {
     //fetches trade from firebase database
     displayTradeDataBase(userId)
       .then((res) => {
-        updateOldTrades(res);
+        // updateOldTrades(res);
+        dispatch(setNewTrade(res));
       })
       .catch((err) => {
         console.log(err);
       });
   }, [userId]);
-  //used to fetcch new trades
-  useEffect(() => {
-    //fetch trade starts at null
-    
-    if (!fetchTrade) return;
-    // addTradeDatabase(fetchTrade, userId);
-    console.log(fetchTrade);
-    var newTrradesArr = []
-    newTrradesArr=[fetchTrade,...newTrades]
-    console.log(newTrradesArr)
-    updateNewTrades(newTrradesArr);
-  }, [fetchTrade]);
 
-  //display old trade
-  const DisplayOldTrades = () => {
-    const tradeTrackAnim = useSpring({
-      to: { opacity: 1, x: 0, y: 0 },
-      from: { opacity: 0, x: 200, y: 0 },
-    });
-    //if there is data inside old trades
-    if (!oldTrades) return;
-    return oldTrades.map((trade, key) => {
-      //gets logo of symbol
-      var symbolLogo = getCryptoImage(trade.cryptoCoin);
 
-      //get date and time -> 21/07/2022, 01:03:50 --- splice comma
-      const dateAndTime = unixToDate(trade.date);
-      const arrayDate = dateAndTime.split(",");
-      return (
-        <animated.tr key={key} style={tradeTrackAnim}>
-          <td>
-            {arrayDate[0]}
-            <br />
-            {arrayDate[1]}
-          </td>
-          <td>
-            <div>
-              {trade.cryptoCoin}
-              <img src={symbolLogo} alt="alternatetext"></img>
-            </div>
-          </td>
-          <td>{trade.entryPrice}</td>
-          <td>{trade.posType}</td>
-          {/* used to delete the trade */}
-          <td>
-            <i
-              onClick={() =>
-                deleteTrade(key, trade.date, userId, oldTrades, updateOldTrades)
-              }
-              className="fa-solid fa-trash-can"></i>
-          </td>
-        </animated.tr>
-      );
-    });
-  };
+
 
   //display new trades
   const DisplayNewTrades = () => {
-    const tradeTrackAnim = useSpring({
-      to: { opacity: 1, x: 0, y: 0 },
-      from: { opacity: 0, x: 200, y: 0 },
-    });
+
+    // const tradeTrackAnim = useSpring({
+    //   to: { opacity: 1, x: 0, y: 0 },
+    //   from: { opacity: 0, x: 200, y: 0 },
+    // });
 
     if (!userId) return;
-    return newTrades.map((trade, key) => {
+    return fetchTrade.map((trade, key) => {
       //get date and time -> 21/07/2022, 01:03:50 --- splice comma
       const dateAndTime = unixToDate(trade.date);
       const arrayDate = dateAndTime.split(",");
 
       return (
-        <animated.tr key={key} style={tradeTrackAnim}>
+        <animated.tr key={key}
+        // style={tradeTrackAnim}
+        >
           <td>
             {arrayDate[0]}
             <br />
@@ -127,17 +84,21 @@ export function TradeTracker() {
           <td>
             <div>
               {trade.cryptoCoin}
-              <img src={trade.cryptoImage} alt="alternatetext"></img>
+              <img src={getCryptoImage(trade.cryptoCoin)} alt="alternatetext"></img>
             </div>
           </td>
           <td>{trade.entryPrice}</td>
           <td>{trade.posType}</td>
           <td>
-            <i
+            <button
               onClick={() =>
-                deleteTrade(key, trade.date, userId, newTrades, updateNewTrades)
+                deleteTrade(key, trade.date)
               }
-              className="fa-solid fa-trash-can"></i>
+              disabled={loading}
+            >
+              <i
+                className="fa-solid fa-trash-can"></i>
+            </button>
           </td>
         </animated.tr>
       );
@@ -167,14 +128,10 @@ export function TradeTracker() {
             {/* table body */}
 
             <tbody>
-              {
-                // user needs to be logged in for this to load
+              
+                {/* user needs to be logged in for this to load */}
                 <DisplayNewTrades />
-              }
-              {
-                // user needs to be logged in for this to load
-                <DisplayOldTrades />
-              }
+              
             </tbody>
           </table>
         </div>

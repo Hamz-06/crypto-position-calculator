@@ -1,33 +1,35 @@
 import { CalculatorTab } from '../Calc/CalculatorTab.jsx';
-import { ChartTab } from '../chart/ChartTab.jsx';
-import React, { } from 'react';
+import { ChartTab } from '../chart/ChartTab.js';
+import React, { memo, useCallback, useMemo } from 'react';
 import Navbar from '../Navbar/Navbar'
 import { Footer } from '../Footer/Footer.jsx';
 import './HomePage.css';
 import { useSelector } from 'react-redux'
 import { TradeTracker } from '../tradetracker/TradeTrackerPrev.jsx'
 import { useSpring, animated, useTransition } from 'react-spring'
-import { display, style } from '@mui/system';
 export function Homepage() {
 
-  const chartClicked = useSelector((state) => state.chartClicked.value)
+  const isChart = useSelector((state) => state.chartClicked.value)
 
 
-  const chartRemoveAnim = useTransition(chartClicked, {
+  // const chartRemoveAnim = useTransition(chartClicked, {
 
-    from: {
-      x: 0, y: -300, opacity: 0,
-    },
-    enter: {
-      x: 0, y: 0, opacity: 1,
-    },
+  //   from: {
+  //     x: 0, y: -300, opacity: 0,
+  //   },
+  //   enter: {
+  //     x: 0, y: 0, opacity: 1,
+  //   },
 
-  })
-  const chartRemoveDefaultAnim = (x) => {
-    return (x) ? { display: 'block' } : { display: 'none' }
-  }
+  // })
+  // const chartRemoveDefaultAnim = (x) => {
+  //   return (x) ? { display: 'block' } : { display: 'none' }
+  // }
 
   const calculatorAnim = useSpring({ to: { opacity: 1, y: 0 }, from: { opacity: 0, y: 300 } })
+  const Chart = useCallback(() => <ChartTab />, [/* dependencies */]);
+  const Tracker = useCallback(() => <TradeTracker />, [/* dependencies */]);
+
   return (
     <>
       <Navbar />
@@ -41,19 +43,21 @@ export function Homepage() {
           </animated.div>
 
 
-          {chartRemoveAnim((style, item) =>
-            <animated.div className="homePage_second_tab" style={{
-              ...style,
-              ...chartRemoveDefaultAnim(item)
-            }}>
+          {/* {chartRemoveAnim((style, item) => */}
+            <div className="homePage_second_tab" 
+            style={{
+              display: (isChart) ? 'block' : 'none',
+              
+            }}
+            >
               <div className="homePage_second_tab_chart">
-                <ChartTab />
+                <Chart />
               </div>
               <div className="homePage_second_tab_tracker">
-                <TradeTracker />
+                <Tracker />
               </div>
-            </animated.div>
-          )}
+            </div>
+          
 
         </div>
 

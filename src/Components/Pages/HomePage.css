@@ -9,6 +9,7 @@
     height: 90vh;
     padding: 0 8%;
     background: lightsteelblue;
+    overflow-y: auto;
 
 }
 

@@ -8,18 +8,19 @@ import allTradesSlice from './AllTrades'
 import paramClickSlice from './ParamClickChart'
 import extraInfoCalctSlice from './ExtraInfroFromCalc'
 import cryptoCoinSlice from './CryptoCoin'
-
+import loadingSlice from './loading'
 export const Store = configureStore({
-reducer: {
+  reducer: {
     chartClicked: chartClickedReducer,
     userData: userEmailReducer,
-    userId:userIdSlicer,
-    newTrade:newTradeSlice,
-    extraInfo:extraInfoSlice,
-    allTrades:allTradesSlice,
-    paramClick:paramClickSlice,
-    calcInfo:extraInfoCalctSlice,
-    cryptoCoin:cryptoCoinSlice,
+    userId: userIdSlicer,
+    newTrade: newTradeSlice,
+    extraInfo: extraInfoSlice,
+    allTrades: allTradesSlice,
+    paramClick: paramClickSlice,
+    calcInfo: extraInfoCalctSlice,
+    cryptoCoin: cryptoCoinSlice,
+    loading: loadingSlice,
 
   },
 })

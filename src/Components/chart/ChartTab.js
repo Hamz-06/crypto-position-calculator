@@ -1,16 +1,14 @@
 import './ChartTab.css'
-import React, { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect, useTransition, memo } from 'react';
 import { GetCandles, GetLiveCandle } from '../ApiReq/PriceData';
 
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
 import { useRef } from 'react';
-import { useCallback } from 'react';
 
-
-import { GetCryptoInfo } from '../ApiReq/PriceData'
 import { setExtraInfo } from '../Storage/ExtraInfoFromChart'
 import { setParamClick } from '../Storage/ParamClickChart'
 import { useDispatch, useSelector } from 'react-redux';
+import { TopInfoContainer } from './TopHeaderChart';
 
 //https://rmolinamir.github.io/typescript-cheatsheet/
 
@@ -18,9 +16,8 @@ export const ChartTab = () => {
 
 
     const [currentTimeFrame, updateTimeFrame] = useState('30m')
-    const timeFrames = ['30m', '1h', '4h']
+    const timeFrames = ['30m', '1h', '4h', '1d']
     const getLivePrice = useRef(null);
-
 
     var dispatch = useDispatch()
     var chart = useRef(null);
@@ -31,100 +28,99 @@ export const ChartTab = () => {
     const takeProfPrice = useRef(null);
     const calcTabInfo = useSelector(state => state.calcInfo.value)
     const cryptoCoin = useSelector(state => state.cryptoCoin.value.cryptoCoin)
-    const allTrades = useSelector((state) => state.allTrades.value)
+    const allTrades = useSelector((state) => state.newTrade.value);
     const [isPending, startTransition] = useTransition()
 
+
     //create chart 
-    useEffect(
-        () => {
-            const chartOptions = {
-                handleScale: {
-                    axisPressedMouseMove: true
+    useEffect(() => {
+        const chartOptions = {
+            handleScale: {
+                axisPressedMouseMove: true
+            },
+            layout: {
+                backgroundColor: '#253248',
+                textColor: 'rgba(255, 255, 255, 0.9)',
+            },
+            grid: {
+                vertLines: {
+                    color: '#334158',
                 },
-                layout: {
-                    backgroundColor: '#253248',
-                    textColor: 'rgba(255, 255, 255, 0.9)',
+                horzLines: {
+                    color: '#334158',
                 },
-                grid: {
-                    vertLines: {
-                        color: '#334158',
-                    },
-                    horzLines: {
-                        color: '#334158',
-                    },
-                },
-                crosshair: {
-                    mode: CrosshairMode.Normal,
+            },
+            crosshair: {
+                mode: CrosshairMode.Normal,
 
-                },
-                priceScale: {
-                    borderColor: '#485c7b',
-                },
-                timeScale: {
-                    borderColor: '#485c7b',
-                },
-                width: chartContainerRef.current.clientWidth,
-                height: chartContainerRef.current.clientHeight,
-                timeScale: {
-                    timeVisible: true,
-                    secondVisible: false,
-                    // borderVisible:false
-                }
-            };
-
-            //create chart at chartContainerRef with rhose options 
-            chart.current = createChart(chartContainerRef.current, chartOptions);
-            chart.current.timeScale().fitContent();
-            //FETCH OLD AND LIVE CANDLES 
-            newSeries.current = chart.current.addCandlestickSeries()
-
-            function myClickHandler(param) {
-                if (!param.point) {
-                    return;
-                }
-                const price = newSeries.current.coordinateToPrice(param.point.y).toFixed(2)
-                var time = (param.time) * 1000
-                time = (Number.isNaN(time)) ? '' : time
-                // console.log(time)
-                dispatch(setParamClick({
-                    price: price,
-                    time: time
-                }))
-
-                // console.log(`Click at ${param.point.x}, ${param.point.y}. The time is ${param.time}.`);
+            },
+            priceScale: {
+                borderColor: '#485c7b',
+            },
+            timeScale: {
+                borderColor: '#485c7b',
+            },
+            width: chartContainerRef.current.clientWidth,
+            height: chartContainerRef.current.clientHeight,
+            timeScale: {
+                timeVisible: true,
+                secondVisible: false,
+                // borderVisible:false
             }
+        };
 
-            chart.current.subscribeClick(myClickHandler);
+        //create chart at chartContainerRef with rhose options 
+        chart.current = createChart(chartContainerRef.current, chartOptions);
+        chart.current.timeScale().fitContent();
+        //FETCH OLD AND LIVE CANDLES 
+        newSeries.current = chart.current.addCandlestickSeries()
 
-            //used to resize observer
-            const resizeO = new ResizeObserver(() => {
-                chart.current.applyOptions(
-                    {
-                        width: chartContainerRef.current.clientWidth,
-                        height: chartContainerRef.current.clientHeight,
-                    });
-            })
-
-            resizeO.observe(chartContainerRef.current)
-
-
-            return () => {
-                resizeO.disconnect()
+        function myClickHandler(param) {
+            if (!param.point) {
+                return;
             }
+            const price = newSeries.current.coordinateToPrice(param.point.y).toFixed(2)
+            var time = (param.time) * 1000
+            time = (Number.isNaN(time)) ? '' : time
+            // console.log(time)
+            dispatch(setParamClick({
+                price: price,
+                time: time
+            }))
 
-        }, []);
+            // console.log(`Click at ${param.point.x}, ${param.point.y}. The time is ${param.time}.`);
+        }
+
+        chart.current.subscribeClick(myClickHandler);
+
+        //used to resize observer
+        const resizeO = new ResizeObserver(() => {
+            chart.current.applyOptions(
+                {
+                    width: chartContainerRef.current.clientWidth,
+                    height: chartContainerRef.current.clientHeight,
+                });
+        })
+
+        resizeO.observe(chartContainerRef.current)
+
+
+        return () => {
+            resizeO.disconnect()
+        }
+
+    }, []);
 
     //update price chart 
     useEffect(() => {
 
         const conn = new WebSocket(GetLiveCandle(currentTimeFrame, cryptoCoin));
         //taken fron priceData.js
-        startTransition(()=>{
-        
+        startTransition(() => {
 
             conn.onmessage = function (event) {
                 var liveData = JSON.parse(event.data)
-    
+
                 var editLiveData = {
                     time: liveData.k.t / 1000,
                     open: liveData.k.o,
@@ -138,9 +134,9 @@ export const ChartTab = () => {
             //taken fron priceData.js 
             GetCandles(currentTimeFrame, cryptoCoin)
                 .then(Resp => {
-    
+
                     const candles = Resp.data.map((d) => ({
-    
+
                         'time': d[0] / 1000,
                         'open': d[1],
                         'high': d[2],
@@ -149,13 +145,11 @@ export const ChartTab = () => {
                     }))
                     //As web scoket is delayed by 2 seconds, im setting live price to last candle open price 
                     const candleLen = candles.length
-    
+
                     getLivePrice.current = candles[candleLen - 1].open
                     newSeries.current.setData(candles)
                 })
-                
-            })
-            
+        })
 
         return () => {
             conn.close()
@@ -243,7 +237,7 @@ export const ChartTab = () => {
                 lineVisible: true
             })
         }
-        
+
         var takeProfitUsd = updatePosPriceChart(parseFloat(priceLocal), positionType, 'takeProfit', takeProfitLocal)
         var stopLossUsd = updatePosPriceChart(parseFloat(priceLocal), positionType, 'stopLoss', stopLossLocal)
 
@@ -297,7 +291,6 @@ export const ChartTab = () => {
 
         }
 
-
     }, [calcTabInfo])
 
     //display all trades
@@ -321,51 +314,11 @@ export const ChartTab = () => {
 
     }, [allTrades, cryptoCoin])
 
-    const TopInfoContainer = useCallback(() => {
-
-        const [cryptoInfo, updateCryptoInfo] = useState([])
-        useEffect(() => {
-
-            //Set extra info
-            function setTimerInfo() {
-                //pass coin info to api
-                GetCryptoInfo(cryptoCoin).then(resp => {
-                    var priceChangePercent = parseFloat(resp.data.priceChangePercent).toFixed(2)
-                    var lowPrice = parseFloat(resp.data.lowPrice).toFixed(2)
-                    var openPrice = parseFloat(resp.data.openPrice).toFixed(2)
-
-                    const cryptoInfoLocal = [priceChangePercent, lowPrice, openPrice]
-                    updateCryptoInfo(cryptoInfoLocal)
 
 
-                })
-            }
-            //run once on load 
-            setTimerInfo()
-            //stat timer 
-            var getInfoInterval = setInterval(setTimerInfo, 2000)
-            return () => {
-                clearInterval(getInfoInterval)
-            }
-        }, [cryptoCoin])
 
-        return (
-            <>
-                <div>
-                    24h Percent Change<br />
-                    <p style={cryptoInfo[0] > 0 ? { color: 'green' } : { color: 'red' }}>{cryptoInfo[0]}</p>
-
-                </div>
-                <div>
-
-                    24h Low<br />
-                    {cryptoInfo[1]}
-                </div>
-            </>
-        )
-    }, [cryptoCoin])
     return (
-        <>
+        <React.Fragment>
 
             <div className="delete" style={{ position: 'absolute', top: '0' }}>
                 {/* {
@@ -377,7 +330,7 @@ export const ChartTab = () => {
             </div>
             <div className="chartTab_info">
                 {/* this is updated every 2 seconds hence its a user defined component  */}
-                <TopInfoContainer />
+                <TopInfoContainer cryptoCoin={cryptoCoin} />
 
 
                 <div className="chartTab_timerDropDown">
@@ -413,7 +366,7 @@ export const ChartTab = () => {
 
             </div>
 
-        </>
+        </React.Fragment>
     )
 
 }
